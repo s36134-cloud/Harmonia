@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     android:background="#F3E5F5" tools:context=".LoginActivity">
 
     <TextView
@@ -124,7 +125,7 @@
                 app:cornerRadius="30dp" android:layout_marginBottom="20dp" />
 
             <TextView
-                android:id="@+id/signup_prompt"
+                android:id="@+id/dont_have_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Don't have an account?"
