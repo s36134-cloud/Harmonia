@@ -68,9 +68,18 @@ public class RegistrationManager {
 
     private void phaseFailed(String message)
     {
+
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            user.delete();
+        }
+        auth.signOut();
+
+
         Log.e(TAG, "phaseFailed: registration failed: message: " + message);
         registrationPhase = REGISTRATION_PHASE_VALIDATE_USER_INFO;
         onResultCallback.onResult(false, message);
+
     }
 
     private void executeNextPhase()
