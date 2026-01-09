@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -27,19 +28,21 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button feeButton = findViewById(R.id.home_btn);
-        feeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_profile);
+        bottomNav.setSelectedItemId(R.id.nav_profile); // מסמן את דף הפרופיל
 
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_profile) return true;
 
-                Intent intent=new Intent(ProfileActivity.this,HomeActivity.class);
-                startActivity(intent);
-                finish();
+            if (id == R.id.nav_home) startActivity(new Intent(this, HomeActivity.class));
+            else if (id == R.id.nav_messages) startActivity(new Intent(this, MessagesActivity.class));
+            else if (id == R.id.nav_community) startActivity(new Intent(this, CommunityActivity.class));
 
-            }
-
+            overridePendingTransition(0, 0);
+            return true;
         });
+
 
         Button feedButton = findViewById(R.id.signout_button);
         feedButton.setOnClickListener(new View.OnClickListener() {
