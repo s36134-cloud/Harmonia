@@ -27,6 +27,20 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
+        Button feeButton = findViewById(R.id.home_btn);
+        feeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent=new Intent(ProfileActivity.this,HomeActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
+
         Button feedButton = findViewById(R.id.signout_button);
         feedButton.setOnClickListener(new View.OnClickListener() {
             @Override
