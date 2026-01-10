@@ -24,7 +24,7 @@ public class MessagesActivity extends AppCompatActivity {
             return insets;
         });
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_messages);
         bottomNav.setSelectedItemId(R.id.nav_messages); // מסמן את דף ההודעות
 
         bottomNav.setOnItemSelectedListener(item -> {

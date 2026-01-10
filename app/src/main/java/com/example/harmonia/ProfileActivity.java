@@ -28,7 +28,7 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_profile);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_Profile);
         bottomNav.setSelectedItemId(R.id.nav_profile); // מסמן את דף הפרופיל
 
         bottomNav.setOnItemSelectedListener(item -> {
@@ -44,8 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        Button feedButton = findViewById(R.id.signout_button);
-        feedButton.setOnClickListener(new View.OnClickListener() {
+        Button signoutButton = findViewById(R.id.signout_button);
+        signoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
