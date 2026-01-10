@@ -24,7 +24,7 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_home);
         bottomNav.setSelectedItemId(R.id.nav_home); // מסמן את דף הבית
 
         bottomNav.setOnItemSelectedListener(item -> {
