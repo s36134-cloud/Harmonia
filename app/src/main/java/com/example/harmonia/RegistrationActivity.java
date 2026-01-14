@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,11 +17,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.harmonia.utils.RegistrationManager;
+import com.example.harmonia.utils.UserImageSelector;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText ;
+
+    private UserImageSelector userImageSelector;
     private static final String TAG = "RegistrationActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,15 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
+        ImageView profilePictureImageView = findViewById(R.id.iv_profile_picture);
+        userImageSelector = new UserImageSelector(this, profilePictureImageView);
+        Button choosePictureButton = findViewById(R.id.btn_choose_picture);
+        choosePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userImageSelector.showImageSourceDialog();
+            }
+        });
 
     }
 
@@ -64,6 +77,7 @@ public class RegistrationActivity extends AppCompatActivity {
         registrationManager.startRegistration(
                 emailEditText.getText().toString(),
                 passwordEditText.getText().toString(),
+                userImageSelector.createImageFile(),
                 new RegistrationManager.OnResultCallback(){
                     @Override
                     public void onResult(boolean success, String message) {

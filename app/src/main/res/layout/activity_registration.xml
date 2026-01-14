@@ -49,12 +49,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="registar"
+                android:text="register"
                 android:textStyle="bold|italic"
                 android:textSize="32sp"
                 android:textColor="#BA68C8"
 
                 android:layout_marginBottom="30dp"/>
+
+            <ImageView
+                android:id="@+id/iv_profile_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:src="@android:drawable/ic_menu_camera" />
+
+            <Button
+                android:id="@+id/btn_choose_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:text="choose picture" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email_layout"
