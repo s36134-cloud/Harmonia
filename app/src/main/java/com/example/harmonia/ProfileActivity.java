@@ -34,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_Profile);
+        bottomNav.setItemIconTintList(null);
         bottomNav.setSelectedItemId(R.id.nav_profile); // מסמן את דף הפרופיל
 
         bottomNav.setOnItemSelectedListener(item -> {

@@ -25,6 +25,7 @@ public class CommunityActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_community);
+        bottomNav.setItemIconTintList(null);
         bottomNav.setSelectedItemId(R.id.nav_community); // מסמן את דף הקהילה
 
         bottomNav.setOnItemSelectedListener(item -> {
