@@ -52,6 +52,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainTitle">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_profile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_account_circle"
+            app:shapeAppearanceOverlay="@style/CircleImageStyle"
+            android:contentDescription="Profile Picture" />
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -64,6 +75,20 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+
+                <ImageView
+                    android:id="@+id/profile_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:src="@android:drawable/ic_menu_camera" />
+
+                <Button
+                    android:id="@+id/btn_choose_picture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:text="choose picture" />
 
                 <Button
                     android:id="@+id/signout_button"

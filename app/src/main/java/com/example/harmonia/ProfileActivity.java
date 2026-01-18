@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,11 +12,15 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.harmonia.utils.UserImageSelector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
+
+    private UserImageSelector userImageSelector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         auth = FirebaseAuth.getInstance();
@@ -56,6 +61,16 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
 
+        });
+
+        ImageView profilePictureImageView = findViewById(R.id.profile_picture);
+        userImageSelector = new UserImageSelector(this, profilePictureImageView);
+        Button choosePictureButton = findViewById(R.id.btn_choose_picture);
+        choosePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userImageSelector.showImageSourceDialog();
+            }
         });
     }
 }

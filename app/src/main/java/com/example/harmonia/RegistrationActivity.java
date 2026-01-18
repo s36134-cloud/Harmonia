@@ -2,6 +2,7 @@ package com.example.harmonia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -11,20 +12,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.harmonia.utils.RegistrationManager;
 import com.example.harmonia.utils.UserImageSelector;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText ;
 
-    private UserImageSelector userImageSelector;
+
     private static final String TAG = "RegistrationActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,40 +64,57 @@ public class RegistrationActivity extends AppCompatActivity {
 
             }
         });
-        ImageView profilePictureImageView = findViewById(R.id.iv_profile_picture);
-        userImageSelector = new UserImageSelector(this, profilePictureImageView);
-        Button choosePictureButton = findViewById(R.id.btn_choose_picture);
-        choosePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userImageSelector.showImageSourceDialog();
-            }
-        });
+
 
     }
 
     private void registerButtonClick() {
         Log.d(TAG, "Register button clicked");
 
-        RegistrationManager registrationManager = new RegistrationManager(RegistrationActivity.this);
-        registrationManager.startRegistration(
+        createUser(
                 emailEditText.getText().toString(),
-                passwordEditText.getText().toString(),
-                userImageSelector.createImageFile(),
-                new RegistrationManager.OnResultCallback(){
+                passwordEditText.getText().toString());
+    }
+
+    public void createUser(String email,
+                           String password)
+    {
+        Log.d(TAG, "createUser: Creating user with Firebase Auth");
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)  ) {
+            Log.w(TAG, "Validation failed: missing fields");
+            Toast.makeText(RegistrationActivity.this, "Please fill in all fields", Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        // Create user with email and password
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onResult(boolean success, String message) {
-                        if (success) {
-                            Toast.makeText(RegistrationActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                        else {
-                            Toast.makeText(RegistrationActivity.this, "Registration failed: " + message, Toast.LENGTH_LONG).show();
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                String userId = user.getUid();
+                                Log.i(TAG, "Firebase Auth registration successful. UID: " + userId);
+                                Toast.makeText(RegistrationActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegistrationActivity.this, ProfileActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Log.e(TAG, "Firebase Auth registration succeeded but user is null");
+                                Toast.makeText(RegistrationActivity.this, "Registration failed. Please try again.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Log.e(TAG, "Firebase Auth registration failed", task.getException());
+                            Toast.makeText(RegistrationActivity.this, task.getException() != null ? task.getException().getMessage() : "Unknown error", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
     }
+
 
 }

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         if (auth.getCurrentUser() != null) {
             Log.i("LoginActivity", "User already signed in, navigating to FeedActivity");
-            Intent intent = new Intent(LoginActivity.this,ProfileActivity.class);
+            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
             startActivity(intent);
             finish();
         }
