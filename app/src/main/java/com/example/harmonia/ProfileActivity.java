@@ -64,7 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         });
 
-        ImageView profilePictureImageView = findViewById(R.id.profile_picture);
+        ImageView profilePictureImageView = findViewById(R.id.imageView);
         userImageSelector = new UserImageSelector(this, profilePictureImageView);
         Button choosePictureButton = findViewById(R.id.btn_choose_picture);
         choosePictureButton.setOnClickListener(new View.OnClickListener() {
