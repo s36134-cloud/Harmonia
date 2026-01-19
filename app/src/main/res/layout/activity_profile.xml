@@ -22,7 +22,6 @@
 
 
 
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_Profile"
         android:layout_width="match_parent"
@@ -64,11 +63,13 @@
             android:fillViewport="true"
             android:scrollbars="none">
 
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="20dp">
+
 
 
                 <ImageView
@@ -83,8 +84,17 @@
                     android:id="@+id/btn_choose_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:orientation="horizontal"
                     android:text="choose picture" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/my_horizontal_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+
 
                 <Button
                     android:id="@+id/signout_button"

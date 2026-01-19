@@ -11,10 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.UserImageSelector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -32,6 +37,29 @@ public class ProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+        // 1. קישור ל-RecyclerView (ודאי שה-ID ב-XML הוא recyclerView)
+        RecyclerView recyclerView = findViewById(R.id.my_horizontal_recycler);
+
+// 2. יצירת רשימת הנתונים
+        List<ItemModel> itemList = new ArrayList<>();
+        itemList.add(new ItemModel("כרטיס 1"));
+        itemList.add(new ItemModel("כרטיס 2"));
+        itemList.add(new ItemModel("כרטיס 3"));
+
+// 3. הגדרה שהתצוגה תהיה אופקית (מצד לצד)
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+// 4. חיבור האדפטר שיצרת לרשימה
+        HorizontalAdapter adapter = new HorizontalAdapter(itemList);
+        recyclerView.setAdapter(adapter);
+
+
+
+
+
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_Profile);
         bottomNav.setItemIconTintList(null);
