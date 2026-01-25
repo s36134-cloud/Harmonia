@@ -71,14 +71,13 @@
                 android:padding="20dp">
 
 
-
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="111dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/default_image"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_image" />
 
                 <Button
                     android:id="@+id/btn_choose_picture"
@@ -86,20 +85,28 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="horizontal"
-                    android:text="choose picture" />
+                    android:text="choose picture"
+                    android:textStyle="bold|italic"
+                    android:backgroundTint="#E1BEE7"
+                    />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/my_horizontal_recycler"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/info_button"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-
+                    android:layout_gravity="center"
+                    android:textStyle="bold|italic"
+                    android:backgroundTint="#E1BEE7"
+                    android:text="add info" />
 
                 <Button
                     android:id="@+id/signout_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="bold|italic"
+                    android:backgroundTint="#E1BEE7"
                     android:text="sign out" />
 
             </LinearLayout>

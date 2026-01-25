@@ -39,28 +39,6 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
 
-        // 1. קישור ל-RecyclerView (ודאי שה-ID ב-XML הוא recyclerView)
-        RecyclerView recyclerView = findViewById(R.id.my_horizontal_recycler);
-
-// 2. יצירת רשימת הנתונים
-        List<ItemModel> itemList = new ArrayList<>();
-        itemList.add(new ItemModel("כרטיס 1"));
-        itemList.add(new ItemModel("כרטיס 2"));
-        itemList.add(new ItemModel("כרטיס 3"));
-
-// 3. הגדרה שהתצוגה תהיה אופקית (מצד לצד)
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-// 4. חיבור האדפטר שיצרת לרשימה
-        HorizontalAdapter adapter = new HorizontalAdapter(itemList);
-        recyclerView.setAdapter(adapter);
-
-
-
-
-
-
-
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_Profile);
         bottomNav.setItemIconTintList(null);
         bottomNav.setSelectedItemId(R.id.nav_profile); // מסמן את דף הפרופיל
@@ -77,6 +55,18 @@ public class ProfileActivity extends AppCompatActivity {
             return true;
         });
 
+        Button infoButton = findViewById(R.id.info_button);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(ProfileActivity.this,InformationActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
 
         Button signoutButton = findViewById(R.id.signout_button);
         signoutButton.setOnClickListener(new View.OnClickListener() {
