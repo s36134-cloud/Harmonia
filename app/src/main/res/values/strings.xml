@@ -1,5 +1,22 @@
 <resources>
-    <string name="app_name">Harmonia</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="Music_array">
+        <td>Pop</td>
+        <td>Rock</td>
+        <td>Hip-hop/Rap</td>
+        <td>RnB</td>
+        <td>Jazz</td>
+        <td>Country</td>
+    </string-array>
+
+
+    <string-array name="Books_array">
+        <td>Romance</td>
+        <td>Fantasy</td>
+        <td>Science fiction</td>
+        <td>Mystery</td>
+        <td>Thriller</td>
+        <td>Horror</td>
+    </string-array>
+
+
 </resources>

@@ -169,6 +169,31 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
+            <Spinner
+                android:id="@+id/et_spinnerMusicgenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/Music_array"
+                android:prompt="@string/select_level_prompt"
+                app:layout_constraintTop_toBottomOf="@id/et_Level"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp" />
+
+
+            <Spinner
+                android:id="@+id/et_spinnerBookgenre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/Books_array"
+                android:prompt="@string/select_level_prompt"
+                app:layout_constraintTop_toBottomOf="@id/et_Level"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp" />
+
 
 
 
