@@ -51,7 +51,7 @@ public class ProfileManager {
             public void onResult(boolean success, String url, String error) {
                 if (success) {
                     Log.i(TAG, "Profile picture uploaded successfully to Supabase. Public URL: " + url);
-                    //phaseDone();
+
                 } else {
                     Log.e(TAG, "Supabase upload failed: " + error);
                     //phaseFailed("Failed to upload profile picture (Supabase): " + error);

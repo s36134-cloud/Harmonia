@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     android:background="@drawable/background">
-    >
+
 
     <TextView
         android:id="@+id/main_title"
@@ -73,6 +73,7 @@
                     android:layout_height="wrap_content"
                     android:paddingTop="18dp"
                     android:paddingBottom="18dp"
+                    android:inputType="textPersonName"
                     android:background="@android:color/transparent" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,6 +169,14 @@
                     android:background="@android:color/transparent" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/Music_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favorite Music genre"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <Spinner
                 android:id="@+id/et_spinnerMusicgenre"
@@ -175,12 +184,20 @@
                 android:layout_height="wrap_content"
                 android:entries="@array/Music_array"
                 android:prompt="@string/select_level_prompt"
-                app:layout_constraintTop_toBottomOf="@id/et_Level"
+                app:layout_constraintTop_toBottomOf="@id/Music_genre"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp" />
 
+            <TextView
+                android:id="@+id/books_genre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your favorite book genre"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <Spinner
                 android:id="@+id/et_spinnerBookgenre"
@@ -188,13 +205,21 @@
                 android:layout_height="wrap_content"
                 android:entries="@array/Books_array"
                 android:prompt="@string/select_level_prompt"
-                app:layout_constraintTop_toBottomOf="@id/et_Level"
+                app:layout_constraintTop_toBottomOf="@id/books_genre"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp" />
 
 
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textStyle="bold|italic"
+                android:backgroundTint="#E1BEE7"
+                android:text="Back to profile" />
 
 
         </LinearLayout>

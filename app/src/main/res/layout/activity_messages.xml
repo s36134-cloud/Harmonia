@@ -65,6 +65,16 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+
+                <Button
+                    android:id="@+id/start_conv_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="bold|italic"
+                    android:backgroundTint="#E1BEE7"
+                    android:text="Start conversation" />
+
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

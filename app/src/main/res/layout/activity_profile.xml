@@ -100,6 +100,7 @@
                     android:backgroundTint="#E1BEE7"
                     android:text="add info" />
 
+
                 <Button
                     android:id="@+id/signout_button"
                     android:layout_width="wrap_content"
