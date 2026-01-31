@@ -82,6 +82,18 @@ public class ProfileActivity extends AppCompatActivity {
 
         });
 
+        Button opensearchButton = findViewById(R.id.btn_opensearch);
+        opensearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(ProfileActivity.this,SearchActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
 
         ImageView profilePictureImageView = findViewById(R.id.imageView);
         userImageSelector = new UserImageSelector(this, profilePictureImageView);
@@ -92,5 +104,9 @@ public class ProfileActivity extends AppCompatActivity {
                 userImageSelector.showImageSourceDialog();
             }
         });
+
+
+
+
     }
 }

@@ -2,23 +2,4 @@
     <string name="app_name">Harmonia</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="select_level_prompt">Select your level</string>
-
-    <string-array name="Music_array">
-        <item>Pop</item>
-        <item>Rock</item>
-        <item>Hip-hop/Rap</item>
-        <item>RnB</item>
-        <item>Jazz</item>
-        <item>Country</item>
-    </string-array>
-
-    <string-array name="Books_array">
-        <item>Romance</item>
-        <item>Fantasy</item>
-        <item>Science fiction</item>
-        <item>Mystery</item>
-        <item>Thriller</item>
-        <item>Horror</item>
-    </string-array>
 </resources>

@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".InformationActivity"
             android:exported="false" />
         <activity

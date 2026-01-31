@@ -68,7 +68,7 @@
                 android:background="@drawable/rounded_input_background">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/name_edit_text"
+                    android:id="@+id/et_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="18dp"
@@ -99,7 +99,7 @@
                 android:background="@drawable/rounded_input_background">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/age_edit_text"
+                    android:id="@+id/et_age"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="18dp"
@@ -109,108 +109,18 @@
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/password_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Change password"
-                app:startIconDrawable="@drawable/ic_lock"
-                app:startIconTint="#8A2BE2"
-                android:layout_marginBottom="40dp"
-
-                app:boxCornerRadiusTopStart="30dp"
-                app:boxCornerRadiusTopEnd="30dp"
-                app:boxCornerRadiusBottomStart="30dp"
-                app:boxCornerRadiusBottomEnd="30dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:boxBackgroundColor="@android:color/transparent"
-                android:background="@drawable/rounded_input_background">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/password_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPassword"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="18dp"
-                    android:background="@android:color/transparent" />
-            </com.google.android.material.textfield.TextInputLayout>
 
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/Email_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Change email"
-                app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="#8A2BE2"
-                android:layout_marginBottom="40dp"
 
-                app:boxCornerRadiusTopStart="30dp"
-                app:boxCornerRadiusTopEnd="30dp"
-                app:boxCornerRadiusBottomStart="30dp"
-                app:boxCornerRadiusBottomEnd="30dp"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:boxBackgroundColor="@android:color/transparent"
-                android:background="@drawable/rounded_input_background">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/Email_edit_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:paddingTop="18dp"
-                    android:paddingBottom="18dp"
-                    android:background="@android:color/transparent" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/Music_genre"
+            <Button
+                android:id="@+id/save_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your favorite Music genre"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <Spinner
-                android:id="@+id/et_spinnerMusicgenre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/Music_array"
-                android:prompt="@string/select_level_prompt"
-                app:layout_constraintTop_toBottomOf="@id/Music_genre"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp" />
-
-            <TextView
-                android:id="@+id/books_genre"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Your favorite book genre"
-                android:layout_marginTop="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <Spinner
-                android:id="@+id/et_spinnerBookgenre"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/Books_array"
-                android:prompt="@string/select_level_prompt"
-                app:layout_constraintTop_toBottomOf="@id/books_genre"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp" />
-
+                android:layout_gravity="center"
+                android:textStyle="bold|italic"
+                android:backgroundTint="#E1BEE7"
+                android:text="save" />
 
             <Button
                 android:id="@+id/back_button"
