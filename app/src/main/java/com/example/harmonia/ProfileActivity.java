@@ -11,15 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.UserImageSelector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -82,12 +77,25 @@ public class ProfileActivity extends AppCompatActivity {
 
         });
 
-        Button opensearchButton = findViewById(R.id.btn_opensearch);
-        opensearchButton.setOnClickListener(new View.OnClickListener() {
+        Button opensearchbooksButton = findViewById(R.id.btn_opensearchbooks);
+        opensearchbooksButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(ProfileActivity.this,SearchActivity.class);
+                Intent intent=new Intent(ProfileActivity.this, SearchBookActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
+
+        Button opensearchsongsButton = findViewById(R.id.btn_opensearchsongs);
+        opensearchsongsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(ProfileActivity.this, SearchSongActivity.class);
                 startActivity(intent);
                 finish();
 

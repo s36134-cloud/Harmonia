@@ -1,7 +1,6 @@
 package com.example.harmonia;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,34 +11,34 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.harmonia.utils.BooksAdapter;
+
+import com.example.harmonia.utils.SongsAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchSongActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private BooksAdapter adapter;
-    private List<Book> bookList;
+    private SongsAdapter adapter;
+    private List<Song> songList;
     private FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_search_song);
 
         db = FirebaseFirestore.getInstance();
-        bookList = new ArrayList<>();
+        songList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new BooksAdapter(bookList);
+        adapter = new  SongsAdapter(songList);
         recyclerView.setAdapter(adapter);
 
-        SearchView searchView = findViewById(R.id.searchView);
+        SearchView searchView = findViewById(R.id.searchViewsong);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -64,23 +63,23 @@ public class SearchActivity extends AppCompatActivity {
     private void searchInFirebase(String searchText) {
 
 
-        db.collection("books")
+        db.collection("songs")
                 .orderBy("name")
                 .startAt(searchText)
                 .endAt(searchText + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        bookList.clear();
+                        songList.clear();
                         if (task.getResult().isEmpty()) {
-                            android.util.Log.d("SEARCH_DEBUG", "No books found for: " + searchText);
+                            android.util.Log.d("SEARCH_DEBUG", "No songs found for: " + searchText);
                         } else {
                             for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Book book = document.toObject(Book.class);
-                                book.setId(document.getId());
-                                bookList.add(book);
+                                Song song = document.toObject(Song.class);
+                                song.setId(document.getId());
+                                songList.add(song);
                             }
-                            android.util.Log.d("SEARCH_DEBUG", "Found " + bookList.size() + " books!");
+                            android.util.Log.d("SEARCH_DEBUG", "Found " + songList.size() + " songs!");
                         }
                         adapter.notifyDataSetChanged();
                     } else {

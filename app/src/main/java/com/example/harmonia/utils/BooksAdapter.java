@@ -61,7 +61,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         Book book = bookList.get(position);
 
         // 1. מילוי הטקסטים (שם הספר והסופר)
-        holder.namebook.setText(book.getTitle());
+        holder.namebook.setText(book.getName());
         holder.author.setText(book.getAuthor());
 
         // 2. מילוי שאר השדות (ז'אנר וגיל)

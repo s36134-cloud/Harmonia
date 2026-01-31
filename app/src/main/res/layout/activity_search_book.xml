@@ -15,11 +15,11 @@
         app:cardElevation="2dp">
 
         <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+        android:id="@+id/searchViewbook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:iconifiedByDefault="false"
-        app:queryHint="search book or song"
+        app:queryHint="search book"
         app:queryBackground="@android:color/transparent"
         android:layoutDirection="ltr" />
 
