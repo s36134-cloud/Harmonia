@@ -48,8 +48,21 @@ public class InformationActivity extends AppCompatActivity {
         nameEditText=findViewById(R.id.et_name);
         ageEditText=findViewById(R.id.et_age);
 
-        Button BackButton = findViewById(R.id.save_button);
+        Button BackButton = findViewById(R.id.back_button);
         BackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(InformationActivity.this,ProfileActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
+
+        Button saveButton = findViewById(R.id.save_button);
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -58,7 +71,7 @@ public class InformationActivity extends AppCompatActivity {
             }
 
         });
-    } // <- Closing brace for onCreate was here
+    }
 
     private void InformationButtonClick() {
         Log.d(TAG, "Register button clicked");
@@ -86,6 +99,6 @@ public class InformationActivity extends AppCompatActivity {
                 }
         );
 
-    } // <--- **ADD THIS CLOSING BRACE**
+    }
 
-    }// This is the closing brace for the InformationActivity class
+    }
