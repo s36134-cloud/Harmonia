@@ -1,37 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="140dp"
+    android:layout_height="250dp"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="4dp">
 
-    <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="120dp"
-        android:layout_height="150dp"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/bookimage"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="5.5"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_menu_gallery" />
 
-            <ImageView
-                android:id="@+id/bookIv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_gallery" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4.5"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="6dp"
+            android:gravity="center_horizontal">
 
             <TextView
-                android:id="@+id/titleTv"
-                android:layout_width="match_parent"
+                android:id="@+id/namebook"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="#80000000"
-                android:padding="8dp"
                 android:text="שם הספר"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textAlignment="center" />
+                android:textStyle="bold"
+                android:textColor="#000000"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="סופר"
+                android:textColor="#444444"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/genrebook"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ז'אנר"
+                android:textColor="#777777"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp" />
+
+            <TextView
+                android:id="@+id/minage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="גיל"
+                android:textColor="#E91E63"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
 

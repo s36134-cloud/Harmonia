@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     android:orientation="vertical"
-    android:background="@drawable/background">>
+    android:background="@drawable/background">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -13,7 +14,7 @@
         app:cardCornerRadius="12dp"
         app:cardElevation="2dp">
 
-        <<androidx.appcompat.widget.SearchView
+        <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
