@@ -101,7 +101,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                     if (s.isSelectedsong()) count++;
                 }
 
-                if (count < 4) {
+                if (count < 5) {
                     song.setSelected(true);
                 } else {
                     Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();
