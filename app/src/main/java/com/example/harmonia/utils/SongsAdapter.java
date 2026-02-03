@@ -83,7 +83,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         // 1. פידבק ויזואלי: אם השיר נבחר - נשנה לו את השקיפות או נוסיף רקע
         if (song.isSelectedsong()) {
             holder.itemView.setAlpha(0.5f); // הופך את הכרטיסייה לקצת שקופה
-            holder.itemView.setBackgroundResource(android.R.color.holo_blue_light); // סתם דוגמה לרקע כחול
+            holder.itemView.setBackgroundResource(android.R.color.white); // סתם דוגמה לרקע כחול
         } else {
             holder.itemView.setAlpha(1.0f); // מצב רגיל
             holder.itemView.setBackgroundResource(android.R.color.white);

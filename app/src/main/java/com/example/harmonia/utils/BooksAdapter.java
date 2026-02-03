@@ -84,7 +84,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         // 1. פידבק ויזואלי: אם השיר נבחר - נשנה לו את השקיפות או נוסיף רקע
         if (book.isSelectedbook()) {
             holder.itemView.setAlpha(0.5f); // הופך את הכרטיסייה לקצת שקופה
-            holder.itemView.setBackgroundResource(android.R.color.holo_blue_light); // סתם דוגמה לרקע כחול
+            holder.itemView.setBackgroundResource(android.R.color.white); //
         } else {
             holder.itemView.setAlpha(1.0f); // מצב רגיל
             holder.itemView.setBackgroundResource(android.R.color.white);
