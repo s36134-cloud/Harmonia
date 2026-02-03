@@ -11,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.Book;
 import com.example.harmonia.R;
+import com.example.harmonia.Song;
+
 import  android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -76,6 +79,52 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                 .load(imageUrl)
 
                 .into(holder.bookimage);
+
+
+        // 1. פידבק ויזואלי: אם השיר נבחר - נשנה לו את השקיפות או נוסיף רקע
+        if (book.isSelectedbook()) {
+            holder.itemView.setAlpha(0.5f); // הופך את הכרטיסייה לקצת שקופה
+            holder.itemView.setBackgroundResource(android.R.color.holo_blue_light); // סתם דוגמה לרקע כחול
+        } else {
+            holder.itemView.setAlpha(1.0f); // מצב רגיל
+            holder.itemView.setBackgroundResource(android.R.color.white);
+        }
+
+        // 2. טיפול בלחיצה
+        holder.itemView.setOnClickListener(v -> {
+            if (book.isSelectedbook()) {
+                // אם הוא כבר נבחר - נבטל את הבחירה
+                book.setSelected(false);
+            } else {
+                // אם הוא לא נבחר - נבדוק אם כבר הגענו ל-4
+                int count = 0;
+                for (Book b : bookList) {
+                    if (b.isSelectedbook()) count++;
+                }
+
+                if (count < 4) {
+                    book.setSelected(true);
+                } else {
+                    Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            // חשוב מאוד: מעדכן את הרשימה כדי שהעיצוב ישתנה מיד
+            notifyItemChanged(position);
+
+            boolean hasSelection = false;
+            for (Book b : bookList) {
+                if (b.isSelectedbook()) {
+                    hasSelection = true;
+                    break;
+                }
+            }
+
+            View button = v.getRootView().findViewById(R.id.btnDoneBooks);
+            if (button != null) {
+                button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 
 

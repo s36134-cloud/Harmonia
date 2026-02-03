@@ -1,6 +1,8 @@
 package com.example.harmonia;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -53,6 +55,26 @@ public class SearchBookActivity extends AppCompatActivity {
                 return true;
             }
         });
+            Button btnDone = findViewById(R.id.btnDoneBooks);
+        btnDone.setVisibility(android.view.View.GONE);
+        btnDone.setOnClickListener(v -> {
+                // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
+                List<String> selectedBookIds = new ArrayList<>();
+                for (Book b : bookList) {
+                    if (b.isSelectedbook()) {
+                        selectedBookIds.add(b.getId());
+                    }
+                }
+
+                // 2. בדיקה אם המשתמש בחר שירים
+                if (selectedBookIds.isEmpty()) {
+                    Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // 3. שמירה ל-Firebase ומעבר מסך
+                saveSelectedBooksAndGoToProfile(selectedBookIds);
+        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -84,6 +106,25 @@ public class SearchBookActivity extends AppCompatActivity {
                     } else {
                         android.util.Log.e("SEARCH_DEBUG", "Error getting documents: ", task.getException());
                     }
+                });
+    }
+
+    private void saveSelectedBooksAndGoToProfile(List<String> bookIds) {
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // במקום ליצור Map חדש ולדרוס, אנחנו משתמשים ב-arrayUnion
+        db.collection("users").document(userId)
+                .update("topBooks", com.google.firebase.firestore.FieldValue.arrayUnion(bookIds.toArray()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "השירים נוספו בהצלחה!", Toast.LENGTH_SHORT).show();
+                    finish(); // חוזר לפרופיל
+                })
+                .addOnFailureListener(e -> {
+                    // אם המסמך לא קיים בכלל, update עלול להיכשל, אז נשתמש ב-set כגיבוי
+                    db.collection("users").document(userId)
+                            .set(new java.util.HashMap<String, Object>() {{
+                                put("topBooks", bookIds);
+                            }}, com.google.firebase.firestore.SetOptions.merge());
                 });
     }
 }

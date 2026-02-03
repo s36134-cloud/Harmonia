@@ -9,7 +9,7 @@ public class Book {
     private String genre;
     private int minage;
 
-
+    private boolean isSelectedbook = false;
 
 
 
@@ -30,5 +30,12 @@ public class Book {
     public void setMinage(int minage) {
         this.minage = minage;
     }
+    public boolean isSelectedbook() {
+        return isSelectedbook;
+    }
+
+
+    public void setSelected(boolean selectedbook) {
+        isSelectedbook = selectedbook;}
 
 }

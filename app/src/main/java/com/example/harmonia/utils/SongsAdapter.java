@@ -14,6 +14,7 @@ import com.example.harmonia.R;
 
 
 import  android.view.View;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -78,6 +79,53 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 .load(imageUrl)
 
                 .into(holder.songimage);
+
+        // 1. פידבק ויזואלי: אם השיר נבחר - נשנה לו את השקיפות או נוסיף רקע
+        if (song.isSelectedsong()) {
+            holder.itemView.setAlpha(0.5f); // הופך את הכרטיסייה לקצת שקופה
+            holder.itemView.setBackgroundResource(android.R.color.holo_blue_light); // סתם דוגמה לרקע כחול
+        } else {
+            holder.itemView.setAlpha(1.0f); // מצב רגיל
+            holder.itemView.setBackgroundResource(android.R.color.white);
+        }
+
+        // 2. טיפול בלחיצה
+        holder.itemView.setOnClickListener(v -> {
+            if (song.isSelectedsong()) {
+                // אם הוא כבר נבחר - נבטל את הבחירה
+                song.setSelected(false);
+            } else {
+                // אם הוא לא נבחר - נבדוק אם כבר הגענו ל-4
+                int count = 0;
+                for (Song s : songList) {
+                    if (s.isSelectedsong()) count++;
+                }
+
+                if (count < 4) {
+                    song.setSelected(true);
+                } else {
+                    Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            // חשוב מאוד: מעדכן את הרשימה כדי שהעיצוב ישתנה מיד
+            notifyItemChanged(position);
+
+            boolean hasSelection = false;
+            for (Song s : songList) {
+                if (s.isSelectedsong()) {
+                    hasSelection = true;
+                    break;
+                }
+            }
+
+            View button = v.getRootView().findViewById(R.id.btnDoneSongs);
+            if (button != null) {
+                button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+            }
+        });
+
+
     }
 
 

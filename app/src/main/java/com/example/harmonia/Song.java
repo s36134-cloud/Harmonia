@@ -8,7 +8,7 @@ public class Song {
     private String artist;
     private String genre;
 
-
+    private boolean isSelectedsong = false;
 
 
 
@@ -22,5 +22,12 @@ public class Song {
     public String getGenre() { return genre; }
     public void setGenre(String genre) { this.genre = genre; }
 
+    public boolean isSelectedsong() {
+        return isSelectedsong;
+    }
 
+
+    public void setSelected(boolean selectedsong) {
+        isSelectedsong = selectedsong;
+    }
 }

@@ -1,6 +1,8 @@
 package com.example.harmonia;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +56,28 @@ public class SearchSongActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+
+        Button btnDone = findViewById(R.id.btnDoneSongs);
+        btnDone.setVisibility(android.view.View.GONE);
+        btnDone.setOnClickListener(v -> {
+            // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
+            List<String> selectedSongIds = new ArrayList<>();
+            for (Song s : songList) {
+                if (s.isSelectedsong()) {
+                    selectedSongIds.add(s.getId());
+                }
+            }
+
+            // 2. בדיקה אם המשתמש בחר שירים
+            if (selectedSongIds.isEmpty()) {
+                Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 3. שמירה ל-Firebase ומעבר מסך
+            saveSelectedSongsAndGoToProfile(selectedSongIds);
+        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -85,6 +109,25 @@ public class SearchSongActivity extends AppCompatActivity {
                     } else {
                         android.util.Log.e("SEARCH_DEBUG", "Error getting documents: ", task.getException());
                     }
+                });
+    }
+
+    private void saveSelectedSongsAndGoToProfile(List<String> songIds) {
+        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // במקום ליצור Map חדש ולדרוס, אנחנו משתמשים ב-arrayUnion
+        db.collection("users").document(userId)
+                .update("topSongs", com.google.firebase.firestore.FieldValue.arrayUnion(songIds.toArray()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "השירים נוספו בהצלחה!", Toast.LENGTH_SHORT).show();
+                    finish(); // חוזר לפרופיל
+                })
+                .addOnFailureListener(e -> {
+                    // אם המסמך לא קיים בכלל, update עלול להיכשל, אז נשתמש ב-set כגיבוי
+                    db.collection("users").document(userId)
+                            .set(new java.util.HashMap<String, Object>() {{
+                                put("topSongs", songIds);
+                            }}, com.google.firebase.firestore.SetOptions.merge());
                 });
     }
 }
