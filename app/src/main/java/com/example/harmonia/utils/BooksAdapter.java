@@ -1,6 +1,7 @@
 package com.example.harmonia.utils;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,6 +28,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         public BooksAdapter(List<Book> bookList) {
             this.bookList = bookList;
         }
+
+    private static final String TAG = "BooksAdapter";
 
         // ה-ViewHolder: כאן  תופסים את הרכיבים מה-XML
         public static class BookViewHolder extends RecyclerView.ViewHolder {
@@ -72,8 +75,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         holder.minage.setText(String.valueOf(book.getMinage()) + "+");
 
         // 3. בניית הכתובת המדויקת לסופאבייס
-        String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/" + book.getId() + ".jpg";
+        String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
 
+        Log.d(TAG, "onBindViewHolder: image url: " + imageUrl);
         // 4. טעינת התמונה
         com.bumptech.glide.Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
@@ -102,7 +106,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                     if (b.isSelectedbook()) count++;
                 }
 
-                if (count < 4) {
+                if (count < 5) {
                     book.setSelected(true);
                 } else {
                     Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();

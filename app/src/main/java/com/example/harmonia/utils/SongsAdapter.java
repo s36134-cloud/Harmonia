@@ -72,7 +72,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
 
         // 3. בניית הכתובת המדויקת לסופאבייס
-        String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/" + song.getId() + ".jpg";
+        String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
         // 4. טעינת התמונה
         com.bumptech.glide.Glide.with(holder.itemView.getContext())
