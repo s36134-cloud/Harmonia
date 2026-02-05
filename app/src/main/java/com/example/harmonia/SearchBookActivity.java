@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,7 +35,7 @@ public class SearchBookActivity extends AppCompatActivity {
         bookList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         adapter = new BooksAdapter(bookList);
         recyclerView.setAdapter(adapter);
@@ -49,7 +50,11 @@ public class SearchBookActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 1) {
+                if (newText.isEmpty()) {
+                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
+                    loadAllBooks();
+                } else if (newText.length() > 0) {
+                    // אם יש טקסט - תבצע חיפוש
                     searchInFirebase(newText);
                 }
                 return true;
@@ -80,6 +85,8 @@ public class SearchBookActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        loadAllBooks();
     }
     private void searchInFirebase(String searchText) {
 
@@ -125,6 +132,29 @@ public class SearchBookActivity extends AppCompatActivity {
                             .set(new java.util.HashMap<String, Object>() {{
                                 put("topBooks", bookIds);
                             }}, com.google.firebase.firestore.SetOptions.merge());
+                });
+    }
+
+
+        private void loadAllBooks() {
+        db.collection("books")
+                .orderBy("name") // מסדר אותם לפי א'-ב'
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        bookList.clear();
+                        if (task.getResult() != null) {
+                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                                Book book = document.toObject(Book.class);
+                                book.setId(document.getId());
+                                bookList.add(book);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        android.util.Log.d("SEARCH_DEBUG", "Loaded all " + bookList.size() + " books");
+                    } else {
+                        android.util.Log.e("SEARCH_DEBUG", "Error loading books: ", task.getException());
+                    }
                 });
     }
 }
