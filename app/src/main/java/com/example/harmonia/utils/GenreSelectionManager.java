@@ -7,6 +7,7 @@ public class GenreSelectionManager {
 
     private List<String> selectedGenres;
 
+
     public GenreSelectionManager() {
         this.selectedGenres = new ArrayList<>();
     }
