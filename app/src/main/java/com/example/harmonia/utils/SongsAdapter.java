@@ -1,6 +1,7 @@
 package com.example.harmonia.utils;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +24,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     // הרשימה שתכיל את הספרים
     private List<Song> songList;
 
+    private static final String TAG = "SongsAdapter";
+
     //   ככה  מקבלים את הרשימה מה-Activity
     public SongsAdapter(List<Song> songList) {
         this.songList = songList;
@@ -37,15 +40,16 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         public ImageView songimage;
         public TextView genresong;
 
+        private static final String TAG = "SongViewHolder";
 
 
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            namesong = itemView.findViewById(R.id.namebook);
-            artist = itemView.findViewById(R.id.author);
-            songimage = itemView.findViewById(R.id.bookimage);
-            genresong = itemView.findViewById(R.id.genrebook);
+            namesong = itemView.findViewById(R.id.namesong);
+            artist = itemView.findViewById(R.id.artist);
+            songimage = itemView.findViewById(R.id.songimage);
+            genresong = itemView.findViewById(R.id.genresong);
 
         }
     }
@@ -53,7 +57,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     @NonNull
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.book, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.song, parent, false);
         return new SongViewHolder(view);
     }
 
@@ -63,6 +67,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
 
+        Log.d(TAG, "onBindViewHolder: song: " + song.getName());
         // 1. מילוי הטקסטים (שם הספר והסופר)
         holder.namesong.setText(song.getName());
         holder.artist.setText(song.getArtist());

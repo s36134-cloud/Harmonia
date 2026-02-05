@@ -16,9 +16,10 @@ public class Song {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
     public String getName() { return name; }
-    public void setName(String title) { this.name = name; }
+
+    public void setName(String name) { this.name = name; }
     public String getArtist() { return artist; }
-    public void setArtist(String author) { this.artist = author;}
+    public void setArtist(String artist) { this.artist = artist;}
     public String getGenre() { return genre; }
     public void setGenre(String genre) { this.genre = genre; }
 
