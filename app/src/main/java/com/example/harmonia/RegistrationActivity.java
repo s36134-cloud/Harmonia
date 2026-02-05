@@ -24,11 +24,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private EditText emailEditText;
     private EditText passwordEditText ;
+
+    private EditText nameEditText;
+
+    private EditText ageEditText;
+
 
 
     private static final String TAG = "RegistrationActivity";
@@ -55,6 +64,8 @@ public class RegistrationActivity extends AppCompatActivity {
         });
         emailEditText=findViewById(R.id.email_edit_text);
         passwordEditText=findViewById(R.id.password_edit_text);
+        nameEditText=findViewById(R.id.et_name);
+        ageEditText=findViewById(R.id.et_age);
 
         Button registerButton = findViewById(R.id.registar_button);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -73,11 +84,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
         createUser(
                 emailEditText.getText().toString(),
-                passwordEditText.getText().toString());
+                passwordEditText.getText().toString(),
+                nameEditText.getText().toString(),
+                Integer.valueOf(ageEditText.getText().toString())
+        );
     }
 
     public void createUser(String email,
-                           String password)
+                           String password,
+                           String name,
+                           int age)
     {
         Log.d(TAG, "createUser: Creating user with Firebase Auth");
 
@@ -100,10 +116,8 @@ public class RegistrationActivity extends AppCompatActivity {
                             if (user != null) {
                                 String userId = user.getUid();
                                 Log.i(TAG, "Firebase Auth registration successful. UID: " + userId);
-                                Toast.makeText(RegistrationActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(RegistrationActivity.this, ProfileActivity.class);
-                                startActivity(intent);
-                                finish();
+                                saveUserToFirestore(userId, name, age);
+
                             } else {
                                 Log.e(TAG, "Firebase Auth registration succeeded but user is null");
                                 Toast.makeText(RegistrationActivity.this, "Registration failed. Please try again.", Toast.LENGTH_LONG).show();
@@ -114,6 +128,31 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void saveUserToFirestore(String userId, String name, int age) {
+
+        Log.d(TAG, "Saving user to Firestore. UID: " + userId + ", Nickname: " + name + ", Age: " + age);
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("name", name);
+        userMap.put("age", age);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(userId)
+                .set(userMap)
+                .addOnSuccessListener(aVoid -> {
+                    Log.i(TAG, "User document created in Firestore for UID: " + userId);
+                    Toast.makeText(RegistrationActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(RegistrationActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to save user data to Firestore", e);
+                    Toast.makeText(RegistrationActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+
     }
 
 

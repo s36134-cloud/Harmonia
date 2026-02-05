@@ -10,6 +10,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,7 +36,7 @@ public class SearchSongActivity extends AppCompatActivity {
         songList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         adapter = new  SongsAdapter(songList);
         recyclerView.setAdapter(adapter);
@@ -50,7 +51,11 @@ public class SearchSongActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if (newText.length() > 1) {
+                if (newText.isEmpty()) {
+                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
+                    loadAllSongs();
+                } else if (newText.length() > 0) {
+                    // אם יש טקסט - תבצע חיפוש
                     searchInFirebase(newText);
                 }
                 return true;
@@ -83,6 +88,8 @@ public class SearchSongActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        loadAllSongs();
     }
     private void searchInFirebase(String searchText) {
 
@@ -128,6 +135,29 @@ public class SearchSongActivity extends AppCompatActivity {
                             .set(new java.util.HashMap<String, Object>() {{
                                 put("topSongs", songIds);
                             }}, com.google.firebase.firestore.SetOptions.merge());
+                });
+    }
+
+
+    private void loadAllSongs() {
+        db.collection("songs")
+                .orderBy("name") // מסדר אותם לפי א'-ב'
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        songList.clear();
+                        if (task.getResult() != null) {
+                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                                Song song = document.toObject(Song.class);
+                                song.setId(document.getId());
+                                songList.add(song);
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                        android.util.Log.d("SEARCH_DEBUG", "Loaded all " + songList.size() + " songs");
+                    } else {
+                        android.util.Log.e("SEARCH_DEBUG", "Error loading songs: ", task.getException());
+                    }
                 });
     }
 }

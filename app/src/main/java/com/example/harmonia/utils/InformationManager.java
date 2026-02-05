@@ -14,7 +14,6 @@ public class InformationManager {
 
     String userId;
 
-    FirebaseAuth auth;
     OnResultCallback onResultCallback;
     private static final String TAG = "InformationManager";
 
@@ -23,6 +22,8 @@ public class InformationManager {
         this.onResultCallback = onResultCallback;
         this.name = name;
         this.age = age;
+
+        saveUserToFirestore();
     }
     public interface OnResultCallback {
         void onResult(boolean success, String message);
@@ -30,6 +31,7 @@ public class InformationManager {
 
     private void saveUserToFirestore() {
 
+        userId = FirebaseAuth.getInstance().getUid();
 
         Log.d(TAG, "Saving user to Firestore. UID: " + userId + ", Nickname: " + name + ", Age: " + age);
         Map<String, Object> userMap = new HashMap<>();
