@@ -20,7 +20,7 @@
             android:name=".SearchBookActivity"
             android:exported="false" />
         <activity
-            android:name=".InformationActivity"
+            android:name=".GenreSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".CommunityActivity"
