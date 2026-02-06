@@ -1,29 +1,24 @@
 package com.example.harmonia;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.harmonia.utils.GenreSelectionManager;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.harmonia.utils.CheckBoxAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenreSelectionActivity extends AppCompatActivity {
-
-
-
-    private static final String TAG = "InformationActivity";
+    private RecyclerView recyclerView;
+    private CheckBoxAdapter adapter;
+    private List<CheckBox> genreList;
+    private com.google.firebase.firestore.FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,32 +30,34 @@ public class GenreSelectionActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button BackButton = findViewById(R.id.back_button);
-        BackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        genreList = new ArrayList<>();
 
-                Intent intent=new Intent(GenreSelectionActivity.this,ProfileActivity.class);
-                startActivity(intent);
-                finish();
+        recyclerView = findViewById(R.id.genresRecyclerView); // וודאי שזה ה-ID ב-XML
+        recyclerView.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(this));
 
-            }
+        adapter = new CheckBoxAdapter(genreList);
+        recyclerView.setAdapter(adapter);
 
-        });
-
-        Button saveButton = findViewById(R.id.save_button);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-
-            }
-
-        });
+        loadGenresFromFirestore(); // קריאה לפונקציה שתשלוף את הנתונים
     }
 
-
-
-
+    private void loadGenresFromFirestore() {
+        db.collection("bookGenres") // השם המעודכן של הקולקשיין
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    genreList.clear();
+                    for (com.google.firebase.firestore.QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        // אנחנו לוקחים את ה-ID של המסמך כי אמרת שהוא שם הז'אנר
+                        String genreName = document.getId();
+                        CheckBox genre = new CheckBox(genreName);
+                        genreList.add(genre);
+                    }
+                    adapter.notifyDataSetChanged();
+                })
+                .addOnFailureListener(e -> {
+                    android.util.Log.e("FirestoreError", "Error: " + e.getMessage());
+                });
     }
+
+}

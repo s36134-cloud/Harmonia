@@ -14,13 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
+            android:name=".GenreSelectionActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchSongActivity"
             android:exported="false" />
         <activity
             android:name=".SearchBookActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GenreSelectionActivity"
             android:exported="false" />
         <activity
             android:name=".CommunityActivity"
