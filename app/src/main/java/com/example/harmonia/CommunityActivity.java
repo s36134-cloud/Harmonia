@@ -2,6 +2,8 @@ package com.example.harmonia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +40,20 @@ public class CommunityActivity extends AppCompatActivity {
 
             overridePendingTransition(0, 0);
             return true;
+        });
+
+
+        Button addpostButton = findViewById(R.id.add_post);
+        addpostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(CommunityActivity.this, AddPostActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
         });
     }
 }

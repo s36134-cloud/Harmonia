@@ -69,7 +69,6 @@
             android:background="@drawable/rounded_input_background"
             android:hint="Email"
             app:boxBackgroundColor="@android:color/transparent"
-
             app:boxCornerRadiusBottomEnd="30dp"
             app:boxCornerRadiusBottomStart="30dp"
             app:boxCornerRadiusTopEnd="30dp"
