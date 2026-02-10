@@ -14,7 +14,7 @@ public class RegistrationManager {
     private static final int REGISTRATION_PHASE_DONE = 3;
     private int registrationPhase;
 
-    String name;
+    String nickname;
 
     int age;
     String email;
@@ -33,12 +33,12 @@ public class RegistrationManager {
 
     }
 
-    public void startRegistration(String name,int age,String email,
+    public void startRegistration(String nickname,int age,String email,
                                   String password,
                                   OnResultCallback onResultCallback)
     {
         this.onResultCallback = onResultCallback;
-        this.name = name;
+        this.nickname = nickname;
         this.age = age;
         this.email = email;
         this.password = password;

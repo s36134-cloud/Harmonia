@@ -1,6 +1,7 @@
 package com.example.harmonia;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -34,7 +35,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText ;
 
-    private EditText nameEditText;
+    private EditText nicknameEditText;
 
     private EditText ageEditText;
 
@@ -64,7 +65,7 @@ public class RegistrationActivity extends AppCompatActivity {
         });
         emailEditText=findViewById(R.id.email_edit_text);
         passwordEditText=findViewById(R.id.password_edit_text);
-        nameEditText=findViewById(R.id.et_name);
+        nicknameEditText=findViewById(R.id.et_nickname);
         ageEditText=findViewById(R.id.et_age);
 
         Button registerButton = findViewById(R.id.registar_button);
@@ -85,14 +86,14 @@ public class RegistrationActivity extends AppCompatActivity {
         createUser(
                 emailEditText.getText().toString(),
                 passwordEditText.getText().toString(),
-                nameEditText.getText().toString(),
+                nicknameEditText.getText().toString(),
                 Integer.valueOf(ageEditText.getText().toString())
         );
     }
 
     public void createUser(String email,
                            String password,
-                           String name,
+                           String nickname,
                            int age)
     {
         Log.d(TAG, "createUser: Creating user with Firebase Auth");
@@ -116,7 +117,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             if (user != null) {
                                 String userId = user.getUid();
                                 Log.i(TAG, "Firebase Auth registration successful. UID: " + userId);
-                                saveUserToFirestore(userId, name, age);
+                                saveUserToFirestore(userId, nickname, age);
 
                             } else {
                                 Log.e(TAG, "Firebase Auth registration succeeded but user is null");
@@ -130,11 +131,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
     }
 
-    private void saveUserToFirestore(String userId, String name, int age) {
+    private void saveUserToFirestore(String userId, String nickname, int age) {
 
-        Log.d(TAG, "Saving user to Firestore. UID: " + userId + ", Nickname: " + name + ", Age: " + age);
+        Log.d(TAG, "Saving user to Firestore. UID: " + userId + ", Nickname: " + nickname + ", Age: " + age);
         Map<String, Object> userMap = new HashMap<>();
-        userMap.put("name", name);
+        userMap.put("nickname", nickname);
         userMap.put("age", age);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -154,6 +155,15 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
 
     }
+
+    private void saveUserDataLocally(String nickname, int age){
+        SharedPreferences sharedPreferences = getSharedPreferences("userInfo", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("nickname", nickname);
+        editor.putInt("age", age);
+        editor.apply();
+    }
+
 
 
 }

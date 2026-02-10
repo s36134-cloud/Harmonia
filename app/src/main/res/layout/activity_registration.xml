@@ -68,7 +68,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/name_layout"
+                android:id="@+id/nickname_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
                 android:background="@drawable/rounded_input_background">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_name"
+                    android:id="@+id/et_nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@android:color/transparent"
