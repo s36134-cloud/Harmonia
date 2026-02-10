@@ -10,10 +10,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.harmonia.utils.PostsAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class CommunityActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
+    private PostsAdapter postsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,5 +60,16 @@ public class CommunityActivity extends AppCompatActivity {
             }
 
         });
+
+        initRecyclerView();
+
     }
+    private void initRecyclerView()
+    {
+        recyclerView = findViewById(R.id.recycler_posts);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        postsAdapter = new PostsAdapter();
+        recyclerView.setAdapter(postsAdapter);
+    }
+
 }

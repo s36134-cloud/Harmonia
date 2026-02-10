@@ -68,6 +68,25 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/searchViewbookorsong"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:iconifiedByDefault="false"
+                        app:queryHint="search book or song"
+                        app:queryBackground="@android:color/transparent"
+                        android:layoutDirection="ltr" />
+
+                </androidx.cardview.widget.CardView>
+
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_posts"
                     android:layout_width="match_parent"
