@@ -59,7 +59,21 @@
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:paddingBottom="15dp"
-                android:text="Add new post" />
+                android:text="Add new post"
+                />
+
+            <Button
+                android:id="@+id/btn_picture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:text="chooose picture"
+                android:textStyle="bold|italic"
+                android:backgroundTint="#E1BEE7"
+                android:paddingBottom="15dp"
+                />
+
 
 
             <com.google.android.material.textfield.TextInputLayout
