@@ -47,11 +47,6 @@ public class RegistrationManager {
     }
 
 
-    public interface OnResultCallback {
-        void onResult(boolean success, String message);
-    }
-
-
     private void phaseDone()
     {
         registrationPhase++;

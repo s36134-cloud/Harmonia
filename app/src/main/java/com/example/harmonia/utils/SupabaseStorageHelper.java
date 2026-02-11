@@ -44,6 +44,7 @@ public class SupabaseStorageHelper {
             Call<ResponseBody> call = service.uploadFile(
                     supabaseKey,
                     bearer,
+                    "true",
                     SUPABASE_BUCKET,
                     filePath,
                     body

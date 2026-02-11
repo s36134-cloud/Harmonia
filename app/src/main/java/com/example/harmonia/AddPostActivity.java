@@ -1,6 +1,7 @@
 package com.example.harmonia;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -50,6 +51,17 @@ public class AddPostActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sendpost();
+            }
+        });
+
+        Button booksongButton = findViewById(R.id.btn_picture);
+        booksongButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent=new Intent(AddPostActivity.this, SearchBookSongPicActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

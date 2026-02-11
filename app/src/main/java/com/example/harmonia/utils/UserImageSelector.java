@@ -30,13 +30,16 @@ public class UserImageSelector {
 
     private ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     private ActivityResultLauncher<Intent> cameraLauncher;
+
+    private OnResultCallback callback;
     private static final String TAG = "UserImageSelector";
 
-    public UserImageSelector(AppCompatActivity activity, ImageView imageView){
+    public UserImageSelector(AppCompatActivity activity, ImageView imageView, OnResultCallback callback){
         this.activity = activity;
         this.imageView = imageView;
         this.imageUri = null;
         this.imageBitmap = null;
+        this.callback = callback;
         initResultLaunchers();
     }
     public void showImageSourceDialog() {
@@ -88,8 +91,10 @@ public class UserImageSelector {
                         Log.d(TAG, "PhotoPicker: Selected URI: " + uri);
                         this.imageUri = uri;
                         imageView.setImageURI(uri);
+                        callback.onResult(true, "ok");
                     } else {
                         Log.d(TAG, "PhotoPicker: No media selected");
+                        callback.onResult(false, "PhotoPicker: No media selected");
                     }
                 });
 
@@ -106,11 +111,15 @@ public class UserImageSelector {
                             Log.d(TAG, "setting bitmap");
                             imageView.setImageBitmap(bitmap);
                             this.imageBitmap = bitmap;
+                            callback.onResult(true, "ok");
                         } else {
                             Log.e(TAG, "Error retrieving image from camera intent");
+                            callback.onResult(false, "Error retrieving image from camera intent");
                         }
                     } else {
                         Log.d(TAG, "Invalid code returned from camera intent");
+                        callback.onResult(false, "Invalid code returned from camera intent");
+
                     }
                 }
         );

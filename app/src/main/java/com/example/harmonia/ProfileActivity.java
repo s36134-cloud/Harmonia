@@ -2,6 +2,7 @@ package com.example.harmonia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.BooksAdapter;
+import com.example.harmonia.utils.OnResultCallback;
 import com.example.harmonia.utils.SongsAdapter;
+import com.example.harmonia.utils.SupabaseStorageHelper;
 import com.example.harmonia.utils.UserImageSelector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,10 +27,11 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements OnResultCallback {
     FirebaseAuth auth;
 
     private UserImageSelector userImageSelector;
@@ -40,6 +44,8 @@ public class ProfileActivity extends AppCompatActivity {
     private RecyclerView recyclerBooks;
     private BooksAdapter booksAdapter;
     private List<Book> topBooksList;
+
+    private static final String TAG = "ProfileActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +175,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         ImageView profilePictureImageView = findViewById(R.id.imageView);
-        userImageSelector = new UserImageSelector(this, profilePictureImageView);
+        userImageSelector = new UserImageSelector(this, profilePictureImageView, this);
         Button choosePictureButton = findViewById(R.id.btn_choose_picture);
         choosePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,5 +258,23 @@ public class ProfileActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "שגיאה בטעינת השירים: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
+    }
+
+    @Override
+    public void onResult(boolean success, String message) {
+        if(success)
+        {
+            File imageFile = userImageSelector.createImageFile();
+            String filePath = "images/profiles/" + auth.getUid() + ".jpg";
+
+            SupabaseStorageHelper.uploadPicture(imageFile, filePath, new SupabaseStorageHelper.OnResultCallback() {
+                @Override
+                public void onResult(boolean success, String url, String error) {
+                    Log.d(TAG, "onResult: success: " + success);
+                    Log.d(TAG, "onResult: url: " + url);
+                    Log.d(TAG, "onResult: error: " + error);
+                }
+            });
+        }
     }
 }
