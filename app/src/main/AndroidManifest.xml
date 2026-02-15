@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
+            android:name=".GenresActivity"
+            android:exported="false" />
+        <activity
             android:name=".SearchBookSongPicActivity"
             android:exported="false" />
         <activity

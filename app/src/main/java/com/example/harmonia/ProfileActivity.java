@@ -110,12 +110,12 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         // סרגל הניווט סוף
 
         //כפתור המידע התחלה
-        Button infoButton = findViewById(R.id.info_button);
-        infoButton.setOnClickListener(new View.OnClickListener() {
+        Button GenresButton = findViewById(R.id.Genres_button);
+        GenresButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent=new Intent(ProfileActivity.this, CommunityActivity.class);
+                Intent intent=new Intent(ProfileActivity.this, GenresActivity.class);
                 startActivity(intent);
                 finish();
 
