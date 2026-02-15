@@ -38,7 +38,7 @@ public class SearchSongActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new  SongsAdapter(songList);
+        adapter = new  SongsAdapter(songList, null);
         recyclerView.setAdapter(adapter);
 
         SearchView searchView = findViewById(R.id.searchViewsong);

@@ -70,10 +70,10 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
 
 // 3. אתחול הרשימה והאדאפטר
         topSongsList = new ArrayList<>();
-        songsAdapter = new SongsAdapter(topSongsList);
+        songsAdapter = new SongsAdapter(topSongsList,null);
 
         topBooksList = new ArrayList<>();
-        booksAdapter = new BooksAdapter(topBooksList);
+        booksAdapter = new BooksAdapter(topBooksList, null);
 
 
 // 4. הגדרת התצוגה לאופקית (Horizontal)

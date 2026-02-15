@@ -1,6 +1,8 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.harmonia.utils.BooksAdapter;
-import com.example.harmonia.utils.SongsAdapter;
+import com.example.harmonia.utils.CombinedMediaAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,13 +24,9 @@ public class SearchBookSongPicActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     private RecyclerView recyclerView;
-    private BooksAdapter booksAdapter;
-    private List<Book> bookList;
+    private CombinedMediaAdapter adapter;
+    private List<Object> mediaList; // רשימה משותפת לספרים ושירים
     private FirebaseFirestore db;
-
-    private SongsAdapter songsAdapter;
-    private List<Song> songList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,58 +35,35 @@ public class SearchBookSongPicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_book_song_pic);
 
         db = FirebaseFirestore.getInstance();
-        bookList = new ArrayList<>();
-        songList = new ArrayList<>();
-
+        mediaList = new ArrayList<>();
 
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerView = findViewById(R.id.searchResultsRecyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        booksAdapter = new BooksAdapter(bookList);
-        recyclerView.setAdapter(booksAdapter);
-
-        songsAdapter = new  SongsAdapter(songList);
-        recyclerView.setAdapter(songsAdapter);
-
-        SearchView searchViewbook = findViewById(R.id.searchViewbooksong);
-        searchViewbook.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchInFirebasebook(query);
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (newText.isEmpty()) {
-                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
-                    loadAllBooks();
-                } else if (newText.length() > 0) {
-                    // אם יש טקסט - תבצע חיפוש
-                    searchInFirebasebook(newText);
-                }
-                return true;
-            }
+        // אדפטר אחד לספרים ושירים
+        adapter = new CombinedMediaAdapter(mediaList, imageUrl -> {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("POST_IMAGE_URL", imageUrl);
+            setResult(RESULT_OK, resultIntent);
+            finish();
         });
+        recyclerView.setAdapter(adapter);
 
-        SearchView searchViewsong = findViewById(R.id.searchViewbooksong);
-        searchViewsong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // SearchView אחד
+        SearchView searchView = findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                searchInFirebasesong(query);
+                searchBooksAndSongs(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
-                    loadAllSongs();
-                } else if (newText.length() > 0) {
-                    // אם יש טקסט - תבצע חיפוש
-                    searchInFirebasesong(newText);
+                    loadAllBooksAndSongs();
+                } else {
+                    searchBooksAndSongs(newText);
                 }
                 return true;
             }
@@ -101,109 +75,88 @@ public class SearchBookSongPicActivity extends AppCompatActivity {
             return insets;
         });
 
-        loadAllBooks();
-        loadAllSongs();
-
+        loadAllBooksAndSongs();
     }
-    private void searchInFirebasebook(String searchText) {
 
+    private void searchBooksAndSongs(String searchText) {
+        mediaList.clear();
 
+        // חיפוש ספרים
         db.collection("books")
                 .orderBy("name")
                 .startAt(searchText)
                 .endAt(searchText + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        bookList.clear();
-                        if (task.getResult().isEmpty()) {
-                            android.util.Log.d("SEARCH_DEBUG", "No books found for: " + searchText);
-                        } else {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Book book = document.toObject(Book.class);
-                                book.setId(document.getId());
-                                bookList.add(book);
-                            }
-                            android.util.Log.d("SEARCH_DEBUG", "Found " + bookList.size() + " books!");
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Book book = document.toObject(Book.class);
+                            book.setId(document.getId());
+                            mediaList.add(book);
                         }
-                        booksAdapter.notifyDataSetChanged();
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error getting documents: ", task.getException());
+                        android.util.Log.d("SEARCH_DEBUG", "Found " + task.getResult().size() + " books");
+
+                        // חיפוש שירים אחרי הספרים
+                        searchSongs(searchText);
                     }
                 });
     }
 
-
-    private void searchInFirebasesong(String searchText) {
-
-
+    private void searchSongs(String searchText) {
         db.collection("songs")
                 .orderBy("name")
                 .startAt(searchText)
                 .endAt(searchText + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        songList.clear();
-                        if (task.getResult().isEmpty()) {
-                            android.util.Log.d("SEARCH_DEBUG", "No songs found for: " + searchText);
-                        } else {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Song song = document.toObject(Song.class);
-                                song.setId(document.getId());
-                                songList.add(song);
-                            }
-                            android.util.Log.d("SEARCH_DEBUG", "Found " + songList.size() + " songs!");
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Song song = document.toObject(Song.class);
+                            song.setId(document.getId());
+                            mediaList.add(song);
                         }
-                        songsAdapter.notifyDataSetChanged();
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error getting documents: ", task.getException());
+                        android.util.Log.d("SEARCH_DEBUG", "Found " + task.getResult().size() + " songs");
                     }
+                    adapter.notifyDataSetChanged();
                 });
     }
 
+    private void loadAllBooksAndSongs() {
+        mediaList.clear();
 
-    private void loadAllBooks() {
+        // טעינת ספרים
         db.collection("books")
-                .orderBy("name") // מסדר אותם לפי א'-ב'
+                .orderBy("name")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        bookList.clear();
-                        if (task.getResult() != null) {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Book book = document.toObject(Book.class);
-                                book.setId(document.getId());
-                                bookList.add(book);
-                            }
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Book book = document.toObject(Book.class);
+                            book.setId(document.getId());
+                            mediaList.add(book);
                         }
-                        booksAdapter.notifyDataSetChanged();
-                        android.util.Log.d("SEARCH_DEBUG", "Loaded all " + bookList.size() + " books");
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error loading books: ", task.getException());
+                        android.util.Log.d("SEARCH_DEBUG", "Loaded " + task.getResult().size() + " books");
+
+                        // טעינת שירים אחרי הספרים
+                        loadAllSongs();
                     }
                 });
     }
 
     private void loadAllSongs() {
         db.collection("songs")
-                .orderBy("name") // מסדר אותם לפי א'-ב'
+                .orderBy("name")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        songList.clear();
-                        if (task.getResult() != null) {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Song song = document.toObject(Song.class);
-                                song.setId(document.getId());
-                                songList.add(song);
-                            }
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Song song = document.toObject(Song.class);
+                            song.setId(document.getId());
+                            mediaList.add(song);
                         }
-                        songsAdapter.notifyDataSetChanged();
-                        android.util.Log.d("SEARCH_DEBUG", "Loaded all " + songList.size() + " songs");
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error loading songs: ", task.getException());
+                        android.util.Log.d("SEARCH_DEBUG", "Loaded " + task.getResult().size() + " songs");
                     }
+                    adapter.notifyDataSetChanged();
                 });
     }
 }

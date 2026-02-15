@@ -53,11 +53,12 @@
             <ImageView
                 android:id="@+id/iv_post_image"
                 android:layout_width="130dp"
-                android:layout_height="130dp"
-                android:scaleType="centerCrop"
+                android:layout_height="170dp"
                 android:layout_gravity="center"
+                android:contentDescription="Post Image Placeholder"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background"
-                android:contentDescription="Post Image Placeholder" />
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

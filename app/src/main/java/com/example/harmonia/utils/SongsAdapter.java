@@ -1,6 +1,6 @@
 package com.example.harmonia.utils;
 
-
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -8,52 +8,52 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Song;
 import com.example.harmonia.R;
 
-
-import  android.view.View;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
 
-    // הרשימה שתכיל את הספרים
     private List<Song> songList;
-
+    private OnSongClickListener listener;
     private static final String TAG = "SongsAdapter";
 
-    //   ככה  מקבלים את הרשימה מה-Activity
-    public SongsAdapter(List<Song> songList) {
-        this.songList = songList;
+    public interface OnSongClickListener {
+        void onSongClick(String imageUrl);
     }
 
-    // ה-ViewHolder: כאן  תופסים את הרכיבים מה-XML
+    public SongsAdapter(List<Song> songList, OnSongClickListener listener) {
+        this.songList = songList;
+        this.listener = listener;
+    }
+
     public static class SongViewHolder extends RecyclerView.ViewHolder {
-
-
         public TextView namesong;
         public TextView artist;
         public ImageView songimage;
         public TextView genresong;
 
-        private static final String TAG = "SongViewHolder";
-
-
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
-
             namesong = itemView.findViewById(R.id.namesong);
             artist = itemView.findViewById(R.id.artist);
             songimage = itemView.findViewById(R.id.songimage);
             genresong = itemView.findViewById(R.id.genresong);
-
         }
     }
-    // 1. קובע איזה XML משמש לכל שורה
+
     @NonNull
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -61,46 +61,59 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         return new SongViewHolder(view);
     }
 
-    // 2. מחבר את הנתונים מהספר הספציפי ל-ViewHolder
-    // 2. מחבר את הנתונים מהספר הספציפי ל-ViewHolder
     @Override
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
 
         Log.d(TAG, "onBindViewHolder: song: " + song.getName());
-        // 1. מילוי הטקסטים (שם הספר והסופר)
+
         holder.namesong.setText(song.getName());
         holder.artist.setText(song.getArtist());
-
-        // 2. מילוי שאר השדות (ז'אנר וגיל)
         holder.genresong.setText(song.getGenre());
 
-
-        // 3. בניית הכתובת המדויקת לסופאבייס
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
-        // 4. טעינת התמונה
-        com.bumptech.glide.Glide.with(holder.itemView.getContext())
-                .load(imageUrl)
+        // הסתר ונקה
+        holder.songimage.setVisibility(View.INVISIBLE);
+        holder.songimage.setImageDrawable(null);
 
+        Glide.with(holder.itemView.getContext())
+                .load(imageUrl)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model,
+                                                Target<Drawable> target, boolean isFirstResource) {
+                        holder.songimage.setVisibility(View.INVISIBLE);
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model,
+                                                   Target<Drawable> target, DataSource dataSource,
+                                                   boolean isFirstResource) {
+                        holder.songimage.setVisibility(View.VISIBLE);
+                        return false;
+                    }
+                })
                 .into(holder.songimage);
 
-        // 1. פידבק ויזואלי: אם השיר נבחר - נשנה לו את השקיפות או נוסיף רקע
         if (song.isSelectedsong()) {
-            holder.itemView.setAlpha(0.5f); // הופך את הכרטיסייה לקצת שקופה
-            holder.itemView.setBackgroundResource(android.R.color.white); // סתם דוגמה לרקע כחול
+            holder.itemView.setAlpha(0.5f);
+            holder.itemView.setBackgroundResource(android.R.color.white);
         } else {
-            holder.itemView.setAlpha(1.0f); // מצב רגיל
+            holder.itemView.setAlpha(1.0f);
             holder.itemView.setBackgroundResource(android.R.color.white);
         }
 
-        // 2. טיפול בלחיצה
         holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onSongClick(imageUrl);
+                return;
+            }
+
             if (song.isSelectedsong()) {
-                // אם הוא כבר נבחר - נבטל את הבחירה
                 song.setSelected(false);
             } else {
-                // אם הוא לא נבחר - נבדוק אם כבר הגענו ל-4
                 int count = 0;
                 for (Song s : songList) {
                     if (s.isSelectedsong()) count++;
@@ -113,7 +126,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 }
             }
 
-            // חשוב מאוד: מעדכן את הרשימה כדי שהעיצוב ישתנה מיד
             notifyItemChanged(position);
 
             boolean hasSelection = false;
@@ -129,16 +141,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
             }
         });
-
-
     }
 
-
-    // אומרת לאדאפטר כמה ספרים יש ברשימה
     @Override
     public int getItemCount() {
         return songList != null ? songList.size() : 0;
     }
 }
-
-

@@ -79,7 +79,7 @@
                     android:layout_height="111dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_image" />
+                    android:src="@drawable/pic_image" />
 
                 <Button
                     android:id="@+id/btn_choose_picture"
@@ -90,8 +90,20 @@
                     android:text="choose picture"
                     android:textStyle="bold|italic"
                     android:backgroundTint="#E1BEE7"
-                    />
 
+
+                    />
+                <TextView
+                    android:id="@+id/favoritesongs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CE93D8"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:paddingBottom="15dp"
+                    android:text="Your favorite songs"
+                    android:textSize="15sp"
+                    />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_songs"
@@ -114,10 +126,21 @@
                     app:iconTint="@android:color/white"
                     app:cornerRadius="20dp"
                     android:backgroundTint="#E1BEE7"
-                    android:padding="0dp" />
+                    android:padding="0dp"
+                    />
 
 
-
+                <TextView
+                    android:id="@+id/favoritebooks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CE93D8"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:paddingBottom="15dp"
+                    android:text="Your favorite books"
+                    android:textSize="15sp"
+                    />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_books"
                     android:layout_width="match_parent"

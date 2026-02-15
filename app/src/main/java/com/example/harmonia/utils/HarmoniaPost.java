@@ -7,15 +7,18 @@ public class HarmoniaPost {
     private String ownerUid;
     private String ownerNickname;
     private Timestamp createdAt;
+    private String imageUrl;
+
 
     public HarmoniaPost() {}
 
-    public HarmoniaPost(String title, String description, String ownerUid, String ownerNickname,Timestamp createdAt) {
+    public HarmoniaPost(String title, String description, String ownerUid, String ownerNickname, Timestamp createdAt, String imageUrl) {
         this.title = title;
         this.description = description;
         this.ownerUid = ownerUid;
         this.ownerNickname = ownerNickname;
         this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
     }
 
     public String getTitle() { return title; }
@@ -28,6 +31,6 @@ public class HarmoniaPost {
     public void setOwnerUid(String ownerUid) { this.ownerUid = ownerUid; }
     public String getOwnerNickname() { return ownerNickname; }
     public void setOwnerNickname(String ownerNickname) { this.ownerNickname = ownerNickname; }
-
-
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

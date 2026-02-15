@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.harmonia.R;
 import com.google.firebase.Timestamp;
 
@@ -45,55 +46,54 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         holder.ownerTextView.setText(post.getOwnerNickname());
 
         if (post.getCreatedAt() != null) {
-            holder.createdTextView.setText(post.getCreatedAt().toDate().toString());
+            holder.createdTextView.setText(timestampToString(post.getCreatedAt()));
         } else {
             holder.createdTextView.setText("No date");
         }
 
-        holder.createdTextView.setText(timestampToString(post.getCreatedAt()));
+        // טעינת התמונה מהפוסט
+        String imageUrl = post.getImageUrl();
+        Log.d(TAG, "Post #" + position + " imageUrl: " + imageUrl);
 
-        if (position % 2 == 0) {
-            // עבור מיקום זוגי (0, 2, 4...)
-            holder.postImageView.setImageResource(R.drawable.ic_launcher_foreground);
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            // אם יש תמונה - תציג אותה
+            holder.postImageView.setVisibility(View.VISIBLE);
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.transparent_placeholder) // 👈 שקוף!
+                    .error(R.drawable.ic_launcher_foreground)
+                    .into(holder.postImageView);
         } else {
-            // עבור מיקום אי-זוגי (1, 3, 5...)
-            holder.postImageView.setImageResource(R.drawable.ic_launcher_background);
+            // אם אין תמונה - תסתיר את ה-ImageView
+            holder.postImageView.setVisibility(View.GONE);
         }
-
     }
 
     @Override
     public int getItemCount() {
         int count = 0;
-        if(posts!= null){
-            count= posts.size();
+        if (posts != null) {
+            count = posts.size();
         }
-        Log.d(TAG, "getItemCount:returning" + count + " items.");
+        Log.d(TAG, "getItemCount: returning " + count + " items.");
         return count;
     }
+
     private String timestampToString(Timestamp timestamp) {
-
         Date messageDate = timestamp.toDate();
-
         boolean isToday = DateUtils.isToday(messageDate.getTime());
 
         SimpleDateFormat fmt;
         if (isToday) {
-            // only show hour:minute, e.g. "14:35"
             fmt = new SimpleDateFormat("HH:mm", Locale.getDefault());
         } else {
-            // only show date, e.g. "Aug 03, 2025"
             fmt = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
         }
 
         return fmt.format(messageDate);
     }
 
-
-
-
     static class PostViewHolder extends RecyclerView.ViewHolder {
-
         TextView titleTextView;
         TextView descriptionTextView;
         TextView createdTextView;
@@ -108,9 +108,5 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             createdTextView = itemView.findViewById(R.id.tv_post_created_at);
             postImageView = itemView.findViewById(R.id.iv_post_image);
         }
-
-
     }
 }
-
-

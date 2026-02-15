@@ -67,13 +67,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:text="chooose picture"
-                android:textStyle="bold|italic"
                 android:backgroundTint="#E1BEE7"
+                android:orientation="horizontal"
                 android:paddingBottom="15dp"
-                />
+                android:text="chooose picture"
+                android:textStyle="bold|italic" />
 
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="100dp"
+                android:layout_height="111dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                 />
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -135,6 +141,8 @@
                     android:paddingTop="10dp"
                     android:paddingBottom="180dp" />
             </com.google.android.material.textfield.TextInputLayout>
+
+
 
             <Button
                 android:id="@+id/btn_send"

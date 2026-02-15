@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:background="@drawable/background">
 
+    <!-- SearchView אחד לספרים ושירים -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,11 +16,11 @@
         app:cardElevation="2dp">
 
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewbooksong"
+            android:id="@+id/searchView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:iconifiedByDefault="false"
-            app:queryHint="search song or book"
+            app:queryHint="Search books or songs"
             app:queryBackground="@android:color/transparent"
             android:layoutDirection="ltr" />
 
@@ -32,21 +33,5 @@
         android:layout_weight="1"
         android:paddingHorizontal="8dp"
         android:clipToPadding="false" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDoneBooksSongs"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#E1BEE7"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
-        android:text="Done"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold|italic"
-        app:cornerRadius="30dp"
-        android:visibility="gone"/>
-
 
 </LinearLayout>

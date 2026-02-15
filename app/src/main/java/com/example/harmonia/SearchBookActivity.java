@@ -37,7 +37,7 @@ public class SearchBookActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new BooksAdapter(bookList);
+        adapter = new BooksAdapter(bookList, null);
         recyclerView.setAdapter(adapter);
 
         SearchView searchView = findViewById(R.id.searchViewbook);
