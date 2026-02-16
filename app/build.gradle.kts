@@ -48,5 +48,7 @@ dependencies {
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
     implementation (libs.okhttp)
+    implementation("androidx.lifecycle:lifecycle-process:2.8.3")
+
 
 }

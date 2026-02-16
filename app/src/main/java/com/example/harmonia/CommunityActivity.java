@@ -1,14 +1,20 @@
 package com.example.harmonia;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;  // 👈 הוספה
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,7 +35,15 @@ public class CommunityActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostsAdapter postsAdapter;
     private List<HarmoniaPost> posts;
-    private SearchView searchView;  // 👈 הוספה
+    private SearchView searchView;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d("FeedActivity", "Notification permission granted.");
+                } else {
+                    Log.d("FeedActivity", "Notification permission denied.");
+                }});
 
     private static final String TAG = "CommunityActivity";
 
@@ -89,6 +103,7 @@ public class CommunityActivity extends AppCompatActivity {
         posts = new ArrayList<>();
         initRecyclerView();
         loadPosts();
+        askNotificationPermission();
     }
 
     private void initRecyclerView() {
@@ -116,4 +131,23 @@ public class CommunityActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load posts: " + e.getMessage()));
     }
+
+
+    private void askNotificationPermission() {
+        // This is only necessary for API level 33 and above.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // TIRAMISU is API 33
+            // Check if the permission has already been granted.
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // Permission is already granted.
+                Log.d("FeedActivity", "Permission already granted.");
+            } else {
+                // Directly ask for the permission.
+                // The registered ActivityResultCallback gets the result of this request.
+                Log.d("FeedActivity", "Requesting notification permission.");
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
 }
