@@ -33,4 +33,20 @@ public class HarmoniaPost {
     public void setOwnerNickname(String ownerNickname) { this.ownerNickname = ownerNickname; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+
+    public boolean containsSearchQuery(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return true; // אם אין שאילתה, להציג הכל
+        }
+
+        String lowerQuery = query.toLowerCase().trim();
+
+        // חיפוש בכותרת, תיאור ושם הבעלים
+        boolean inTitle = title != null && title.toLowerCase().contains(lowerQuery);
+        boolean inDescription = description != null && description.toLowerCase().contains(lowerQuery);
+        boolean inOwner = ownerNickname != null && ownerNickname.toLowerCase().contains(lowerQuery);
+
+        return inTitle || inDescription || inOwner;
+    }
 }

@@ -66,6 +66,69 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <TextView
+                    android:id="@+id/booksrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CE93D8"
+                    android:textStyle="bold"
+                    android:text="Books"
+                    android:textSize="18sp"
+                    android:paddingBottom="8dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_booksrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="24dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
+                    android:layout_marginBottom="24dp"/>
+
+                <TextView
+                    android:id="@+id/songsrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CE93D8"
+                    android:textStyle="bold"
+                    android:text="Songs"
+                    android:textSize="18sp"
+                    android:paddingBottom="8dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_songsrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
+                    android:layout_marginBottom="24dp"/>
+
+
+                <TextView
+                    android:id="@+id/playlistrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CE93D8"
+                    android:textStyle="bold"
+                    android:text="playlists"
+                    android:textSize="18sp"
+                    android:paddingBottom="8dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_playlistrec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="24dp"/>
+
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>

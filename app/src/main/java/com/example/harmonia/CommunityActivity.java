@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;  // 👈 הוספה
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,6 +29,7 @@ public class CommunityActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private PostsAdapter postsAdapter;
     private List<HarmoniaPost> posts;
+    private SearchView searchView;  // 👈 הוספה
 
     private static final String TAG = "CommunityActivity";
 
@@ -44,7 +46,7 @@ public class CommunityActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_community);
         bottomNav.setItemIconTintList(null);
-        bottomNav.setSelectedItemId(R.id.nav_community); // מסמן את דף הקהילה
+        bottomNav.setSelectedItemId(R.id.nav_community);
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -58,28 +60,38 @@ public class CommunityActivity extends AppCompatActivity {
             return true;
         });
 
-
         Button addpostButton = findViewById(R.id.add_post);
         addpostButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent=new Intent(CommunityActivity.this, AddPostActivity.class);
+                Intent intent = new Intent(CommunityActivity.this, AddPostActivity.class);
                 startActivity(intent);
                 finish();
-
             }
-
         });
-        posts = new ArrayList<>();
 
+        // 👇 הוספת חיבור ל-SearchView
+        searchView = findViewById(R.id.searchViewbookorsong);
+        searchView.setOnClickListener(v -> {
+            // מעבר לעמוד החיפוש
+            Intent intent = new Intent(CommunityActivity.this, SearchCommActivity.class);
+            startActivity(intent);
+        });
+
+        // אפשר גם כשמתחילים להקליד
+        searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                Intent intent = new Intent(CommunityActivity.this, SearchCommActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        posts = new ArrayList<>();
         initRecyclerView();
         loadPosts();
-
     }
 
-    private void initRecyclerView()
-    {
+    private void initRecyclerView() {
         recyclerView = findViewById(R.id.recycler_posts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         postsAdapter = new PostsAdapter(posts);
@@ -104,6 +116,4 @@ public class CommunityActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load posts: " + e.getMessage()));
     }
-
-
 }
