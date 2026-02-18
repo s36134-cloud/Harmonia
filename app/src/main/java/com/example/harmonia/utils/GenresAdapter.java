@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder> {
-    private List<String> genreNames; // שמות הז'אנרים (ה-ID מ-Firebase)
+    private List<String> genreNames;
     private Set<Integer> checkedPositions;
     private OnGenreCheckedListener listener;
 

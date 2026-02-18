@@ -46,7 +46,6 @@ public class GenresActivity extends AppCompatActivity {
             return insets;
         });
 
-        // אתחול Firebase
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
@@ -57,19 +56,15 @@ public class GenresActivity extends AppCompatActivity {
             return;
         }
 
-        // אתחול RecyclerViews
         recyclerSongsGenres = findViewById(R.id.recycler_SongsGenres);
         recyclerBooksGenres = findViewById(R.id.recycler_BooksGenres);
 
-        // הגדרת Layout Manager - 2 עמודות
-        recyclerSongsGenres.setLayoutManager(new GridLayoutManager(this, 3));
-        recyclerBooksGenres.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerSongsGenres.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerBooksGenres.setLayoutManager(new GridLayoutManager(this, 2));
 
-        // אתחול רשימות
         songGenreNames = new ArrayList<>();
         bookGenreNames = new ArrayList<>();
 
-        // יצירת Adapters עם Listener לשמירה
         songsAdapter = new GenresAdapter(songGenreNames, new GenresAdapter.OnGenreCheckedListener() {
             @Override
             public void onGenreChecked(String genreName, boolean isChecked) {
@@ -87,19 +82,21 @@ public class GenresActivity extends AppCompatActivity {
         recyclerSongsGenres.setAdapter(songsAdapter);
         recyclerBooksGenres.setAdapter(booksAdapter);
 
-        // טעינת נתונים מ-Firebase
-        loadSongsGenres();
+
         loadBooksGenres();
+        loadSongsGenres();
     }
 
     private void loadSongsGenres() {
         db.collection("songGenres")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d("GenresActivity", "loadSongsGenres: got " + queryDocumentSnapshots.size() + " genres");
                     songGenreNames.clear();
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
                         // ה-ID של הדוקומנט הוא בעצם שם הז'אנר
                         songGenreNames.add(document.getId());
+                        Log.d("GenresActivity", "loadSongsGenres: added genre: " + document.getId());
                     }
                     songsAdapter.notifyDataSetChanged();
                     Log.d("GenresActivity", "Loaded " + songGenreNames.size() + " song genres");
@@ -128,17 +125,14 @@ public class GenresActivity extends AppCompatActivity {
                 });
     }
 
-    // שמירת הז'אנר שנבחר ב-Firebase תחת המשתמש
     private void saveGenreToFirebase(String field, String genreName, boolean isChecked) {
         if (userId == null) return;
 
         Map<String, Object> update = new HashMap<>();
 
         if (isChecked) {
-            // הוספת הז'אנר לרשימה
             update.put(field, FieldValue.arrayUnion(genreName));
         } else {
-            // הסרת הז'אנר מהרשימה
             update.put(field, FieldValue.arrayRemove(genreName));
         }
 

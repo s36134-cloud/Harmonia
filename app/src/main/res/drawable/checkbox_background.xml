@@ -5,5 +5,5 @@
     <corners android:radius="12dp"/>  <!-- פינות עגולות -->
     <stroke
         android:width="2dp"
-        android:color="#CE93D8"/>  <!-- מסגרת סגולה -->
+        android:color="#E1BEE7"/>  <!-- מסגרת סגולה -->
 </shape>
