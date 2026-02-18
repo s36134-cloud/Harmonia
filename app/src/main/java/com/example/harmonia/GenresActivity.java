@@ -2,9 +2,7 @@ package com.example.harmonia;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,11 +14,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.GenresAdapter;
-import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,8 +45,6 @@ public class GenresActivity extends AppCompatActivity {
             return insets;
         });
 
-
-
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
@@ -69,38 +64,44 @@ public class GenresActivity extends AppCompatActivity {
         songGenreNames = new ArrayList<>();
         bookGenreNames = new ArrayList<>();
 
-        songsAdapter = new GenresAdapter(songGenreNames, new GenresAdapter.OnGenreCheckedListener() {
-            @Override
-            public void onGenreChecked(String genreName, boolean isChecked) {
-                saveGenreToFirebase("selectedSongGenres", genreName, isChecked);
-            }
-        });
-
-        booksAdapter = new GenresAdapter(bookGenreNames, new GenresAdapter.OnGenreCheckedListener() {
-            @Override
-            public void onGenreChecked(String genreName, boolean isChecked) {
-                saveGenreToFirebase("selectedBookGenres", genreName, isChecked);
-            }
-        });
+        songsAdapter = new GenresAdapter(songGenreNames);
+        booksAdapter = new GenresAdapter(bookGenreNames);
 
         recyclerSongsGenres.setAdapter(songsAdapter);
         recyclerBooksGenres.setAdapter(booksAdapter);
 
-
-        loadBooksGenres();
         loadSongsGenres();
+        loadBooksGenres();
+
+        Button saveButton = findViewById(R.id.btn_save);
+        saveButton.setOnClickListener(v -> {
+            List<String> selectedSongs = songsAdapter.getCheckedGenres();
+            List<String> selectedBooks = booksAdapter.getCheckedGenres();
+
+            Map<String, Object> update = new HashMap<>();
+            update.put("selectedSongGenres", selectedSongs);
+            update.put("selectedBookGenres", selectedBooks);
+
+            db.collection("users").document(userId)
+                    .set(update, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("GenresActivity", "Error saving genres", e);
+                        Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
+                    });
+        });
     }
 
     private void loadSongsGenres() {
         db.collection("songGenres")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("GenresActivity", "loadSongsGenres: got " + queryDocumentSnapshots.size() + " genres");
                     songGenreNames.clear();
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        // ה-ID של הדוקומנט הוא בעצם שם הז'אנר
                         songGenreNames.add(document.getId());
-                        Log.d("GenresActivity", "loadSongsGenres: added genre: " + document.getId());
                     }
                     songsAdapter.notifyDataSetChanged();
                     Log.d("GenresActivity", "Loaded " + songGenreNames.size() + " song genres");
@@ -117,7 +118,6 @@ public class GenresActivity extends AppCompatActivity {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     bookGenreNames.clear();
                     for (DocumentSnapshot document : queryDocumentSnapshots) {
-                        // ה-ID של הדוקומנט הוא בעצם שם הז'אנר
                         bookGenreNames.add(document.getId());
                     }
                     booksAdapter.notifyDataSetChanged();
@@ -126,28 +126,6 @@ public class GenresActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Log.e("GenresActivity", "Error loading books genres", e);
                     Toast.makeText(this, "שגיאה בטעינת ז'אנרים של ספרים", Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void saveGenreToFirebase(String field, String genreName, boolean isChecked) {
-        if (userId == null) return;
-
-        Map<String, Object> update = new HashMap<>();
-
-        if (isChecked) {
-            update.put(field, FieldValue.arrayUnion(genreName));
-        } else {
-            update.put(field, FieldValue.arrayRemove(genreName));
-        }
-
-        db.collection("users").document(userId)
-                .set(update, com.google.firebase.firestore.SetOptions.merge())
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("GenresActivity", "Genre saved: " + genreName + " (" + isChecked + ")");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("GenresActivity", "Error saving genre", e);
-                    Toast.makeText(this, "שגיאה בשמירת בחירה", Toast.LENGTH_SHORT).show();
                 });
     }
 }

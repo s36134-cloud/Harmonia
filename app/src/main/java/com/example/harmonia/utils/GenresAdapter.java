@@ -10,23 +10,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.R;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder> {
+
     private List<String> genreNames;
     private Set<Integer> checkedPositions;
-    private OnGenreCheckedListener listener;
 
-    public interface OnGenreCheckedListener {
-        void onGenreChecked(String genreName, boolean isChecked);
-    }
-
-    public GenresAdapter(List<String> genreNames, OnGenreCheckedListener listener) {
+    public GenresAdapter(List<String> genreNames) {
         this.genreNames = genreNames;
         this.checkedPositions = new HashSet<>();
-        this.listener = listener;
     }
 
     @NonNull
@@ -40,7 +36,6 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String genreName = genreNames.get(position);
-
         holder.genreCheckBox.setText(genreName);
         holder.genreCheckBox.setChecked(checkedPositions.contains(position));
 
@@ -49,11 +44,6 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
                 checkedPositions.add(position);
             } else {
                 checkedPositions.remove(position);
-            }
-
-            // שמירה ב-Firebase
-            if (listener != null) {
-                listener.onGenreChecked(genreName, isChecked);
             }
         });
     }
@@ -64,9 +54,9 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     }
 
     public List<String> getCheckedGenres() {
-        List<String> checkedGenres = new java.util.ArrayList<>();
-        for (int position : checkedPositions) {
-            checkedGenres.add(genreNames.get(position));
+        List<String> checkedGenres = new ArrayList<>();
+        for (int pos : checkedPositions) {
+            checkedGenres.add(genreNames.get(pos));
         }
         return checkedGenres;
     }
