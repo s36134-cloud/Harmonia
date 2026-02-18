@@ -81,6 +81,20 @@
                     android:layout_height="wrap_content"
                     android:text="DATE"
                     android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/delete"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone"/>
+
+
+
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

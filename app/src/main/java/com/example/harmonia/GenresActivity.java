@@ -2,6 +2,8 @@ package com.example.harmonia;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -45,6 +47,8 @@ public class GenresActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
 
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();

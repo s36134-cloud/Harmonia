@@ -8,6 +8,7 @@ public class HarmoniaPost {
     private String ownerNickname;
     private Timestamp createdAt;
     private String imageUrl;
+    private String PostId;
 
 
     public HarmoniaPost() {}
@@ -33,6 +34,9 @@ public class HarmoniaPost {
     public void setOwnerNickname(String ownerNickname) { this.ownerNickname = ownerNickname; }
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String  getPostId() { return PostId; }
+    public void setPostId(String PostId) { this.PostId = PostId; }
 
 
     public boolean containsSearchQuery(String query) {

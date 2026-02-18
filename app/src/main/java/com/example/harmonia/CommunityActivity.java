@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.HarmoniaPost;
 import com.example.harmonia.utils.PostsAdapter;
+import com.example.harmonia.utils.UserImageSelector;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -73,6 +75,10 @@ public class CommunityActivity extends AppCompatActivity {
             overridePendingTransition(0, 0);
             return true;
         });
+
+
+
+
 
         Button addpostButton = findViewById(R.id.add_post);
         addpostButton.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +131,8 @@ public class CommunityActivity extends AppCompatActivity {
                     Log.d(TAG, "loadPosts succeeded: " + queryDocumentSnapshots.size() + " documents");
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         HarmoniaPost post = doc.toObject(HarmoniaPost.class);
+
+                        post.setPostId(doc.getId());
                         posts.add(post);
                     }
                     postsAdapter.notifyDataSetChanged();

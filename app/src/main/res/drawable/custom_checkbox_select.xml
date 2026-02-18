@@ -13,13 +13,13 @@
         </layer-list>
     </item>
 
-    <!-- כשלא מסומן - עיגול לבן עם מסגרת -->
+    <!-- כשלא מסומן - עיגול לבן -->
     <item>
         <layer-list>
             <item>
                 <shape android:shape="oval">
                     <solid android:color="#FFFFFF"/>
-                    <stroke android:width="2dp" android:color="#CE93D8"/>
+                    <stroke  android:color="#CE93D8"/>
                     <size android:width="20dp" android:height="20dp"
                         />
                 </shape>
