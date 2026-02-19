@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/genreCheckBox"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:background="@drawable/checkbox_background"
-    android:button="@drawable/custom_checkbox_select"
-    android:layoutDirection="rtl"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:maxLines="1"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
-    android:text="Genre"
-    android:textStyle="bold"
-    android:textColor="#FFFFFF"
-    android:textSize="14sp"
-    android:gravity="center_vertical"
-    />
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/heartIcon"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:src="@drawable/ic_heart"
+        android:tint="#CE93D8"
+         />
+
+    <TextView
+        android:id="@+id/genreText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rock"
+        android:textColor="#CE93D8"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginTop="4dp" />
+
+</LinearLayout>

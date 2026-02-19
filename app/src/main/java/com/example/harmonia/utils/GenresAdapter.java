@@ -3,7 +3,8 @@ package com.example.harmonia.utils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,21 +30,44 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.checkbox, parent, false);
+                .inflate(R.layout.checkbox, parent, false); // ← שני את השם אם קראת לו אחרת
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String genreName = genreNames.get(position);
-        holder.genreCheckBox.setText(genreName);
-        holder.genreCheckBox.setChecked(checkedPositions.contains(position));
+        holder.genreText.setText(genreName);
 
-        holder.genreCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                checkedPositions.add(position);
-            } else {
+        if (checkedPositions.contains(position)) {
+            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#CE93D8"));
+            holder.heartIcon.setScaleX(1f);
+            holder.heartIcon.setScaleY(1f);
+        } else {
+            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#" +
+                    "E1BEE7"));
+            holder.heartIcon.setScaleX(1f);
+            holder.heartIcon.setScaleY(1f);
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (checkedPositions.contains(position)) {
                 checkedPositions.remove(position);
+                notifyItemChanged(position);
+            } else {
+                checkedPositions.add(position);
+                holder.heartIcon.animate()
+                        .scaleX(1.4f)
+                        .scaleY(1.4f)
+                        .setDuration(200)
+                        .withEndAction(() ->
+                                holder.heartIcon.animate()
+                                        .scaleX(1f)
+                                        .scaleY(1f)
+                                        .setDuration(100)
+                                        .start()
+                        ).start();
+                holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#CE93D8"));
             }
         });
     }
@@ -62,11 +86,13 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox genreCheckBox;
+        ImageView heartIcon;
+        TextView genreText;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            genreCheckBox = itemView.findViewById(R.id.genreCheckBox);
+            heartIcon = itemView.findViewById(R.id.heartIcon);
+            genreText = itemView.findViewById(R.id.genreText);
         }
     }
 }

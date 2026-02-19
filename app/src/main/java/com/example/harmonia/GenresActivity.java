@@ -1,7 +1,9 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -58,8 +60,8 @@ public class GenresActivity extends AppCompatActivity {
         recyclerSongsGenres = findViewById(R.id.recycler_SongsGenres);
         recyclerBooksGenres = findViewById(R.id.recycler_BooksGenres);
 
-        recyclerSongsGenres.setLayoutManager(new GridLayoutManager(this, 2));
-        recyclerBooksGenres.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerSongsGenres.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerBooksGenres.setLayoutManager(new GridLayoutManager(this, 3));
 
         songGenreNames = new ArrayList<>();
         bookGenreNames = new ArrayList<>();
@@ -86,12 +88,26 @@ public class GenresActivity extends AppCompatActivity {
                     .set(update, SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show();
-                        finish();
+
                     })
                     .addOnFailureListener(e -> {
                         Log.e("GenresActivity", "Error saving genres", e);
                         Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
                     });
+        });
+
+        Button backtoprofileButton = findViewById(R.id.btn_back_to_profile);
+        backtoprofileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Intent intent=new Intent(GenresActivity.this,ProfileActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
         });
     }
 
