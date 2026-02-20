@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Profile"
-        android:textColor="#E1BEE7"
+        android:textColor="#FFFFFF"
         android:textSize="48sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
                     android:layout_height="111dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/pic_image" />
+                    android:src="@drawable/ic_account" />
 
                 <Button
                     android:id="@+id/btn_choose_picture"

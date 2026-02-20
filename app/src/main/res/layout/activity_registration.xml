@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="#F3E5F5" tools:context=".LoginActivity">
+    android:background="@drawable/background" tools:context=".LoginActivity">
 
     <TextView
         android:id="@+id/app_title"
@@ -15,7 +15,7 @@
         android:text="Harmonia"
         android:textStyle="bold|italic"
         android:textSize="48sp"
-        android:textColor="#CE93D8"
+        android:textColor="#FFFFFF"
         android:fontFamily="serif"
         android:layout_marginTop="60dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -58,11 +58,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="register"
+                android:text="Register"
                 android:textStyle="bold"
                 android:textSize="32sp"
                 android:textColor="#BA68C8"
-
+                android:layout_gravity="center"
                 android:layout_marginBottom="30dp"/>
 
 
@@ -221,7 +221,8 @@
                 android:textSize="16sp"
                 android:textColor="#BA68C8"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"
