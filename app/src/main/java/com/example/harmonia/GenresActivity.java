@@ -77,22 +77,47 @@ public class GenresActivity extends AppCompatActivity {
 
         Button saveButton = findViewById(R.id.btn_save);
         saveButton.setOnClickListener(v -> {
-            List<String> selectedSongs = songsAdapter.getCheckedGenres();
-            List<String> selectedBooks = booksAdapter.getCheckedGenres();
+            List<String> newSelectedSongs = songsAdapter.getCheckedGenres();
+            List<String> newSelectedBooks = booksAdapter.getCheckedGenres();
 
-            Map<String, Object> update = new HashMap<>();
-            update.put("selectedSongGenres", selectedSongs);
-            update.put("selectedBookGenres", selectedBooks);
-
+            // טוענים קודם את מה שכבר שמור ומוסיפים
             db.collection("users").document(userId)
-                    .set(update, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show();
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        List<String> existingSongs = new ArrayList<>();
+                        List<String> existingBooks = new ArrayList<>();
 
+                        if (documentSnapshot.exists()) {
+                            List<String> s = (List<String>) documentSnapshot.get("selectedSongGenres");
+                            List<String> b = (List<String>) documentSnapshot.get("selectedBookGenres");
+                            if (s != null) existingSongs.addAll(s);
+                            if (b != null) existingBooks.addAll(b);
+                        }
+
+                        // מוסיפים רק ז'אנרים שעדיין לא קיימים
+                        for (String genre : newSelectedSongs) {
+                            if (!existingSongs.contains(genre)) existingSongs.add(genre);
+                        }
+                        for (String genre : newSelectedBooks) {
+                            if (!existingBooks.contains(genre)) existingBooks.add(genre);
+                        }
+
+                        Map<String, Object> update = new HashMap<>();
+                        update.put("selectedSongGenres", existingSongs);
+                        update.put("selectedBookGenres", existingBooks);
+
+                        db.collection("users").document(userId)
+                                .set(update, SetOptions.merge())
+                                .addOnSuccessListener(aVoid ->
+                                        Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show())
+                                .addOnFailureListener(e -> {
+                                    Log.e("GenresActivity", "Error saving genres", e);
+                                    Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
+                                });
                     })
                     .addOnFailureListener(e -> {
-                        Log.e("GenresActivity", "Error saving genres", e);
-                        Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
+                        Log.e("GenresActivity", "Error loading existing genres", e);
+                        Toast.makeText(this, "Failed to load existing genres", Toast.LENGTH_SHORT).show();
                     });
         });
 

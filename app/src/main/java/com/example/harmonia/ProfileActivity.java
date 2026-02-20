@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -142,34 +143,26 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         //כפתור היציאה סוף
 
         //כפתור פתיחת החיפוש ספר התחלה
-        Button opensearchbooksButton = findViewById(R.id.btn_opensearchbooks);
+        CardView opensearchbooksButton = findViewById(R.id.btn_opensearchbooks); // כאן שינית מ-Button ל-CardView וזה מעולה!
         opensearchbooksButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent=new Intent(ProfileActivity.this, SearchBookActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, SearchBookActivity.class);
                 startActivity(intent);
-
-
             }
-
         });
         //כפתור פתיחת החיפוש ספר סוף
 
 
 
         //כפתור פתיחת החיפוש שיר התחלה
-        Button opensearchsongsButton = findViewById(R.id.btn_opensearchsongs);
+        CardView opensearchsongsButton = findViewById(R.id.btn_opensearchsongs); // כאן שינית מ-Button ל-CardView וזה מעולה!
         opensearchsongsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent=new Intent(ProfileActivity.this, SearchSongActivity.class);
+                Intent intent = new Intent(ProfileActivity.this, SearchSongActivity.class);
                 startActivity(intent);
-
-
             }
-
         });
         //כפתור פתיחת החיפוש שיר סוף
 

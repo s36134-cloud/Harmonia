@@ -75,6 +75,11 @@
                     android:text="Books"
                     android:textSize="18sp"
                     android:paddingBottom="8dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
+                    android:layout_marginBottom="24dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_booksrec"
@@ -98,6 +103,11 @@
                     android:text="Songs"
                     android:textSize="18sp"
                     android:paddingBottom="8dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
+                    android:layout_marginBottom="24dp"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_songsrec"
@@ -111,7 +121,6 @@
                     android:background="#F3E5F5"
                     android:layout_marginBottom="24dp"/>
 
-
                 <TextView
                     android:id="@+id/playlistrec"
                     android:layout_width="match_parent"
@@ -122,12 +131,25 @@
                     android:textSize="18sp"
                     android:paddingBottom="8dp"/>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
+                    android:layout_marginBottom="24dp"/>
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_playlistrec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="24dp"
+                    android:nestedScrollingEnabled="false" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3E5F5"
                     android:layout_marginBottom="24dp"/>
+
 
             </LinearLayout>
         </ScrollView>

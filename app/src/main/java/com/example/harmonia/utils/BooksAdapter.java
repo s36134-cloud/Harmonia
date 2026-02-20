@@ -3,6 +3,7 @@ package com.example.harmonia.utils;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +20,6 @@ import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Book;
 import com.example.harmonia.R;
 
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -37,6 +37,11 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     public BooksAdapter(List<Book> bookList, OnBookClickListener listener) {
         this.bookList = bookList;
         this.listener = listener;
+    }
+
+    public void updateList(List<Book> newList) {
+        this.bookList = newList;
+        notifyDataSetChanged();
     }
 
     public static class BookViewHolder extends RecyclerView.ViewHolder {
@@ -70,13 +75,11 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         holder.namebook.setText(book.getName());
         holder.author.setText(book.getAuthor());
         holder.genrebook.setText(book.getGenre());
-        holder.minage.setText(String.valueOf(book.getMinage()) + "+");
+        holder.minage.setText(book.getMinage() + "+");
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
+        Log.d(TAG, "image url: " + imageUrl);
 
-        Log.d(TAG, "onBindViewHolder: image url: " + imageUrl);
-
-        // הסתר ונקה
         holder.bookimage.setVisibility(View.INVISIBLE);
         holder.bookimage.setImageDrawable(null);
 
@@ -100,43 +103,38 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                 })
                 .into(holder.bookimage);
 
-        if (book.isSelectedbook()) {
-            holder.itemView.setAlpha(0.5f);
-            holder.itemView.setBackgroundResource(android.R.color.white);
-        } else {
-            holder.itemView.setAlpha(1.0f);
-            holder.itemView.setBackgroundResource(android.R.color.white);
-        }
+        holder.itemView.setAlpha(book.isSelectedbook() ? 0.5f : 1.0f);
 
         holder.itemView.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition(); // ✅ תוקן
+            if (currentPosition == RecyclerView.NO_ID) return;
+
             if (listener != null) {
                 listener.onBookClick(imageUrl);
                 return;
             }
 
-            if (book.isSelectedbook()) {
-                book.setSelected(false);
+            Book currentBook = bookList.get(currentPosition);
+
+            if (currentBook.isSelectedbook()) {
+                currentBook.setSelected(false);
             } else {
                 int count = 0;
                 for (Book b : bookList) {
                     if (b.isSelectedbook()) count++;
                 }
-
                 if (count < 5) {
-                    book.setSelected(true);
+                    currentBook.setSelected(true);
                 } else {
                     Toast.makeText(v.getContext(), "אפשר לבחור עד 4 ספרים בלבד", Toast.LENGTH_SHORT).show();
                 }
             }
 
-            notifyItemChanged(position);
+            notifyItemChanged(currentPosition); // ✅ תוקן
 
             boolean hasSelection = false;
             for (Book b : bookList) {
-                if (b.isSelectedbook()) {
-                    hasSelection = true;
-                    break;
-                }
+                if (b.isSelectedbook()) { hasSelection = true; break; }
             }
 
             View button = v.getRootView().findViewById(R.id.btnDoneBooks);

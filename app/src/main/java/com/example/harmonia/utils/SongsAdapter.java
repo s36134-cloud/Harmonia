@@ -3,6 +3,7 @@ package com.example.harmonia.utils;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,10 +17,9 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-import com.example.harmonia.Song;
 import com.example.harmonia.R;
+import com.example.harmonia.Song;
 
-import android.view.View;
 import android.widget.Toast;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     private static final String TAG = "SongsAdapter";
 
     public interface OnSongClickListener {
-        void onSongClick(String imageUrl);
+        void onSongClick(Song song);
     }
 
     public SongsAdapter(List<Song> songList, OnSongClickListener listener) {
@@ -39,11 +39,14 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         this.listener = listener;
     }
 
+    public void updateList(List<Song> newList) {
+        this.songList = newList;
+        notifyDataSetChanged();
+    }
+
     public static class SongViewHolder extends RecyclerView.ViewHolder {
-        public TextView namesong;
-        public TextView artist;
+        public TextView namesong, artist, genresong;
         public ImageView songimage;
-        public TextView genresong;
 
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,15 +68,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         Song song = songList.get(position);
 
-        Log.d(TAG, "onBindViewHolder: song: " + song.getName());
-
         holder.namesong.setText(song.getName());
         holder.artist.setText(song.getArtist());
         holder.genresong.setText(song.getGenre());
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
-        // הסתר ונקה
         holder.songimage.setVisibility(View.INVISIBLE);
         holder.songimage.setImageDrawable(null);
 
@@ -97,43 +97,40 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 })
                 .into(holder.songimage);
 
-        if (song.isSelectedsong()) {
-            holder.itemView.setAlpha(0.5f);
-            holder.itemView.setBackgroundResource(android.R.color.white);
-        } else {
-            holder.itemView.setAlpha(1.0f);
-            holder.itemView.setBackgroundResource(android.R.color.white);
-        }
+        holder.itemView.setAlpha(song.isSelectedsong() ? 0.5f : 1.0f);
 
         holder.itemView.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition == RecyclerView.NO_ID) return;
+
+            // אם יש listener (למשל מ-HomeActivity) — קורא לו ויוצא
             if (listener != null) {
-                listener.onSongClick(imageUrl);
+                listener.onSongClick(songList.get(currentPosition));
                 return;
             }
 
-            if (song.isSelectedsong()) {
-                song.setSelected(false);
+            // לוגיקת בחירה (לשימוש במסכים אחרים)
+            Song currentSong = songList.get(currentPosition);
+
+            if (currentSong.isSelectedsong()) {
+                currentSong.setSelected(false);
             } else {
                 int count = 0;
                 for (Song s : songList) {
                     if (s.isSelectedsong()) count++;
                 }
-
                 if (count < 5) {
-                    song.setSelected(true);
+                    currentSong.setSelected(true);
                 } else {
                     Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();
                 }
             }
 
-            notifyItemChanged(position);
+            notifyItemChanged(currentPosition);
 
             boolean hasSelection = false;
             for (Song s : songList) {
-                if (s.isSelectedsong()) {
-                    hasSelection = true;
-                    break;
-                }
+                if (s.isSelectedsong()) { hasSelection = true; break; }
             }
 
             View button = v.getRootView().findViewById(R.id.btnDoneSongs);
