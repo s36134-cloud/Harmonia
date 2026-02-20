@@ -73,7 +73,7 @@
                     android:layout_weight="1"
                     android:text="OWNER"
                     android:textSize="12sp"
-                    android:textStyle="italic" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_post_created_at"

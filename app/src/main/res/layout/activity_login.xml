@@ -58,7 +58,7 @@
             android:textColor="#BA68C8"
             android:textSize="32sp"
 
-            android:textStyle="bold|italic" />
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_layout"
@@ -128,7 +128,7 @@
             android:text="Log in"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:textStyle="bold|italic"
+            android:textStyle="bold"
             app:cornerRadius="30dp" />
 
         <TextView
@@ -140,7 +140,7 @@
             android:text="Don't have an account?"
             android:textColor="#BA68C8"
             android:textSize="16sp"
-            android:textStyle="bold|italic" />
+            android:textStyle="bold" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signup_button"
@@ -152,7 +152,7 @@
             android:text="Sign up"
             android:textColor="@android:color/white"
             android:textSize="18sp"
-            android:textStyle="bold|italic"
+            android:textStyle="bold"
             app:cornerRadius="30dp" />
     </LinearLayout>
     </androidx.cardview.widget.CardView>

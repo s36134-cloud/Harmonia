@@ -73,8 +73,9 @@
                     android:textColor="#CE93D8"
                     android:textStyle="bold"
                     android:text="Books"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -101,8 +102,9 @@
                     android:textColor="#CE93D8"
                     android:textStyle="bold"
                     android:text="Songs"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -128,8 +130,9 @@
                     android:textColor="#CE93D8"
                     android:textStyle="bold"
                     android:text="playlists"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"/>
 
                 <View
                     android:layout_width="match_parent"

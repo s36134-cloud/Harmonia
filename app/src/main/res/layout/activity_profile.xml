@@ -74,21 +74,22 @@
 
                 <Button
                     android:id="@+id/btn_choose_picture"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="16dp"
                     android:backgroundTint="#E1BEE7"
                     android:text="choose picture"
-                    android:textStyle="bold|italic" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Your favorite songs"
                     android:textColor="#CE93D8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -141,8 +142,9 @@
                     android:layout_height="wrap_content"
                     android:text="Your favorite books"
                     android:textColor="#CE93D8"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -192,20 +194,21 @@
 
                 <Button
                     android:id="@+id/Genres_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#E1BEE7"
                     android:text="Choose Genres"
-                    android:textStyle="bold|italic" />
+                    android:textStyle="bold"
+                    />
 
                 <Button
                     android:id="@+id/signout_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="290dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
                     android:backgroundTint="#E1BEE7"
                     android:text="sign out"
-                    android:textStyle="bold|italic" />
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </ScrollView>

@@ -55,8 +55,16 @@
                     android:textColor="#CE93D8"
                     android:textStyle="bold"
                     android:text="Songs Genres"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#F3E5F5" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_SongsGenres"
@@ -78,8 +86,15 @@
                     android:textColor="#CE93D8"
                     android:textStyle="bold"
                     android:text="Books Genres"
-                    android:textSize="18sp"
-                    android:paddingBottom="8dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"
+                    android:gravity="center"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#F3E5F5" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_BooksGenres"
@@ -87,22 +102,26 @@
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false" />
 
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:background="#F3E5F5" />
                 <Button
                     android:id="@+id/btn_save"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textStyle="bold|italic"
+                    android:textStyle="bold"
                     android:backgroundTint="#E1BEE7"
                     android:text="save" />
 
                 <Button
                     android:id="@+id/btn_back_to_profile"
-                    android:layout_width="wrap_content"
+                    android:layout_width="290dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textStyle="bold|italic"
+                    android:textStyle="bold"
                     android:backgroundTint="#E1BEE7"
                     android:text="Back to profile" />
 
