@@ -25,6 +25,10 @@ public class PlaylistsActivity extends AppCompatActivity implements SongsAdapter
     private FirebaseFirestore db;
     private SongsAdapter adapter;
     private List<Song> songList;
+    private RecyclerView recyclerView;
+    private SongsAdapter songsAdapter; // ודאי שיש לך אדפטר לשירים
+    private List<Song> songsList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

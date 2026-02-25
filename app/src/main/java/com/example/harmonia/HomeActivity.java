@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.BooksAdapter;
+import com.example.harmonia.utils.PlaylistsAdapter;
 import com.example.harmonia.utils.SongsAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,11 +26,15 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerBooks, recyclerSongs;
+    private RecyclerView recyclerBooks, recyclerSongs, recyclerPlaylists;
     private BooksAdapter booksAdapter;
     private SongsAdapter songsAdapter;
+    private PlaylistsAdapter playlistsAdapter;
+
     private List<Book> bookList = new ArrayList<>();
     private List<Song> songList = new ArrayList<>();
+
+    private List<Playlist> playlistsList = new ArrayList<>();
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
@@ -51,12 +56,17 @@ public class HomeActivity extends AppCompatActivity {
         // --- RecyclerViews ---
         recyclerBooks = findViewById(R.id.recycler_booksrec);
         recyclerSongs = findViewById(R.id.recycler_songsrec);
+        recyclerPlaylists = findViewById(R.id.recycler_playlistrec);
+
 
         // אופקי לספרים
         recyclerBooks.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         // אופקי לשירים
         recyclerSongs.setLayoutManager(
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+
+        recyclerPlaylists.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         booksAdapter = new BooksAdapter(bookList, imageUrl -> {
@@ -66,8 +76,13 @@ public class HomeActivity extends AppCompatActivity {
             // כאן תוכלי לפתוח מסך פרטי שיר אם תרצי
         });
 
+        playlistsAdapter = new PlaylistsAdapter(playlistsList, this ,playlist -> {
+        });
+
         recyclerBooks.setAdapter(booksAdapter);
         recyclerSongs.setAdapter(songsAdapter);
+        recyclerPlaylists.setAdapter(playlistsAdapter);
+
 
         // --- טוען המלצות לפי ז'אנרים ---
         loadRecommendations();
@@ -109,6 +124,7 @@ public class HomeActivity extends AppCompatActivity {
                     List<String> selectedSongGenres =
                             (List<String>) documentSnapshot.get("selectedSongGenres");
 
+
                     // שלב 2: שולפים ספרים לפי הז'אנרים
                     if (selectedBookGenres != null && !selectedBookGenres.isEmpty()) {
                         loadBooksByGenres(selectedBookGenres);
@@ -117,6 +133,10 @@ public class HomeActivity extends AppCompatActivity {
                     // שלב 3: שולפים שירים לפי הז'אנרים
                     if (selectedSongGenres != null && !selectedSongGenres.isEmpty()) {
                         loadSongsByGenres(selectedSongGenres);
+                    }
+
+                    if (selectedSongGenres != null && !selectedSongGenres.isEmpty()) {
+                        loadPlaylistsByGenres(selectedSongGenres);
                     }
                 })
                 .addOnFailureListener(e ->
@@ -162,4 +182,42 @@ public class HomeActivity extends AppCompatActivity {
                 .addOnFailureListener(e ->
                         Log.e("HomeActivity", "שגיאה בטעינת שירים", e));
     }
+
+    private void loadPlaylistsByGenres(List<String> genres) {
+        db.collection("playlists").get().addOnSuccessListener(querySnapshots -> {
+            playlistsList.clear();
+
+            for (DocumentSnapshot doc : querySnapshots) {
+                // ניסיון לקחת את השדה name, ואם הוא חסר - לקחת את ה-ID של המסמך
+                String pName = doc.getString("name");
+                if (pName == null) {
+                    pName = doc.getId(); // כאן הקסם: הוא יקח את "Rock Songs"
+                }
+
+                String playlistNameLower = pName.toLowerCase().trim();
+                boolean isMatch = false;
+
+                for (String genre : genres) {
+                    if (genre != null && playlistNameLower.contains(genre.toLowerCase().trim())) {
+                        isMatch = true;
+                        break;
+                    }
+                }
+
+                if (isMatch) {
+                    Playlist playlist = doc.toObject(Playlist.class);
+                    if (playlist == null) {
+                        playlist = new Playlist(); // יצירת אובייקט חדש אם toObject נכשל
+                    }
+                    playlist.setId(doc.getId());
+                    playlist.setName(pName);
+                    playlistsList.add(playlist);
+                }
+            }
+
+            Log.d("CHECK", "סוף חיפוש. נמצאו " + playlistsList.size() + " פלייליסטים.");
+            playlistsAdapter.updateList(playlistsList);
+        });
+    }
+
 }
