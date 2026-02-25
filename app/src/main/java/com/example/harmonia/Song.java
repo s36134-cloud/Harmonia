@@ -10,7 +10,9 @@ public class Song {
 
     private boolean isSelectedsong = false;
 
-
+    public Song() {
+        // חובה להשאיר ריק עבור Firestore
+    }
 
     // Getters & Setters
     public String getId() { return id; }

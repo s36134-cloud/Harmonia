@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Playlist;
-import com.example.harmonia.PlaylistsActivity;
+import com.example.harmonia.PlaylistActivity;
 import com.example.harmonia.R;
 
 import java.util.List;
@@ -96,12 +96,12 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
 
         holder.itemView.setOnClickListener(v -> {
+            // שליפת ה-ID ישירות מהאובייקט playlist ולא מה-UI
+            String id = playlist.getName(); // ב-Firestore שלך ה-Document ID הוא השם
 
-            TextView name = v.findViewById(R.id.textViewPlaylistNameItem);
-            Intent intent = new Intent(activity, PlaylistsActivity.class);
-            intent.putExtra("playlistId", name.getText());
+            Intent intent = new Intent(activity, PlaylistActivity.class);
+            intent.putExtra("playlistId", id);
             activity.startActivity(intent);
-
         });
     }
 

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
-            android:name=".PlaylistsActivity"
+            android:name=".PlaylistActivity"
             android:exported="false" />
 
         <service
