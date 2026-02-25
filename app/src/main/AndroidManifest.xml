@@ -3,11 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
-
 
     <application
         android:name=".utils.HarmoniaApplication"
@@ -19,10 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
+        <activity
+            android:name=".PlaylistsActivity"
+            android:exported="false" />
+
         <service
             android:name=".utils.PostsNotificationService"
-            android:foregroundServiceType="dataSync"
-            android:exported="false"/>
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
         <activity
             android:name=".SearchCommActivity"
