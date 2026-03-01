@@ -11,17 +11,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="25dp"
         app:cardElevation="2dp">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchViewsong"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:iconifiedByDefault="false"
-            app:queryHint="search song"
-            app:queryBackground="@android:color/transparent"
-            android:layoutDirection="ltr" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="12dp"
+            android:paddingEnd="8dp">
+
+            <ImageView
+                android:id="@+id/imageViewsongsearch"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_back"
+                android:contentDescription="Back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/searchViewsong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:iconifiedByDefault="false"
+                app:queryHint="search book"
+                app:queryBackground="@android:color/transparent"
+                android:layoutDirection="ltr" />
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 

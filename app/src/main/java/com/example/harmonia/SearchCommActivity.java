@@ -1,5 +1,6 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +51,18 @@ public class SearchCommActivity extends AppCompatActivity {
         setupRecyclerView();
         setupSearch();
         loadPosts();
+
+
+
+        ImageView backsongbookImageView = findViewById(R.id.imageViewbooksongsearch);
+        backsongbookImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(SearchCommActivity.this, CommunityActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initViews() {

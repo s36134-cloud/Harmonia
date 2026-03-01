@@ -89,6 +89,15 @@ public class AddPostActivity extends AppCompatActivity {
                 searchBookSongLauncher.launch(intent); // שימוש ב-launcher במקום startActivity
             }
         });
+
+        Button BacktocommunityButton = findViewById(R.id.Back_to_community);
+        BacktocommunityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddPostActivity.this, CommunityActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void sendpost() {

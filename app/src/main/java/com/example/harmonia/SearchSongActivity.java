@@ -1,7 +1,10 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -59,6 +62,16 @@ public class SearchSongActivity extends AppCompatActivity {
                     searchInFirebase(newText);
                 }
                 return true;
+            }
+        });
+
+        ImageView backsongImageView = findViewById(R.id.imageViewsongsearch);
+        backsongImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(SearchSongActivity.this, ProfileActivity.class);
+                startActivity(intent);
             }
         });
 
