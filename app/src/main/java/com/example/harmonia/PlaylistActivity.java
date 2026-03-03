@@ -1,7 +1,10 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistActivity extends AppCompatActivity implements SongsAdapter.OnSongClickListener {
-
+public class PlaylistActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private SongsAdapter songsAdapter;
     private List<Song> songsList = new ArrayList<>();
@@ -40,7 +42,7 @@ public class PlaylistActivity extends AppCompatActivity implements SongsAdapter.
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         // אתחול האדפטר
-        songsAdapter = new SongsAdapter(songsList, this);
+        songsAdapter = new SongsAdapter(songsList, null);
         recyclerView.setAdapter(songsAdapter);
 
         // 3. שליפת השירים במידה ויש ID
@@ -58,6 +60,17 @@ public class PlaylistActivity extends AppCompatActivity implements SongsAdapter.
             // עכשיו אפשר להמשיך לטעינת השירים
             fetchSongsFromPlaylist(playlistName);
         }
+
+
+        ImageView backhomeImageView = findViewById(R.id.backhome);
+        backhomeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                Intent intent = new Intent(PlaylistActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void fetchSongsFromPlaylist(String playlistId) {
@@ -101,9 +114,5 @@ public class PlaylistActivity extends AppCompatActivity implements SongsAdapter.
                 .addOnFailureListener(e -> Log.e("PlaylistActivity", "Error loading playlist", e));
     }
 
-    @Override
-    public void onSongClick(Song song) {
-        // כאן תוכלי להוסיף מעבר למסך הנגן (PlayerActivity) עם ה-song.getId()
-        Toast.makeText(this, "מנגן את: " + song.getName(), Toast.LENGTH_SHORT).show();
-    }
+
 }
