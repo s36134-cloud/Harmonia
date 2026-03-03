@@ -139,6 +139,8 @@ public class AddPostActivity extends AppCompatActivity {
         Log.d(TAG, "sendPost: done");
     }
 
+
+
     public HarmoniaPost createHarmoniaPost() {
         String title = titleEditText.getText().toString().trim();
         String description = descEditText.getText().toString().trim();
