@@ -7,18 +7,34 @@
     android:layout_height="match_parent"
     android:background="@drawable/background">
 
-    <TextView
-        android:id="@+id/mainTitle"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/titleCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Community"
-        android:textColor="#FFFFFF"
-        android:textSize="48sp"
-        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/mainTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingStart="45dp"
+            android:paddingEnd="45dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Community"
+            android:textColor="#CE93D8"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:fontFamily="serif" />
+    </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_community"
@@ -54,7 +70,7 @@
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_community"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainTitle">
+        app:layout_constraintTop_toBottomOf="@+id/titleCard">
 
         <ScrollView
             android:layout_width="match_parent"
