@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +20,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.R;
 import com.example.harmonia.Song;
-
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -72,8 +71,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         holder.artist.setText(song.getArtist());
         holder.genresong.setText(song.getGenre());
 
+        // בניית כתובת התמונה מה-Supabase
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
+        // אתחול התמונה לפני טעינה מחדש (מונע תמונות קופצות ב-Recycle)
         holder.songimage.setVisibility(View.INVISIBLE);
         holder.songimage.setImageDrawable(null);
 
@@ -97,47 +98,51 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 })
                 .into(holder.songimage);
 
+        // שינוי שקיפות השורה אם השיר נבחר
         holder.itemView.setAlpha(song.isSelectedsong() ? 0.5f : 1.0f);
 
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
-            if (currentPosition == RecyclerView.NO_ID) return;
+            if (currentPosition == RecyclerView.NO_POSITION) return;
 
-            // אם יש listener (למשל מ-HomeActivity) — קורא לו ויוצא
+            Song currentSong = songList.get(currentPosition);
+
+            // 1. אם קיים Listener חיצוני (כמו ב-HomeActivity), הוא מקבל את האירוע
             if (listener != null) {
-                listener.onSongClick(songList.get(currentPosition));
+                listener.onSongClick(currentSong);
                 return;
             }
 
-            // לוגיקת בחירה (לשימוש במסכים אחרים)
-            Song currentSong = songList.get(currentPosition);
+            // 2. לוגיקת בחירה מרובה (ללא הגבלת כמות)
+            // פשוט הופכים את מצב הבחירה (Inverting)
+            currentSong.setSelected(!currentSong.isSelectedsong());
 
-            if (currentSong.isSelectedsong()) {
-                currentSong.setSelected(false);
-            } else {
-                int count = 0;
-                for (Song s : songList) {
-                    if (s.isSelectedsong()) count++;
-                }
-                if (count < 5) {
-                    currentSong.setSelected(true);
-                } else {
-                    Toast.makeText(v.getContext(), "אפשר לבחור עד 4 שירים בלבד", Toast.LENGTH_SHORT).show();
-                }
-            }
-
+            // עדכון השורה הספציפית ב-UI
             notifyItemChanged(currentPosition);
 
-            boolean hasSelection = false;
-            for (Song s : songList) {
-                if (s.isSelectedsong()) { hasSelection = true; break; }
-            }
-
-            View button = v.getRootView().findViewById(R.id.btnDoneSongs);
-            if (button != null) {
-                button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
-            }
+            // 3. עדכון כפתור ה-"סיום" (btnDoneSongs) אם הוא קיים במסך
+            checkSelectionStatus(v);
         });
+    }
+
+    /**
+     * פונקציית עזר לבדיקה האם יש לפחות שיר אחד נבחר והצגת כפתור הסיום בהתאם
+     */
+    private void checkSelectionStatus(View v) {
+        boolean hasSelection = false;
+        if (songList != null) {
+            for (Song s : songList) {
+                if (s.isSelectedsong()) {
+                    hasSelection = true;
+                    break;
+                }
+            }
+        }
+
+        View button = v.getRootView().findViewById(R.id.btnDoneSongs);
+        if (button != null) {
+            button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override

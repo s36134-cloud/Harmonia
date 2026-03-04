@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +20,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Book;
 import com.example.harmonia.R;
-
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -78,8 +77,8 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         holder.minage.setText(book.getMinage() + "+");
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
-        Log.d(TAG, "image url: " + imageUrl);
 
+        // אתחול התמונה לפני טעינה למניעת כפילויות בגלילה
         holder.bookimage.setVisibility(View.INVISIBLE);
         holder.bookimage.setImageDrawable(null);
 
@@ -103,45 +102,51 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                 })
                 .into(holder.bookimage);
 
+        // עדכון השקיפות לפי מצב הבחירה
         holder.itemView.setAlpha(book.isSelectedbook() ? 0.5f : 1.0f);
 
         holder.itemView.setOnClickListener(v -> {
-            int currentPosition = holder.getAdapterPosition(); // ✅ תוקן
-            if (currentPosition == RecyclerView.NO_ID) return;
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition == RecyclerView.NO_POSITION) return;
 
+            // 1. אם יש Listener חיצוני, הוא מטפל בלחיצה
             if (listener != null) {
                 listener.onBookClick(imageUrl);
                 return;
             }
 
+            // 2. לוגיקת בחירה ללא הגבלה
             Book currentBook = bookList.get(currentPosition);
 
-            if (currentBook.isSelectedbook()) {
-                currentBook.setSelected(false);
-            } else {
-                int count = 0;
-                for (Book b : bookList) {
-                    if (b.isSelectedbook()) count++;
-                }
-                if (count < 5) {
-                    currentBook.setSelected(true);
-                } else {
-                    Toast.makeText(v.getContext(), "אפשר לבחור עד 4 ספרים בלבד", Toast.LENGTH_SHORT).show();
-                }
-            }
+            // הפיכת מצב הבחירה
+            currentBook.setSelected(!currentBook.isSelectedbook());
 
-            notifyItemChanged(currentPosition); // ✅ תוקן
+            // עדכון השורה הספציפית
+            notifyItemChanged(currentPosition);
 
-            boolean hasSelection = false;
-            for (Book b : bookList) {
-                if (b.isSelectedbook()) { hasSelection = true; break; }
-            }
-
-            View button = v.getRootView().findViewById(R.id.btnDoneBooks);
-            if (button != null) {
-                button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
-            }
+            // 3. עדכון נראות כפתור הסיום
+            updateDoneButtonVisibility(v);
         });
+    }
+
+    /**
+     * בודק אם יש לפחות ספר אחד נבחר ומציג/מסתיר את כפתור הסיום
+     */
+    private void updateDoneButtonVisibility(View v) {
+        boolean hasSelection = false;
+        if (bookList != null) {
+            for (Book b : bookList) {
+                if (b.isSelectedbook()) {
+                    hasSelection = true;
+                    break;
+                }
+            }
+        }
+
+        View button = v.getRootView().findViewById(R.id.btnDoneBooks);
+        if (button != null) {
+            button.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override

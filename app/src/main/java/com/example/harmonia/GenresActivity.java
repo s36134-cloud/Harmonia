@@ -74,8 +74,8 @@ public class GenresActivity extends AppCompatActivity {
 
         loadSongsGenres();
         loadBooksGenres();
-
         Button saveButton = findViewById(R.id.btn_save);
+        saveButton.setVisibility(android.view.View.GONE);
         saveButton.setOnClickListener(v -> {
             List<String> newSelectedSongs = songsAdapter.getCheckedGenres();
             List<String> newSelectedBooks = booksAdapter.getCheckedGenres();

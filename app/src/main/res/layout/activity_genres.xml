@@ -128,7 +128,8 @@
                     android:layout_gravity="center"
                     android:textStyle="bold"
                     android:backgroundTint="#E1BEE7"
-                    android:text="save" />
+                    android:text="save"
+                    android:visibility="gone"/>
 
                 <Button
                     android:id="@+id/btn_back_to_profile"
