@@ -5,12 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.harmonia.R;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,16 +18,24 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     private List<String> genreNames;
     private Set<Integer> checkedPositions;
 
-    public GenresAdapter(List<String> genreNames) {
+    // --- הוספה: ממשק שמאפשר ל-Activity לדעת על לחיצות ---
+    public interface OnGenreClickListener {
+        void onGenreClick();
+    }
+    private OnGenreClickListener listener;
+
+    // בנאי מעודכן שמקבל את הליסנר
+    public GenresAdapter(List<String> genreNames, OnGenreClickListener listener) {
         this.genreNames = genreNames;
         this.checkedPositions = new HashSet<>();
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.checkbox, parent, false); // ← שני את השם אם קראת לו אחרת
+                .inflate(R.layout.checkbox, parent, false);
         return new ViewHolder(view);
     }
 
@@ -39,23 +44,19 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
         String genreName = genreNames.get(position);
         holder.genreText.setText(genreName);
 
+        // עיצוב לפי מצב בחירה
         if (checkedPositions.contains(position)) {
             holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#CE93D8"));
-            holder.heartIcon.setScaleX(1f);
-            holder.heartIcon.setScaleY(1f);
         } else {
-            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#" +
-                    "E1BEE7"));
-            holder.heartIcon.setScaleX(1f);
-            holder.heartIcon.setScaleY(1f);
+            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#E1BEE7"));
         }
 
         holder.itemView.setOnClickListener(v -> {
             if (checkedPositions.contains(position)) {
                 checkedPositions.remove(position);
-                notifyItemChanged(position);
             } else {
                 checkedPositions.add(position);
+                // האנימציה היפה שלך
                 holder.heartIcon.animate()
                         .scaleX(1.4f)
                         .scaleY(1.4f)
@@ -67,7 +68,13 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
                                         .setDuration(100)
                                         .start()
                         ).start();
-                holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#CE93D8"));
+            }
+
+            notifyItemChanged(position);
+
+            // --- הפעלת הליסנר כדי לעדכן את ה-Activity ---
+            if (listener != null) {
+                listener.onGenreClick();
             }
         });
     }

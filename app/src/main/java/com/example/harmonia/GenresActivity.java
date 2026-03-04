@@ -35,12 +35,14 @@ public class GenresActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private String userId;
+    private Button saveButton; // הפכנו אותו לגלובלי
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_genres);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -57,6 +59,10 @@ public class GenresActivity extends AppCompatActivity {
             return;
         }
 
+        // זיהוי הכפתור והגדרתו כנסתר בהתחלה
+        saveButton = findViewById(R.id.btn_save);
+        saveButton.setVisibility(View.GONE);
+
         recyclerSongsGenres = findViewById(R.id.recycler_SongsGenres);
         recyclerBooksGenres = findViewById(R.id.recycler_BooksGenres);
 
@@ -66,74 +72,80 @@ public class GenresActivity extends AppCompatActivity {
         songGenreNames = new ArrayList<>();
         bookGenreNames = new ArrayList<>();
 
-        songsAdapter = new GenresAdapter(songGenreNames);
-        booksAdapter = new GenresAdapter(bookGenreNames);
+        // יצירת האדפטרים עם ה-Listener החדש
+        songsAdapter = new GenresAdapter(songGenreNames, this::updateSaveButtonVisibility);
+        booksAdapter = new GenresAdapter(bookGenreNames, this::updateSaveButtonVisibility);
 
         recyclerSongsGenres.setAdapter(songsAdapter);
         recyclerBooksGenres.setAdapter(booksAdapter);
 
         loadSongsGenres();
         loadBooksGenres();
-        Button saveButton = findViewById(R.id.btn_save);
-        saveButton.setVisibility(android.view.View.GONE);
-        saveButton.setOnClickListener(v -> {
-            List<String> newSelectedSongs = songsAdapter.getCheckedGenres();
-            List<String> newSelectedBooks = booksAdapter.getCheckedGenres();
 
-            // טוענים קודם את מה שכבר שמור ומוסיפים
-            db.collection("users").document(userId)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        List<String> existingSongs = new ArrayList<>();
-                        List<String> existingBooks = new ArrayList<>();
-
-                        if (documentSnapshot.exists()) {
-                            List<String> s = (List<String>) documentSnapshot.get("selectedSongGenres");
-                            List<String> b = (List<String>) documentSnapshot.get("selectedBookGenres");
-                            if (s != null) existingSongs.addAll(s);
-                            if (b != null) existingBooks.addAll(b);
-                        }
-
-                        // מוסיפים רק ז'אנרים שעדיין לא קיימים
-                        for (String genre : newSelectedSongs) {
-                            if (!existingSongs.contains(genre)) existingSongs.add(genre);
-                        }
-                        for (String genre : newSelectedBooks) {
-                            if (!existingBooks.contains(genre)) existingBooks.add(genre);
-                        }
-
-                        Map<String, Object> update = new HashMap<>();
-                        update.put("selectedSongGenres", existingSongs);
-                        update.put("selectedBookGenres", existingBooks);
-
-                        db.collection("users").document(userId)
-                                .set(update, SetOptions.merge())
-                                .addOnSuccessListener(aVoid ->
-                                        Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show())
-                                .addOnFailureListener(e -> {
-                                    Log.e("GenresActivity", "Error saving genres", e);
-                                    Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
-                                });
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("GenresActivity", "Error loading existing genres", e);
-                        Toast.makeText(this, "Failed to load existing genres", Toast.LENGTH_SHORT).show();
-                    });
-        });
+        saveButton.setOnClickListener(v -> saveSelectedGenres());
 
         Button backtoprofileButton = findViewById(R.id.btn_back_to_profile);
-        backtoprofileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent=new Intent(GenresActivity.this,ProfileActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-
+        backtoprofileButton.setOnClickListener(v -> {
+            Intent intent = new Intent(GenresActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            finish();
         });
+    }
+
+    // פונקציה שבודקת אם להציג או להסתיר את הכפתור
+    private void updateSaveButtonVisibility() {
+        // בודק אם יש לפחות בחירה אחת באחד משני האדפטרים
+        boolean hasSelection = !songsAdapter.getCheckedGenres().isEmpty() ||
+                !booksAdapter.getCheckedGenres().isEmpty();
+
+        if (hasSelection) {
+            saveButton.setVisibility(View.VISIBLE);
+        } else {
+            saveButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void saveSelectedGenres() {
+        List<String> newSelectedSongs = songsAdapter.getCheckedGenres();
+        List<String> newSelectedBooks = booksAdapter.getCheckedGenres();
+
+        db.collection("users").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    List<String> existingSongs = new ArrayList<>();
+                    List<String> existingBooks = new ArrayList<>();
+
+                    if (documentSnapshot.exists()) {
+                        List<String> s = (List<String>) documentSnapshot.get("selectedSongGenres");
+                        List<String> b = (List<String>) documentSnapshot.get("selectedBookGenres");
+                        if (s != null) existingSongs.addAll(s);
+                        if (b != null) existingBooks.addAll(b);
+                    }
+
+                    for (String genre : newSelectedSongs) {
+                        if (!existingSongs.contains(genre)) existingSongs.add(genre);
+                    }
+                    for (String genre : newSelectedBooks) {
+                        if (!existingBooks.contains(genre)) existingBooks.add(genre);
+                    }
+
+                    Map<String, Object> update = new HashMap<>();
+                    update.put("selectedSongGenres", existingSongs);
+                    update.put("selectedBookGenres", existingBooks);
+
+                    db.collection("users").document(userId)
+                            .set(update, SetOptions.merge())
+                            .addOnSuccessListener(aVoid ->
+                                    Toast.makeText(this, "Saved successfully✓", Toast.LENGTH_SHORT).show())
+                            .addOnFailureListener(e -> {
+                                Log.e("GenresActivity", "Error saving genres", e);
+                                Toast.makeText(this, "Failed to save", Toast.LENGTH_SHORT).show();
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("GenresActivity", "Error loading existing genres", e);
+                    Toast.makeText(this, "Failed to load existing genres", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void loadSongsGenres() {
@@ -145,12 +157,8 @@ public class GenresActivity extends AppCompatActivity {
                         songGenreNames.add(document.getId());
                     }
                     songsAdapter.notifyDataSetChanged();
-                    Log.d("GenresActivity", "Loaded " + songGenreNames.size() + " song genres");
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("GenresActivity", "Error loading songs genres", e);
-                    Toast.makeText(this, "שגיאה בטעינת ז'אנרים של שירים", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Log.e("GenresActivity", "Error loading songs genres", e));
     }
 
     private void loadBooksGenres() {
@@ -162,11 +170,7 @@ public class GenresActivity extends AppCompatActivity {
                         bookGenreNames.add(document.getId());
                     }
                     booksAdapter.notifyDataSetChanged();
-                    Log.d("GenresActivity", "Loaded " + bookGenreNames.size() + " book genres");
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("GenresActivity", "Error loading books genres", e);
-                    Toast.makeText(this, "שגיאה בטעינת ז'אנרים של ספרים", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> Log.e("GenresActivity", "Error loading books genres", e));
     }
 }
