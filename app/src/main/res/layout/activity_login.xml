@@ -33,8 +33,7 @@
             android:text="Harmonia"
             android:textColor="#CE93D8"
             android:textSize="36sp"
-            android:textStyle="bold|italic"
-            android:fontFamily="serif" />
+            android:fontFamily="@font/myfont4" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -74,6 +73,9 @@
                 android:textSize="32sp"
 
                 android:textStyle="bold" />
+
+
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email_layout"
