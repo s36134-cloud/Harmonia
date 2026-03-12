@@ -2,6 +2,8 @@ package com.example.harmonia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class MessagesActivity extends AppCompatActivity {
 
@@ -38,6 +44,38 @@ public class MessagesActivity extends AppCompatActivity {
 
             overridePendingTransition(0, 0);
             return true;
+        });
+
+        // הגדרת הכפתור
+        Button startconvButton = findViewById(R.id.start_conv_button); // ודאי שזה ה-ID של הכפתור שלך
+
+        startconvButton.setOnClickListener(v -> {
+            // השגת ה-ID של המשתמש המחובר
+            String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+            // שליפת הנתונים של המשתמש הנוכחי כדי להעביר ל-AI
+            FirebaseFirestore.getInstance().collection("users").document(currentUserId)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            // חילוץ הרשימות של הז'אנרים (ודאי שהשמות ב-Firestore תואמים לאלו)
+                            ArrayList<String> musicGenres = (ArrayList<String>) documentSnapshot.get("musicGenres");
+                            ArrayList<String> bookGenres = (ArrayList<String>) documentSnapshot.get("bookGenres");
+                            String userName = documentSnapshot.getString("displayName");
+
+                            // מעבר לעמוד החיפוש עם הנתונים בתוך ה-Intent
+                            Intent intent = new Intent(MessagesActivity.this, SearchChatActivity.class);
+                            intent.putStringArrayListExtra("myMusic", musicGenres);
+                            intent.putStringArrayListExtra("myBooks", bookGenres);
+                            intent.putExtra("myName", userName);
+
+                            startActivity(intent);
+                            // לא חייב לעשות finish() אם את רוצה שהמשתמש יוכל לחזור אחורה בקלות
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(MessagesActivity.this, "שגיאה בטעינת נתונים", Toast.LENGTH_SHORT).show();
+                    });
         });
     }
 }
