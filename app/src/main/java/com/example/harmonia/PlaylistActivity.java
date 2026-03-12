@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.SongsAdapter;
@@ -21,7 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaylistActivity extends AppCompatActivity{
+public class PlaylistActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SongsAdapter songsAdapter;
     private List<Song> songsList = new ArrayList<>();
@@ -34,42 +33,27 @@ public class PlaylistActivity extends AppCompatActivity{
 
         db = FirebaseFirestore.getInstance();
 
-        // 1. קבלת ה-ID (למשל "Love Songs") שנשלח מה-Adapter
         String playlistId = getIntent().getStringExtra("playlistId");
 
-        // 2. הגדרת ה-RecyclerView
         recyclerView = findViewById(R.id.recyclerViewSongsPlaylist);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        // אתחול האדפטר
         songsAdapter = new SongsAdapter(songsList, null);
         recyclerView.setAdapter(songsAdapter);
 
-        // 3. שליפת השירים במידה ויש ID
+        TextView playlistTitle = findViewById(R.id.title);
+
         if (playlistId != null) {
+            playlistTitle.setText(playlistId);
             fetchSongsFromPlaylist(playlistId);
         } else {
             Toast.makeText(this, "שגיאה: לא נמצא מזהה פלייליסט", Toast.LENGTH_SHORT).show();
         }
 
-        TextView playlistTitle = findViewById(R.id.title);
-        String playlistName = getIntent().getStringExtra("playlistId");
-
-        if (playlistName != null) {
-            playlistTitle.setText(playlistName);
-            // עכשיו אפשר להמשיך לטעינת השירים
-            fetchSongsFromPlaylist(playlistName);
-        }
-
-
         ImageView backhomeImageView = findViewById(R.id.backhome);
-        backhomeImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(PlaylistActivity.this, HomeActivity.class);
-                startActivity(intent);
-            }
+        backhomeImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(PlaylistActivity.this, HomeActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -80,33 +64,15 @@ public class PlaylistActivity extends AppCompatActivity{
                         List<String> rawSongIds = (List<String>) documentSnapshot.get("songs");
 
                         if (rawSongIds != null && !rawSongIds.isEmpty()) {
-                            // --- התיקון: סינון IDs ריקים כדי למנוע קריסה ---
                             List<String> cleanSongIds = new ArrayList<>();
                             for (String id : rawSongIds) {
                                 if (id != null && !id.trim().isEmpty()) {
-                                    cleanSongIds.add(id);
+                                    cleanSongIds.add(id.trim());
                                 }
                             }
 
-                            // בדיקה נוספת שהרשימה לא התרוקנה אחרי הסינון
                             if (!cleanSongIds.isEmpty()) {
-                                db.collection("songs")
-                                        .whereIn(FieldPath.documentId(), cleanSongIds)
-                                        .get()
-                                        .addOnSuccessListener(querySnapshot -> {
-                                            songsList.clear();
-                                            for (DocumentSnapshot doc : querySnapshot) {
-                                                Song song = doc.toObject(Song.class);
-                                                if (song != null) {
-                                                    song.setId(doc.getId());
-                                                    songsList.add(song);
-                                                }
-                                            }
-                                            songsAdapter.notifyDataSetChanged();
-                                        })
-                                        .addOnFailureListener(e -> Log.e("PlaylistActivity", "Error loading songs", e));
-                            } else {
-                                Log.d("PlaylistActivity", "No valid song IDs found after cleaning");
+                                fetchSongsInBatches(cleanSongIds);
                             }
                         }
                     }
@@ -114,5 +80,34 @@ public class PlaylistActivity extends AppCompatActivity{
                 .addOnFailureListener(e -> Log.e("PlaylistActivity", "Error loading playlist", e));
     }
 
+    // פיצול לחלקים של 30 בגלל מגבלת Firestore
+    private void fetchSongsInBatches(List<String> songIds) {
+        int batchSize = 30;
+        int totalBatches = (int) Math.ceil((double) songIds.size() / batchSize);
+        final int[] completedBatches = {0};
 
+        songsList.clear();
+
+        for (int i = 0; i < songIds.size(); i += batchSize) {
+            List<String> batch = songIds.subList(i, Math.min(i + batchSize, songIds.size()));
+
+            db.collection("songs")
+                    .whereIn(FieldPath.documentId(), batch)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        for (DocumentSnapshot doc : querySnapshot) {
+                            Song song = doc.toObject(Song.class);
+                            if (song != null) {
+                                song.setId(doc.getId());
+                                songsList.add(song);
+                            }
+                        }
+                        completedBatches[0]++;
+                        if (completedBatches[0] == totalBatches) {
+                            songsAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .addOnFailureListener(e -> Log.e("PlaylistActivity", "Error loading songs batch", e));
+        }
+    }
 }

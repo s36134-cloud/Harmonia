@@ -3,6 +3,7 @@ package com.example.harmonia.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,15 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
     public static class PlaylistViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        public ImageView image;
+        public ImageView img1, img2, img3, img4;
 
         public PlaylistViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.textViewPlaylistNameItem);
-            image = itemView.findViewById(R.id.playlistimage);
+            img1 = itemView.findViewById(R.id.img1);
+            img2 = itemView.findViewById(R.id.img2);
+            img3 = itemView.findViewById(R.id.img3);
+            img4 = itemView.findViewById(R.id.img4);
         }
     }
 
@@ -69,36 +73,31 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
 
         holder.name.setText(playlist.getName());
 
-        //String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
+        List<String> songIds = playlist.getSongs();
 
-        //holder.image.setVisibility(View.INVISIBLE);
-        //holder.image.setImageDrawable(null);
+        ImageView[] imageViews = {holder.img1, holder.img2, holder.img3, holder.img4};
 
-        //Glide.with(holder.itemView.getContext())
-          //      .load(imageUrl)
-            //    .listener(new RequestListener<Drawable>() {
-              //      @Override
-                //    public boolean onLoadFailed(@Nullable GlideException e, Object model,
-                  //                              Target<Drawable> target, boolean isFirstResource) {
-                    //    holder.image.setVisibility(View.INVISIBLE);
-                      //  return true;
-                    //}
+        for (int i = 0; i < 4; i++) {
+            if (songIds != null && i < songIds.size()) {
+                String songId = songIds.get(i).trim();
+                String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + songId + ".jpg";
 
-                    //@Override
-                    //public boolean onResourceReady(Drawable resource, Object model,
-                      //                             Target<Drawable> target, DataSource dataSource,
-                        //                           boolean isFirstResource) {
-                  //      holder.image.setVisibility(View.VISIBLE);
-                    //    return false;
-               //     }
-                //})
-               // .into(holder.image);
+                Log.d("PlaylistCover", "Position " + i + " | songId: [" + songId + "] | url: " + imageUrl);
 
+                imageViews[i].setVisibility(View.VISIBLE);
+                Glide.with(holder.itemView.getContext())
+                        .load(imageUrl)
+                        .centerCrop()
+                        .placeholder(android.R.drawable.ic_menu_gallery)
+                        .error(android.R.drawable.ic_menu_close_clear_cancel)
+                        .into(imageViews[i]);
+            } else {
+                imageViews[i].setImageResource(android.R.drawable.ic_menu_gallery);
+            }
+        }
 
         holder.itemView.setOnClickListener(v -> {
-            // שליפת ה-ID ישירות מהאובייקט playlist ולא מה-UI
-            String id = playlist.getName(); // ב-Firestore שלך ה-Document ID הוא השם
-
+            String id = playlist.getName();
             Intent intent = new Intent(activity, PlaylistActivity.class);
             intent.putExtra("playlistId", id);
             activity.startActivity(intent);
@@ -109,4 +108,4 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
     public int getItemCount() {
         return playlists != null ? playlists.size() : 0;
     }
-}
+        }
