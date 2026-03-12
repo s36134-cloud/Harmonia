@@ -144,6 +144,9 @@ public class RegistrationActivity extends AppCompatActivity {
                 .set(userMap)
                 .addOnSuccessListener(aVoid -> {
                     Log.i(TAG, "User document created in Firestore for UID: " + userId);
+
+                    saveUserDataLocally(nickname, age); // 👈 נוסף כאן
+
                     Toast.makeText(RegistrationActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(RegistrationActivity.this, ProfileActivity.class);
                     startActivity(intent);
