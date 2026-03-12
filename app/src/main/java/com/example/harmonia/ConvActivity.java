@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConvActivity extends AppCompatActivity {
-
+    private com.google.firebase.firestore.ListenerRegistration chatListener;
     private TextView tvPartnerName;
     private EditText etMessage;
     private ImageButton btnSend, btnBack;
@@ -106,16 +106,24 @@ public class ConvActivity extends AppCompatActivity {
             });
         }
     }
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // כשהמסך נסגר, אנחנו אומרים ל-Firebase להפסיק להקשיב להודעות
+        if (chatListener != null) {
+            chatListener.remove();
+        }
+    }
     private void listenForMessages(String partnerId) {
         String chatId = getChatId(myId, partnerId);
         Log.d("CHAT_DEBUG", "Listening to Chat ID: " + chatId);
 
-        FirebaseFirestore.getInstance()
+        // אנחנו שומרים את המאזין לתוך המשתנה chatListener כדי שנוכל לסגור אותו אחר כך
+        chatListener = FirebaseFirestore.getInstance()
                 .collection("chats")
                 .document(chatId)
                 .collection("messages")
-                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.ASCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         Log.e("CHAT_ERROR", "Listen failed.", error);
@@ -123,22 +131,26 @@ public class ConvActivity extends AppCompatActivity {
                     }
 
                     if (value != null) {
-                        messageList.clear();
-                        for (DocumentSnapshot doc : value.getDocuments()) {
-                            Conv msg = doc.toObject(Conv.class);
-                            if (msg != null) {
-                                messageList.add(msg);
+                        // במקום למחוק הכל (clear), אנחנו עוברים רק על השינויים (DocumentChanges)
+                        for (com.google.firebase.firestore.DocumentChange dc : value.getDocumentChanges()) {
+                            // אם נוספה הודעה חדשה
+                            if (dc.getType() == com.google.firebase.firestore.DocumentChange.Type.ADDED) {
+                                Conv msg = dc.getDocument().toObject(Conv.class);
+                                if (msg != null) {
+                                    messageList.add(msg);
+                                    // אומרים לאדפטר שנוספה רק שורה אחת בסוף - זה הרבה יותר מהיר!
+                                    adapter.notifyItemInserted(messageList.size() - 1);
+                                }
                             }
                         }
-                        adapter.notifyDataSetChanged();
-                        // גלילה אוטומטית להודעה האחרונה רק אם יש הודעות
+
+                        // גלילה אוטומטית להודעה האחרונה
                         if (!messageList.isEmpty()) {
-                            recyclerView.smoothScrollToPosition(messageList.size() - 1);
+                            recyclerView.scrollToPosition(messageList.size() - 1);
                         }
                     }
                 });
     }
-
     private void sendMessage(String partnerId, String text) {
         String chatId = getChatId(myId, partnerId);
 

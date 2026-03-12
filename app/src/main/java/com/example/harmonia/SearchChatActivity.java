@@ -105,7 +105,7 @@ public class SearchChatActivity extends AppCompatActivity {
                 String reason = obj.optString("reason", "Great match based on your interests!");
 
                 // סינון: רק מי שקיבל ציון של 50 ומעלה
-                if (score >= 50) {
+                if (score > 0) {
                     String realName = "User";
 
                     if (lastFetchedUsers != null && !userId.isEmpty()) {
