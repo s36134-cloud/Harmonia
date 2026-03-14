@@ -35,6 +35,7 @@
                 android:textColor="#4CAF50"
                 android:textStyle="bold"
                 android:layout_alignParentEnd="true" />
+
         </RelativeLayout>
 
         <TextView

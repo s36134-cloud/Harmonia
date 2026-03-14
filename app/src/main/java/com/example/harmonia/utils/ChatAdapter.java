@@ -1,5 +1,6 @@
 package com.example.harmonia.utils;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast; // הוספתי לטובת התראות למשתמש
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +16,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.harmonia.ConvActivity;
 import com.example.harmonia.R;
 import com.example.harmonia.RecommendedUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
@@ -29,7 +36,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // וודאי שקובץ ה-layout אכן נקרא chat.xml
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat, parent, false);
         return new ViewHolder(view);
     }
@@ -38,31 +44,97 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecommendedUser user = matches.get(position);
 
-        holder.tvName.setText(user.display_name != null ? user.display_name : "משתמש ללא שם");
+        String displayName = (user.display_name != null && !user.display_name.isEmpty()) ? user.display_name : "User";
+        holder.tvName.setText(displayName);
         holder.tvReason.setText(user.reason);
 
-        // הסתרת שדות שלא תמיד בשימוש בעיצוב הזה
-        if (holder.tvScore != null) holder.tvScore.setVisibility(View.GONE);
-        if (holder.btnStartChat != null) holder.btnStartChat.setVisibility(View.GONE);
+        if (holder.tvScore != null) {
+            holder.tvScore.setVisibility(View.GONE);
+        }
+        if (holder.btnStartChat != null) {
+            holder.btnStartChat.setVisibility(View.GONE);
+        }
 
+        // לחיצה על כל הכרטיס
         holder.itemView.setOnClickListener(v -> {
-            // ה-ID שמגיע מה-RecommendedUser המתוקן (עם ה-SerializedName)
             String finalId = user.user_id;
 
-            // בדיקת בטיחות: אם ה-ID ריק, לא עוברים מסך
             if (finalId == null || finalId.isEmpty()) {
-                Log.e("NAV_DEBUG", "Error: user_id is null for " + user.display_name);
-                Toast.makeText(v.getContext(), "שגיאה: לא ניתן ליצור קשר עם משתמש זה", Toast.LENGTH_SHORT).show();
+                Log.e("NAV_DEBUG", "Error: user_id is null for " + displayName);
+                Toast.makeText(v.getContext(), "שגיאה: לא ניתן ליצור קשר", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            Intent intent = new Intent(v.getContext(), ConvActivity.class);
-            intent.putExtra("userId", finalId);
-            intent.putExtra("userName", user.display_name);
-
-            Log.d("NAV_DEBUG", "Successfully starting chat with: " + user.display_name + " ID: " + finalId);
-            v.getContext().startActivity(intent);
+            // יצירת השיחה ב-Firestore ואז מעבר לדף ההודעות
+            createChatIfNeeded(v.getContext(), finalId, displayName);
         });
+    }
+
+    /**
+     * יוצרת מסמך שיחה ב-Firestore אם לא קיים,
+     * ואז מנווטת ל-ConvActivity ומסגרת את SearchChatActivity.
+     */
+    private void createChatIfNeeded(android.content.Context context, String otherUserId, String displayName) {
+        String myUid = FirebaseAuth.getInstance().getUid();
+        if (myUid == null) {
+            Toast.makeText(context, "שגיאה: משתמש לא מחובר", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // ID ייחודי ועקבי לכל זוג – לא תלוי בסדר
+        String chatId = myUid.compareTo(otherUserId) < 0
+                ? myUid + "_" + otherUserId
+                : otherUserId + "_" + myUid;
+
+        FirebaseFirestore.getInstance()
+                .collection("chats")
+                .document(chatId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (!doc.exists()) {
+                        // יצירת מסמך שיחה חדש
+                        Map<String, Object> chatData = new HashMap<>();
+                        chatData.put("users", Arrays.asList(myUid, otherUserId));
+                        chatData.put("lastMessage", "");
+                        chatData.put("timestamp", FieldValue.serverTimestamp());
+
+                        FirebaseFirestore.getInstance()
+                                .collection("chats")
+                                .document(chatId)
+                                .set(chatData)
+                                .addOnSuccessListener(unused -> {
+                                    Log.d("NAV_DEBUG", "Chat created: " + chatId);
+                                    navigateToConv(context, otherUserId, displayName);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("NAV_DEBUG", "Failed to create chat: " + e.getMessage());
+                                    Toast.makeText(context, "שגיאה ביצירת השיחה", Toast.LENGTH_SHORT).show();
+                                });
+                    } else {
+                        // שיחה כבר קיימת – רק נווט
+                        Log.d("NAV_DEBUG", "Chat already exists: " + chatId);
+                        navigateToConv(context, otherUserId, displayName);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("NAV_DEBUG", "Error checking chat: " + e.getMessage());
+                    Toast.makeText(context, "שגיאה בבדיקת השיחה", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * מנווטת ל-ConvActivity וסוגרת את SearchChatActivity.
+     */
+    private void navigateToConv(android.content.Context context, String otherUserId, String displayName) {
+        Log.d("NAV_DEBUG", "Navigating to ConvActivity with: " + displayName);
+
+        Intent intent = new Intent(context, ConvActivity.class);
+        intent.putExtra("userId", otherUserId);
+        intent.putExtra("userName", displayName);
+        context.startActivity(intent);
+
+        // סגירת SearchChatActivity – המשתמש לא יוכל לחזור אליו בלחיצת Back
+        ((Activity) context).finish();
     }
 
     @Override
@@ -76,7 +148,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // וודאי שה-IDs האלו קיימים בתוך chat.xml
             tvName = itemView.findViewById(R.id.tv_partner_name);
             tvScore = itemView.findViewById(R.id.tv_score);
             tvReason = itemView.findViewById(R.id.tv_reason);

@@ -83,6 +83,7 @@
                 android:padding="20dp">
 
 
+
                 <Button
                     android:id="@+id/start_conv_button"
                     android:layout_width="250dp"
@@ -92,6 +93,13 @@
                     android:backgroundTint="#E1BEE7"
                     android:text="Start conversation" />
 
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewchats"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:clipToPadding="false" />
             </LinearLayout>
         </ScrollView>
     </androidx.cardview.widget.CardView>
