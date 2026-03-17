@@ -42,9 +42,9 @@ public class CommunityActivity extends AppCompatActivity {
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Log.d("FeedActivity", "Notification permission granted.");
+                    Log.d("CommunityActivity", "Notification permission granted.");
                 } else {
-                    Log.d("FeedActivity", "Notification permission denied.");
+                    Log.d("CommunityActivity", "Notification permission denied.");
                 }});
 
     private static final String TAG = "CommunityActivity";

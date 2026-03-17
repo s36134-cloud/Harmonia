@@ -42,19 +42,20 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
-        TextView tvRegister = findViewById(R.id.dont_have_account);
         emailEditText=findViewById(R.id.email_edit_text);
         passwordEditText=findViewById(R.id.password_edit_text);
-        tvRegister.setOnClickListener(new View.OnClickListener() {
+
+
+        Button donthaveaccountbutton = findViewById(R.id.dont_have_account_button);
+        donthaveaccountbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // יצירת אינטנט למעבר מ-LoginActivity ל-RegisterActivity
                 Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(intent);
             }
         });
-        Button loginButton = findViewById(R.id.login_button);
 
+        Button loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

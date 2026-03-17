@@ -50,6 +50,8 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
 
@@ -107,37 +109,50 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadRecommendations() {
+        // --- שיפור חווית משתמש: מניעת טעינה כפולה כשחוזרים למסך ---
+        // אם אחת מהרשימות כבר מכילה נתונים, אנחנו לא רוצים להריץ את השאילתות שוב
+        if (!bookList.isEmpty() || !songList.isEmpty() || !playlistsList.isEmpty()) {
+            Log.d("HomeActivity", "הנתונים כבר קיימים, מדלג על טעינה מחדש");
+            return;
+        }
+
         String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
         if (userId == null) {
             Toast.makeText(this, "משתמש לא מחובר", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // שלב 1: שולפים את הז'אנרים שהמשתמש בחר
+        // שלב 1: שולפים את נתוני המשתמש מה-Firestore
         db.collection("users").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (!documentSnapshot.exists()) return;
 
-                    List<String> selectedBookGenres =
-                            (List<String>) documentSnapshot.get("selectedBookGenres");
-                    List<String> selectedSongGenres =
-                            (List<String>) documentSnapshot.get("selectedSongGenres");
+                    // שליפת רשימות הז'אנרים מה-Document של המשתמש
+                    List<String> selectedBookGenres = (List<String>) documentSnapshot.get("selectedBookGenres");
+                    List<String> selectedSongGenres = (List<String>) documentSnapshot.get("selectedSongGenres");
 
-
-                    // שלב 2: שולפים ספרים לפי הז'אנרים
+                    // שלב 2: טעינת ספרים לפי ז'אנרים (אם נבחרו)
                     if (selectedBookGenres != null && !selectedBookGenres.isEmpty()) {
                         loadBooksByGenres(selectedBookGenres);
                     }
 
-                    // שלב 3: שולפים שירים לפי הז'אנרים
+                    // שלב 3: טעינת שירים לפי ז'אנרים (אם נבחרו)
                     if (selectedSongGenres != null && !selectedSongGenres.isEmpty()) {
                         loadSongsByGenres(selectedSongGenres);
                     }
 
-                    if (selectedSongGenres != null && !selectedSongGenres.isEmpty()) {
-                        loadPlaylistsByGenres(selectedSongGenres);
+                    // שלב 4: איחוד כל הז'אנרים (ספרים + שירים) לצורך המלצת פלייליסטים
+                    List<String> allGenres = new ArrayList<>();
+                    if (selectedBookGenres != null) {
+                        allGenres.addAll(selectedBookGenres);
                     }
+                    if (selectedSongGenres != null) {
+                        allGenres.addAll(selectedSongGenres);
+                    }
+
+                    // שליחת הרשימה המאוחדת לפלייליסטים (כולל הפלייליסטים הקבועים שביקשת)
+                    loadPlaylistsByGenres(allGenres);
                 })
                 .addOnFailureListener(e ->
                         Log.e("HomeActivity", "שגיאה בטעינת העדפות", e));
@@ -184,40 +199,56 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadPlaylistsByGenres(List<String> genres) {
-        db.collection("playlists").get().addOnSuccessListener(querySnapshots -> {
-            playlistsList.clear();
+        // 1. ניקוי הרשימה ושימוש ב-Set למניעת כפילויות
+        playlistsList.clear();
+        java.util.Set<String> processedIds = new java.util.HashSet<>();
 
-            for (DocumentSnapshot doc : querySnapshots) {
-                // ניסיון לקחת את השדה name, ואם הוא חסר - לקחת את ה-ID של המסמך
-                String pName = doc.getString("name");
-                if (pName == null) {
-                    pName = doc.getId(); // כאן הקסם: הוא יקח את "Rock Songs"
-                }
+        // 2. רשימת פלייליסטים שיופיעו לכולם (חובה)
+        List<String> mandatoryPlaylists = java.util.Arrays.asList("Calm songs", "Sad songs");
 
-                String playlistNameLower = pName.toLowerCase().trim();
-                boolean isMatch = false;
-
-                for (String genre : genres) {
-                    if (genre != null && playlistNameLower.contains(genre.toLowerCase().trim())) {
-                        isMatch = true;
-                        break;
+        // שליפת פלייליסטים חובה בנפרד
+        db.collection("playlists")
+                .whereIn(com.google.firebase.firestore.FieldPath.documentId(), mandatoryPlaylists)
+                .get()
+                .addOnSuccessListener(querySnapshots -> {
+                    for (DocumentSnapshot doc : querySnapshots) {
+                        addPlaylistFromDoc(doc, processedIds);
                     }
-                }
+                    // עדכון ה-Adapter אחרי טעינת פלייליסטים חובה
+                    playlistsAdapter.updateList(new ArrayList<>(playlistsList));
+                });
 
-                if (isMatch) {
-                    Playlist playlist = doc.toObject(Playlist.class);
-                    if (playlist == null) {
-                        playlist = new Playlist(); // יצירת אובייקט חדש אם toObject נכשל
-                    }
-                    playlist.setId(doc.getId());
-                    playlist.setName(pName);
-                    playlistsList.add(playlist);
-                }
+        // 3. שליפת פלייליסטים לפי ז'אנרים (אם קיימים)
+        if (genres != null && !genres.isEmpty()) {
+            for (int i = 0; i < genres.size(); i += 10) {
+                List<String> chunk = genres.subList(i, Math.min(i + 10, genres.size()));
+
+                db.collection("playlists")
+                        .whereArrayContainsAny("genres", chunk)
+                        .get()
+                        .addOnSuccessListener(querySnapshots -> {
+                            for (DocumentSnapshot doc : querySnapshots) {
+                                addPlaylistFromDoc(doc, processedIds);
+                            }
+                            playlistsAdapter.updateList(new ArrayList<>(playlistsList));
+                            Log.d("HomeActivity", "Total playlists loaded: " + playlistsList.size());                        });
             }
+        }
+    }
 
-            Log.d("CHECK", "סוף חיפוש. נמצאו " + playlistsList.size() + " פלייליסטים.");
-            playlistsAdapter.updateList(playlistsList);
-        });
+    // פונקציית עזר כדי לא לשכפל קוד של יצירת האובייקט והגדרת השם
+    private void addPlaylistFromDoc(DocumentSnapshot doc, java.util.Set<String> processedIds) {
+        if (!processedIds.contains(doc.getId())) {
+            Playlist playlist = doc.toObject(Playlist.class);
+            if (playlist != null) {
+                playlist.setId(doc.getId());
+                // הגדרת השם מה-ID כפי שמופיע ב-Console
+                playlist.setName(doc.getId());
+
+                playlistsList.add(playlist);
+                processedIds.add(doc.getId());
+            }
+        }
     }
 
 }

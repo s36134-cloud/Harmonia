@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -84,11 +85,10 @@ public class GenresActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(v -> saveSelectedGenres());
 
-        Button backtoprofileButton = findViewById(R.id.btn_back_to_profile);
-        backtoprofileButton.setOnClickListener(v -> {
+        ImageView backtoprofileImageView = findViewById(R.id.backtoprofile);
+        backtoprofileImageView.setOnClickListener(v -> {
             Intent intent = new Intent(GenresActivity.this, ProfileActivity.class);
             startActivity(intent);
-            finish();
         });
     }
 

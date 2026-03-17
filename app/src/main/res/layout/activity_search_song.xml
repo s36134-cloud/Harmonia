@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:iconifiedByDefault="false"
-                app:queryHint="search book"
+                app:queryHint="search song"
                 app:queryBackground="@android:color/transparent"
                 android:layoutDirection="ltr" />
         </LinearLayout>

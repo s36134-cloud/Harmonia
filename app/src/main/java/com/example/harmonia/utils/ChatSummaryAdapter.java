@@ -1,6 +1,5 @@
 package com.example.harmonia.utils;
 
-
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,18 @@ import java.util.List;
 
 public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.ViewHolder> {
     private List<ChatSummary> chatList;
+
+    // 1. הוספת ה-Interface והמשתנה עבור הלחיצה
+    public interface OnItemClickListener {
+        void onItemClick(ChatSummary chat);
+    }
+
+    private OnItemClickListener listener;
+
+    // 2. הפונקציה שהייתה חסרה בשגיאה שלך
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public ChatSummaryAdapter(List<ChatSummary> chatList) {
         this.chatList = chatList;
@@ -31,15 +42,21 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatSummary chat = chatList.get(position);
 
+        // הצגת ה-nickname מה-Firebase (למשל "lilo")
         holder.tvName.setText(chat.partnerName != null ? chat.partnerName : "User");
         holder.tvLastMsg.setText(chat.lastMessage);
 
-        // לחיצה על השורה פותחת את השיחה
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), ConvActivity.class);
-            intent.putExtra("userId", chat.partnerId);
-            intent.putExtra("userName", chat.partnerName);
-            v.getContext().startActivity(intent);
+            // אם הגדרנו listener (כמו בדיאלוג השיתוף), נפעיל אותו
+            if (listener != null) {
+                listener.onItemClick(chat);
+            } else {
+                // אחרת, נתנהג כרגיל ונפתח את ה-Activity (עבור המסך הראשי)
+                Intent intent = new Intent(v.getContext(), ConvActivity.class);
+                intent.putExtra("userId", chat.partnerId);
+                intent.putExtra("userName", chat.partnerName);
+                v.getContext().startActivity(intent);
+            }
         });
     }
 

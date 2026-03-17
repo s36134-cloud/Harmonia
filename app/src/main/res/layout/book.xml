@@ -1,77 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="125dp"
-    android:layout_height="250dp"
-    android:layout_margin="8dp"
-    android:layout_marginRight="15dp"
-    android:paddingRight="8dp"
-    android:paddingLeft="8dp"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="4dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/bookimage"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5.5"
-            android:scaleType="centerCrop"
-            />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/bookcard"
+        android:layout_width="125dp"
+        android:layout_height="250dp"
+        android:layout_margin="8dp"
+        android:layout_marginRight="15dp"
+        android:layout_gravity="start"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="4.5"
-            android:orientation="vertical"
-            android:background="#FFFFFF"
-            android:padding="6dp"
-            android:gravity="center_horizontal">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/namebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="שם הספר"
-                android:textStyle="bold"
-                android:textColor="#000000"
-                android:textSize="13sp"
-                android:maxLines="2"
-                android:ellipsize="end" />
+            <ImageView
+                android:id="@+id/bookimage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5.5"
+                android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="סופר"
-                android:textColor="#444444"
-                android:textSize="11sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4.5"
+                android:orientation="vertical"
+                android:background="#FFFFFF"
+                android:padding="6dp"
+                android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/genrebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ז'אנר"
-                android:textColor="#777777"
-                android:textSize="10sp"
-                android:layout_marginTop="2dp" />
+                <TextView
+                    android:id="@+id/namebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="שם הספר"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    android:textSize="13sp"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/minage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="גיל"
-                android:textColor="#E91E63"
-                android:textStyle="bold"
-                android:textSize="10sp"
-                android:layout_marginTop="2dp" />
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="סופר"
+                    android:textColor="#444444"
+                    android:textSize="11sp" />
 
+                <TextView
+                    android:id="@+id/genrebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ז'אנר"
+                    android:textColor="#777777"
+                    android:textSize="10sp"
+                    android:layout_marginTop="2dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp">
+
+                    <TextView
+                        android:id="@+id/minage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:text="גיל"
+                        android:textColor="#777777"
+                        android:textSize="10sp" />
+
+                    <ImageView
+                        android:id="@+id/sharebook"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_share"
+                        android:background="?attr/selectableItemBackgroundBorderless" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
+</FrameLayout>

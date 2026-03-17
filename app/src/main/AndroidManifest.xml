@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ConvActivity"
             android:exported="false" />
         <activity
@@ -58,9 +61,6 @@
             android:exported="false" />
         <activity
             android:name=".MessagesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HomeActivity"
             android:exported="false" />
         <activity
             android:name=".ProfileActivity"

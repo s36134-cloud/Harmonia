@@ -85,7 +85,8 @@
                     android:layout_height="111dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_account" />
+                    android:src="@drawable/ic_add"
+                    app:tint="#E1BEE7"/>
 
                 <Button
                     android:id="@+id/btn_choose_picture"

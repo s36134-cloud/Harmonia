@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -19,9 +20,18 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Book;
+import com.example.harmonia.ChatSummary;
 import com.example.harmonia.R;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHolder> {
 
@@ -49,6 +59,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         public ImageView bookimage;
         public TextView genrebook;
         public TextView minage;
+        public ImageView sharebook;
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -57,6 +68,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
             bookimage = itemView.findViewById(R.id.bookimage);
             genrebook = itemView.findViewById(R.id.genrebook);
             minage = itemView.findViewById(R.id.minage);
+            sharebook = itemView.findViewById(R.id.sharebook);
         }
     }
 
@@ -78,7 +90,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
 
-        // אתחול התמונה לפני טעינה למניעת כפילויות בגלילה
         holder.bookimage.setVisibility(View.INVISIBLE);
         holder.bookimage.setImageDrawable(null);
 
@@ -102,36 +113,110 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                 })
                 .into(holder.bookimage);
 
-        // עדכון השקיפות לפי מצב הבחירה
         holder.itemView.setAlpha(book.isSelectedbook() ? 0.5f : 1.0f);
+
+        // כפתור שיתוף
+        holder.sharebook.setOnClickListener(v -> showShareDialog(v, book));
 
         holder.itemView.setOnClickListener(v -> {
             int currentPosition = holder.getAdapterPosition();
             if (currentPosition == RecyclerView.NO_POSITION) return;
 
-            // 1. אם יש Listener חיצוני, הוא מטפל בלחיצה
             if (listener != null) {
                 listener.onBookClick(imageUrl);
                 return;
             }
 
-            // 2. לוגיקת בחירה ללא הגבלה
             Book currentBook = bookList.get(currentPosition);
-
-            // הפיכת מצב הבחירה
             currentBook.setSelected(!currentBook.isSelectedbook());
-
-            // עדכון השורה הספציפית
             notifyItemChanged(currentPosition);
-
-            // 3. עדכון נראות כפתור הסיום
             updateDoneButtonVisibility(v);
         });
     }
 
-    /**
-     * בודק אם יש לפחות ספר אחד נבחר ומציג/מסתיר את כפתור הסיום
-     */
+    private void showShareDialog(View v, Book book) {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(v.getContext());
+        View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_chat, null);
+        bottomSheetDialog.setContentView(dialogView);
+
+        RecyclerView rvChats = dialogView.findViewById(R.id.select_chat);
+        rvChats.setLayoutManager(new LinearLayoutManager(v.getContext()));
+
+        String currentUserId = FirebaseAuth.getInstance().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("chats")
+                .whereArrayContains("users", currentUserId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<ChatSummary> chatList = new ArrayList<>();
+                    ChatSummaryAdapter adapter = new ChatSummaryAdapter(chatList);
+                    rvChats.setAdapter(adapter);
+
+                    adapter.setOnItemClickListener(chat -> {
+                        sendBookToChat(chat.chatId, book, v.getContext());
+                        bottomSheetDialog.dismiss();
+                    });
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                        ChatSummary chat = doc.toObject(ChatSummary.class);
+                        if (chat != null) {
+                            chat.chatId = doc.getId();
+                            chatList.add(chat);
+
+                            String partnerId = "";
+                            if (chat.users != null) {
+                                for (String uid : chat.users) {
+                                    if (!uid.equals(currentUserId)) {
+                                        partnerId = uid;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (!partnerId.isEmpty()) {
+                                db.collection("users").document(partnerId).get()
+                                        .addOnSuccessListener(userDoc -> {
+                                            if (userDoc.exists()) {
+                                                String nameFromDB = userDoc.getString("nickname");
+                                                chat.partnerName = (nameFromDB != null) ? nameFromDB : "Unknown";
+                                                chat.partnerId = userDoc.getId();
+                                                adapter.notifyDataSetChanged();
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+
+        bottomSheetDialog.show();
+    }
+
+    private void sendBookToChat(String chatId, Book book, android.content.Context context) {
+        String currentUserId = FirebaseAuth.getInstance().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Map<String, Object> message = new HashMap<>();
+        message.put("senderId", currentUserId);
+        message.put("text", book.getName());
+        message.put("timestamp", FieldValue.serverTimestamp());
+        message.put("bookId", book.getId());
+        message.put("type", "book");
+        message.put("author", book.getAuthor());
+        message.put("genre", book.getGenre());
+
+        db.collection("chats").document(chatId).collection("messages")
+                .add(message)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(context, "Book shared!", Toast.LENGTH_SHORT).show();
+
+                    db.collection("chats").document(chatId)
+                            .update("lastMessage", "Shared a book: " + book.getName(),
+                                    "timestamp", FieldValue.serverTimestamp());
+                })
+                .addOnFailureListener(e -> Log.e("BooksAdapter", "Error sharing book", e));
+    }
+
     private void updateDoneButtonVisibility(View v) {
         boolean hasSelection = false;
         if (bookList != null) {

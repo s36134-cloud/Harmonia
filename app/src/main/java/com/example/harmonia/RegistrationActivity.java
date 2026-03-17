@@ -53,16 +53,17 @@ public class RegistrationActivity extends AppCompatActivity {
             return insets;
         });
 
-        TextView tvRegister = findViewById(R.id.already_have_account);
 
-        tvRegister.setOnClickListener(new View.OnClickListener() {
+
+        Button alreadyhaveaccountbutton = findViewById(R.id.already_have_account_button);
+        alreadyhaveaccountbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // יצירת אינטנט למעבר מ-RegisterActivityל-LoginActivity
                 Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
+
         emailEditText=findViewById(R.id.email_edit_text);
         passwordEditText=findViewById(R.id.password_edit_text);
         nicknameEditText=findViewById(R.id.et_nickname);

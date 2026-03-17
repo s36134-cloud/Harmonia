@@ -14,13 +14,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.harmonia.utils.SongsAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
-
+import com.example.harmonia.utils.SongsAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,11 +37,29 @@ public class SearchSongActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         songList = new ArrayList<>();
 
+        // 1. קודם כל מוצאים את הכפתור ומגדירים אותו כ-final
+        final Button btnDone = findViewById(R.id.btnDoneSongs);
+        btnDone.setVisibility(View.GONE); // מוסתר בהתחלה
+
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new  SongsAdapter(songList, null);
+        // 2. עדכון ה-Adapter עם הלוגיקה של הכפתור
+        adapter = new SongsAdapter(songList, song -> {
+            boolean hasSelection = false;
+            for (Song s : songList) {
+                if (s.isSelectedsong()) {
+                    hasSelection = true;
+                    break;
+                }
+            }
+            // אם נבחר שיר - הכפתור מופיע, אם לא - הוא נעלם
+            btnDone.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+        });
+
         recyclerView.setAdapter(adapter);
+
+        // --- שאר הקוד שלך (חיפוש, כפתור חזור וכו') ---
 
         SearchView searchView = findViewById(R.id.searchViewsong);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -55,10 +72,8 @@ public class SearchSongActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
                     loadAllSongs();
-                } else if (newText.length() > 0) {
-                    // אם יש טקסט - תבצע חיפוש
+                } else {
                     searchInFirebase(newText);
                 }
                 return true;
@@ -66,20 +81,13 @@ public class SearchSongActivity extends AppCompatActivity {
         });
 
         ImageView backsongImageView = findViewById(R.id.imageViewsongsearch);
-        backsongImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(SearchSongActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
+        backsongImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(SearchSongActivity.this, ProfileActivity.class);
+            startActivity(intent);
         });
 
-
-        Button btnDone = findViewById(R.id.btnDoneSongs);
-        btnDone.setVisibility(android.view.View.GONE);
+        // הלוגיקה של הלחיצה על Done נשארת אותו דבר
         btnDone.setOnClickListener(v -> {
-            // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
             List<String> selectedSongIds = new ArrayList<>();
             for (Song s : songList) {
                 if (s.isSelectedsong()) {
@@ -87,15 +95,14 @@ public class SearchSongActivity extends AppCompatActivity {
                 }
             }
 
-            // 2. בדיקה אם המשתמש בחר שירים
             if (selectedSongIds.isEmpty()) {
                 Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 3. שמירה ל-Firebase ומעבר מסך
             saveSelectedSongsAndGoToProfile(selectedSongIds);
         });
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

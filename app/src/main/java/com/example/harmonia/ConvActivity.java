@@ -155,8 +155,8 @@ public class ConvActivity extends AppCompatActivity {
         String chatId = getChatId(myId, partnerId);
 
         // יצירת אובייקט הודעה
-        Conv newMessage = new Conv(myId, partnerId, text, System.currentTimeMillis());
-
+// במקום השורה הישנה, השתמשי בזו:
+        Conv newMessage = new Conv(myId, partnerId, text, System.currentTimeMillis(), "text", null);
         FirebaseFirestore.getInstance()
                 .collection("chats")
                 .document(chatId)

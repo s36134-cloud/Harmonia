@@ -28,10 +28,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Date;
 
 public class AddPostActivity extends AppCompatActivity {
-    String name;
     private TextInputEditText titleEditText;
     private TextInputEditText descEditText;
     private ImageView imageView;
+    private Button sendButton; // הוספנו משתנה כדי לשלוט בכפתור
     private String selectedImageUrl = null;
 
     private static final String TAG = "AddPostActivity";
@@ -59,6 +59,7 @@ public class AddPostActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_post);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -68,12 +69,13 @@ public class AddPostActivity extends AppCompatActivity {
         titleEditText = findViewById(R.id.et_title);
         descEditText = findViewById(R.id.et_description);
         imageView = findViewById(R.id.imageView);
+        sendButton = findViewById(R.id.btn_send); // אתחול הכפתור
+
         imageView.setVisibility(View.GONE);
 
-        // ניקוי nickname ישן כדי לטעון מחדש מ-Firestore
-        getSharedPreferences("userInfo", Context.MODE_PRIVATE).edit().remove("nickname").apply();
+        // שיפור: לא מוחקים את ה-nickname כאן. זה גורם לעומס מיותר.
+        // אם תרצי לרענן אותו, אפשר לעשות זאת בתוך sendpost אם ה-nickname ריק.
 
-        Button sendButton = findViewById(R.id.btn_send);
         sendButton.setOnClickListener(v -> sendpost());
 
         Button booksongButton = findViewById(R.id.btn_picture);
@@ -82,38 +84,38 @@ public class AddPostActivity extends AppCompatActivity {
             searchBookSongLauncher.launch(intent);
         });
 
-        Button BacktocommunityButton = findViewById(R.id.Back_to_community);
-        BacktocommunityButton.setOnClickListener(v -> {
+        ImageView backcommunityImageView = findViewById(R.id.Back_to_community);
+        backcommunityImageView.setOnClickListener(v -> {
             Intent intent = new Intent(AddPostActivity.this, CommunityActivity.class);
             startActivity(intent);
+
         });
     }
 
     public void sendpost() {
-        Log.d(TAG, "sendPost: start");
-
         String title = titleEditText.getText().toString().trim();
         String description = descEditText.getText().toString().trim();
 
-        if (title.isEmpty()) {
-            Toast.makeText(this, "Please enter a title", Toast.LENGTH_SHORT).show();
+        if (title.isEmpty() || description.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (description.isEmpty()) {
-            Toast.makeText(this, "Please enter a description", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // נטרול הכפתור כדי למנוע לחיצות כפולות בזמן השליחה
+        sendButton.setEnabled(false);
+        sendButton.setText("Sending...");
 
         String ownerUid = FirebaseAuth.getInstance().getCurrentUser() != null
                 ? FirebaseAuth.getInstance().getCurrentUser().getUid() : "";
 
-        Log.d(TAG, "ownerUid: " + ownerUid);
+        if (ownerUid.isEmpty()) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            sendButton.setEnabled(true);
+            return;
+        }
 
         SharedPreferences sharedPref = getSharedPreferences("userInfo", Context.MODE_PRIVATE);
         String cachedNickname = sharedPref.getString("nickname", null);
-
-        Log.d(TAG, "cachedNickname: " + cachedNickname);
 
         if (cachedNickname != null) {
             savePost(title, description, ownerUid, cachedNickname);
@@ -125,14 +127,15 @@ public class AddPostActivity extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(doc -> {
                         String nickname = doc.getString("name");
-                        Log.d(TAG, "Nickname from Firestore: " + nickname);
                         if (nickname == null) nickname = "Anonymous";
                         sharedPref.edit().putString("nickname", nickname).apply();
                         savePost(title, description, ownerUid, nickname);
                     })
                     .addOnFailureListener(e -> {
-                        Log.e(TAG, "Failed to load nickname: " + e.getMessage());
-                        Toast.makeText(this, "Error loading user info", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Failed to load nickname", e);
+                        sendButton.setEnabled(true);
+                        sendButton.setText("Send");
+                        Toast.makeText(this, "Connection error", Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -141,23 +144,21 @@ public class AddPostActivity extends AppCompatActivity {
         Timestamp creationTimestamp = new Timestamp(new Date());
         HarmoniaPost newPost = new HarmoniaPost(title, description, ownerUid, nickname, creationTimestamp, selectedImageUrl);
 
-        if (selectedImageUrl != null && !selectedImageUrl.isEmpty()) {
-            newPost.setImageUrl(selectedImageUrl);
-        }
-
         FirebaseFirestore.getInstance().collection("posts")
                 .add(newPost)
                 .addOnSuccessListener(documentReference -> {
-                    Log.d(TAG, "Post saved with ID: " + documentReference.getId());
-                    Toast.makeText(AddPostActivity.this, "Post saved successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddPostActivity.this, "Post saved!", Toast.LENGTH_SHORT).show();
+                    // חזרה לקהילה בצורה נקייה
                     Intent intent = new Intent(AddPostActivity.this, CommunityActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    Log.w(TAG, "Error adding document", e);
-                    Toast.makeText(AddPostActivity.this, "Error saving post: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Error saving post", e);
+                    sendButton.setEnabled(true); // החזרת הכפתור למצב פעיל במקרה של שגיאה
+                    sendButton.setText("Send");
+                    Toast.makeText(AddPostActivity.this, "Failed to save post", Toast.LENGTH_SHORT).show();
                 });
     }
 }

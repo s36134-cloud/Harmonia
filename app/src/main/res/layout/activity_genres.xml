@@ -21,20 +21,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/mainTitle"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingStart="45dp"
-            android:paddingEnd="45dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Genres"
-            android:textColor="#CE93D8"
-            android:textSize="36sp"
-            android:fontFamily="@font/myfont4" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="30dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/backtoprofile"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_pback"
+                android:contentDescription="Back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <TextView
+                android:id="@+id/mainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Genres"
+                android:textColor="#CE93D8"
+                android:textSize="36sp"
+                android:fontFamily="@font/myfont4"
+                android:layout_marginStart="10dp" /> </LinearLayout>
+
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -121,6 +137,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="8dp"
                     android:background="#F3E5F5" />
+
                 <Button
                     android:id="@+id/btn_save"
                     android:layout_width="250dp"
@@ -131,14 +148,6 @@
                     android:text="save"
                     android:visibility="gone"/>
 
-                <Button
-                    android:id="@+id/btn_back_to_profile"
-                    android:layout_width="290dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:backgroundTint="#E1BEE7"
-                    android:text="Back to profile" />
 
             </LinearLayout>
 
