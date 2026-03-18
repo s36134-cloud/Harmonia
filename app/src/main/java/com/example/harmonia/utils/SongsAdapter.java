@@ -1,5 +1,6 @@
 package com.example.harmonia.utils;
 
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.example.harmonia.ChatSummary;
 import com.example.harmonia.R;
 import com.example.harmonia.Song;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -82,32 +83,35 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 .placeholder(android.R.color.darker_gray)
                 .into(holder.songimage);
 
-        // --- החלק שחסר לך: לחיצה על התמונה כדי לבחור את השיר ---
         holder.songimage.setOnClickListener(v -> {
-            // 1. שינוי מצב הבחירה (נבחר/לא נבחר)
             song.setSelected(!song.isSelectedsong());
 
-            // 2. שינוי ויזואלי כדי שהמשתמש ידע שהוא בחר (למשל שקיפות)
             if (song.isSelectedsong()) {
-                holder.songimage.setAlpha(0.5f); // הופך לחצי שקוף כשנבחר
+                holder.songimage.setAlpha(0.5f);
             } else {
-                holder.songimage.setAlpha(1.0f); // חוזר לרגיל
+                holder.songimage.setAlpha(1.0f);
             }
 
-            // 3. דיווח ל-Activity כדי שתראה את כפתור ה-Done
             if (listener != null) {
                 listener.onSongClick(song);
             }
         });
 
-        // כפתור השיתוף הקיים שלך נשאר אותו דבר
         holder.sharesong.setOnClickListener(v -> showShareDialog(v, song));
     }
 
     private void showShareDialog(View v, Song song) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(v.getContext());
+        // שינוי ל-AlertDialog למרכוז הדיאלוג
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_chat, null);
-        bottomSheetDialog.setContentView(dialogView);
+        builder.setView(dialogView);
+
+        AlertDialog alertDialog = builder.create();
+
+        // הפיכת הרקע לשקוף כדי לתמוך בעיצוב מעוגל ב-XML
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
 
         RecyclerView rvChats = dialogView.findViewById(R.id.select_chat);
         rvChats.setLayoutManager(new LinearLayoutManager(v.getContext()));
@@ -125,7 +129,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
                     adapter.setOnItemClickListener(chat -> {
                         sendSongToChat(chat.chatId, song, v.getContext());
-                        bottomSheetDialog.dismiss();
+                        alertDialog.dismiss(); // סגירת הדיאלוג
                     });
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
@@ -159,7 +163,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                     }
                 });
 
-        bottomSheetDialog.show();
+        alertDialog.show();
     }
 
     private void sendSongToChat(String chatId, Song song, android.content.Context context) {
@@ -168,12 +172,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
         Map<String, Object> message = new HashMap<>();
         message.put("senderId", currentUserId);
-        message.put("text", song.getName());  // רק שם השיר - האמן והז'אנר בשדות נפרדים
+        message.put("text", song.getName());
         message.put("timestamp", FieldValue.serverTimestamp());
         message.put("songId", song.getId());
         message.put("type", "song");
-        message.put("artist", song.getArtist());  // חדש
-        message.put("genre", song.getGenre());    // חדש
+        message.put("artist", song.getArtist());
+        message.put("genre", song.getGenre());
 
         db.collection("chats").document(chatId).collection("messages")
                 .add(message)

@@ -77,7 +77,6 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_share"
-                        app:tint="#CE93D8"
                         android:background="?attr/selectableItemBackgroundBorderless" />
 
                 </RelativeLayout>

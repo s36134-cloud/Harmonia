@@ -1,5 +1,6 @@
 package com.example.harmonia.utils;
 
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +24,6 @@ import com.bumptech.glide.request.target.Target;
 import com.example.harmonia.Book;
 import com.example.harmonia.ChatSummary;
 import com.example.harmonia.R;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
@@ -115,7 +116,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         holder.itemView.setAlpha(book.isSelectedbook() ? 0.5f : 1.0f);
 
-        // כפתור שיתוף
         holder.sharebook.setOnClickListener(v -> showShareDialog(v, book));
 
         holder.itemView.setOnClickListener(v -> {
@@ -135,9 +135,17 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     }
 
     private void showShareDialog(View v, Book book) {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(v.getContext());
+        // שינוי ל-AlertDialog כדי שיופיע במרכז
+        AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_chat, null);
-        bottomSheetDialog.setContentView(dialogView);
+        builder.setView(dialogView);
+
+        AlertDialog alertDialog = builder.create();
+
+        // הגדרת רקע שקוף כדי שהפינות המעוגלות של ה-XML שלך יעבדו
+        if (alertDialog.getWindow() != null) {
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
 
         RecyclerView rvChats = dialogView.findViewById(R.id.select_chat);
         rvChats.setLayoutManager(new LinearLayoutManager(v.getContext()));
@@ -155,7 +163,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
                     adapter.setOnItemClickListener(chat -> {
                         sendBookToChat(chat.chatId, book, v.getContext());
-                        bottomSheetDialog.dismiss();
+                        alertDialog.dismiss(); // סגירת הדיאלוג
                     });
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots) {
@@ -189,7 +197,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                     }
                 });
 
-        bottomSheetDialog.show();
+        alertDialog.show();
     }
 
     private void sendBookToChat(String chatId, Book book, android.content.Context context) {

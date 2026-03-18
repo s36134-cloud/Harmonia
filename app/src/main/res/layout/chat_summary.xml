@@ -40,7 +40,7 @@
                 android:text="שם המשתמש"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#4A148C" />
+                />
 
             <TextView
                 android:id="@+id/tv_last_message"
@@ -55,13 +55,11 @@
 
         </LinearLayout>
 
-        <!-- חץ -->
         <ImageView
-            android:id="@+id/backhome"
+            android:id="@+id/ic_round_chat"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_chat"
-            android:contentDescription="Back"
+            android:src="@drawable/ic_round_chat"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
