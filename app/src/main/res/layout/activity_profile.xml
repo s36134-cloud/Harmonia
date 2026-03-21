@@ -85,7 +85,7 @@
                     android:layout_height="111dp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_add"
+                    android:src="@drawable/ic_person"
                     app:tint="#E1BEE7"/>
 
                 <Button
@@ -98,7 +98,6 @@
                     android:text="choose picture"
                     android:textStyle="bold" />
 
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Your favorite songs"
