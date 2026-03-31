@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.SongsAdapter;
@@ -35,7 +36,7 @@ public class PlaylistActivity extends AppCompatActivity {
         String playlistId = getIntent().getStringExtra("playlistId");
 
         recyclerView = findViewById(R.id.recyclerViewSongsPlaylist);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         songsAdapter = new SongsAdapter(songsList, null, R.layout.song_list);
         recyclerView.setAdapter(songsAdapter);

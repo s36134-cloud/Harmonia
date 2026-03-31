@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.harmonia.utils.BooksAdapter;
 import com.example.harmonia.utils.SongsAdapter;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.example.harmonia.utils.SongsAdapter;
@@ -55,7 +56,8 @@ public class SearchSongActivity extends AppCompatActivity {
             }
             // אם נבחר שיר - הכפתור מופיע, אם לא - הוא נעלם
             btnDone.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
-        }, R.layout.song_list); // <--- זה הפרמטר השלישי שהיה חסר!
+        }, R.layout.song); // <--- כאן שיניתי ל-layout הרגיל שלך
+
 
         recyclerView.setAdapter(adapter);
 
