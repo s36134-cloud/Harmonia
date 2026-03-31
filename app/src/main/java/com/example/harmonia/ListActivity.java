@@ -1,6 +1,7 @@
 package com.example.harmonia;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +25,13 @@ public class ListActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String currentUserId, listId, listType;
 
+    // רשימה לתוצאות החיפוש בלבד
     private List<Song> songResults = new ArrayList<>();
     private List<Book> bookResults = new ArrayList<>();
+
+    // רשימה של מה שכבר קיים ברשימה (כדי שלא ייעלם)
+    private List<Song> existingSongs = new ArrayList<>();
+    private List<Book> existingBooks = new ArrayList<>();
 
     private SongsAdapter songsAdapter;
     private BooksAdapter booksAdapter;
@@ -35,11 +41,6 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
@@ -47,7 +48,6 @@ public class ListActivity extends AppCompatActivity {
         listType = getIntent().getStringExtra("listType");
         String listName = getIntent().getStringExtra("listName");
 
-        // הצגת שם הרשימה בכותרת
         TextView yourList = findViewById(R.id.Your_list);
         yourList.setText(listName);
 
@@ -59,50 +59,51 @@ public class ListActivity extends AppCompatActivity {
         searchViewbookorsong = findViewById(R.id.searchViewbookorsong);
 
         setupAdapterAndSearch();
+        loadExistingItems(); // טעינת הפריטים שכבר ברשימה בהתחלה
     }
 
     private void setupAdapterAndSearch() {
-        if (listType.equals("songs")) {
+        if ("songs".equals(listType)) {
+            // האדאפטר מציג את songResults (שמתחילה ריקה בחיפוש)
             songsAdapter = new SongsAdapter(songResults, song -> {
                 addItemToList(song.getId());
-                Toast.makeText(this, song.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
-            }, R.layout.song_list); // <--- זה הפרמטר השלישי שהיה חסר
+                Toast.makeText(this, song.getName() + " נוסף!", Toast.LENGTH_SHORT).show();
+            }, R.layout.song_list);
             recyclerViewsongbooklist.setAdapter(songsAdapter);
 
-            searchViewbookorsong.setQueryHint("search song...");
             searchViewbookorsong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) { return false; }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (!newText.isEmpty()) searchSongs(newText);
-                    else {
-                        songResults.clear();
-                        songsAdapter.updateList(songResults);
+                    if (newText.isEmpty()) {
+                        // אם החיפוש ריק - מציגים את מה שכבר היה ברשימה
+                        songsAdapter.updateList(existingSongs);
+                    } else {
+                        searchSongs(newText);
                     }
                     return true;
                 }
             });
 
         } else {
-
-            booksAdapter = new BooksAdapter(bookResults, imageUrl -> {
-                // כאן הקוד שקורה בלחיצה (כרגע ריק אצלך)
+            booksAdapter = new BooksAdapter(bookResults, book -> {
+                addItemToList(book.getId());
+                Toast.makeText(this, book.getName() + " נוסף!", Toast.LENGTH_SHORT).show();
             }, R.layout.book_list);
             recyclerViewsongbooklist.setAdapter(booksAdapter);
 
-            searchViewbookorsong.setQueryHint("search book...");
             searchViewbookorsong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) { return false; }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (!newText.isEmpty()) searchBooks(newText);
-                    else {
-                        bookResults.clear();
-                        booksAdapter.updateList(bookResults);
+                    if (newText.isEmpty()) {
+                        booksAdapter.updateList(existingBooks);
+                    } else {
+                        searchBooks(newText);
                     }
                     return true;
                 }
@@ -148,11 +149,52 @@ public class ListActivity extends AppCompatActivity {
                 });
     }
 
+    // טעינת הפריטים שכבר קיימים ברשימה ב-Firestore
+    private void loadExistingItems() {
+        db.collection("users").document(currentUserId)
+                .collection("lists").document(listId) // וודאי שזה הנתיב הנכון אצלך
+                .addSnapshotListener((value, error) -> {
+                    if (value != null && value.exists()) {
+                        List<String> ids = (List<String>) value.get("itemIds");
+                        if (ids != null && !ids.isEmpty()) {
+                            fetchDetailsForExistingItems(ids);
+                        }
+                    }
+                });
+    }
+
+    private void fetchDetailsForExistingItems(List<String> ids) {
+        String collection = "songs".equals(listType) ? "songs" : "books";
+        db.collection(collection).whereIn(FieldPath.documentId(), ids).get()
+                .addOnSuccessListener(snapshot -> {
+                    if ("songs".equals(listType)) {
+                        existingSongs.clear();
+                        for (DocumentSnapshot doc : snapshot) {
+                            Song s = doc.toObject(Song.class);
+                            s.setId(doc.getId());
+                            existingSongs.add(s);
+                        }
+                        // אם החיפוש כרגע ריק, תציג את הקיימים
+                        if (searchViewbookorsong.getQuery().toString().isEmpty()) {
+                            songsAdapter.updateList(existingSongs);
+                        }
+                    } else {
+                        existingBooks.clear();
+                        for (DocumentSnapshot doc : snapshot) {
+                            Book b = doc.toObject(Book.class);
+                            b.setId(doc.getId());
+                            existingBooks.add(b);
+                        }
+                        if (searchViewbookorsong.getQuery().toString().isEmpty()) {
+                            booksAdapter.updateList(existingBooks);
+                        }
+                    }
+                });
+    }
+
     private void addItemToList(String itemId) {
         db.collection("users").document(currentUserId)
                 .collection("lists").document(listId)
-                .update("itemIds", FieldValue.arrayUnion(itemId))
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "שגיאה בהוספה לרשימה", Toast.LENGTH_SHORT).show());
+                .update("itemIds", FieldValue.arrayUnion(itemId));
     }
 }

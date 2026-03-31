@@ -14,21 +14,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.harmonia.utils.BooksAdapter;
-import com.example.harmonia.utils.UserImageSelector;
+import com.example.harmonia.utils.SongsAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SearchBookActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BooksAdapter adapter;
     private List<Book> bookList;
     private FirebaseFirestore db;
+    private String listId; // ID של הרשימה הספציפית
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +44,32 @@ public class SearchBookActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         bookList = new ArrayList<>();
 
+        // בדיקה: האם הגענו כדי לעדכן רשימה ספציפית או את הפרופיל?
+        listId = getIntent().getStringExtra("LIST_ID");
+        boolean isSelectionMode = getIntent().getBooleanExtra("IS_SELECTION_MODE", false);
+
+        final Button btnDone = findViewById(R.id.btnDoneBooks);
+        btnDone.setVisibility(View.GONE);
+
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new BooksAdapter(bookList, null, R.layout.book);
+
+        adapter = new BooksAdapter(bookList, book -> {
+            // האדאפטר משנה את ה-isSelected בלחיצה, כאן רק נעדכן את הכפתור
+            boolean hasSelection = false;
+            for (Book b : bookList) {
+                if (b.isSelectedbook()) {
+                    hasSelection = true;                    break;
+                }
+            }
+            btnDone.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
+        }, R.layout.book);
+
+
+
+
+
 
         recyclerView.setAdapter(adapter);
 
@@ -56,19 +84,15 @@ public class SearchBookActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if (newText.isEmpty()) {
-                    // אם המשתמש מחק הכל - תציג שוב את כל השירים
                     loadAllBooks();
-                } else if (newText.length() > 0) {
-                    // אם יש טקסט - תבצע חיפוש
+                } else {
                     searchInFirebase(newText);
                 }
                 return true;
             }
         });
-        Button btnDone = findViewById(R.id.btnDoneBooks);
-        btnDone.setVisibility(android.view.View.GONE);
+
         btnDone.setOnClickListener(v -> {
-            // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
             List<String> selectedBookIds = new ArrayList<>();
             for (Book b : bookList) {
                 if (b.isSelectedbook()) {
@@ -76,101 +100,100 @@ public class SearchBookActivity extends AppCompatActivity {
                 }
             }
 
-            // 2. בדיקה אם המשתמש בחר שירים
             if (selectedBookIds.isEmpty()) {
-                Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "אנא בחרי לפחות ספר אחד", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // 3. שמירה ל-Firebase ומעבר מסך
-            saveSelectedBooksAndGoToProfile(selectedBookIds);
+            // החלטה לאן לשמור לפי ה-ID שקיבלנו
+            if (listId != null) {
+                saveToSpecificList(selectedBookIds);
+            } else {
+                saveSelectedBooksAndGoToProfile(selectedBookIds);
+            }
         });
+
+        ImageView backbookImageView = findViewById(R.id.imageViewbooksearch);
+        backbookImageView.setOnClickListener(v -> finish()); // סגירת המסך וחזרה
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        ImageView backbookImageView = findViewById(R.id.imageViewbooksearch);
-        backbookImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Intent intent = new Intent(SearchBookActivity.this, ProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
         loadAllBooks();
     }
+
+    private void saveToSpecificList(List<String> bookIds) {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) return;
+
+        Map<String, Object> listData = new HashMap<>();
+        listData.put("itemsIds", bookIds);
+        listData.put("lastUpdated", FieldValue.serverTimestamp());
+
+        // שמירה תחת users -> {uid} -> my_custom_lists -> {listId}
+        db.collection("users").document(userId)
+                .collection("my_custom_lists").document(listId)
+                .set(listData, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "הרשימה עודכנה בהצלחה!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "שגיאה בשמירה", Toast.LENGTH_SHORT).show());
+    }
+
+    private void saveSelectedBooksAndGoToProfile(List<String> bookIds) {
+        String userId = FirebaseAuth.getInstance().getUid();
+        if (userId == null) return;
+
+        db.collection("users").document(userId)
+                .update("topBooks", FieldValue.arrayUnion(bookIds.toArray()))
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "הספרים נוספו לפרופיל!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("topBooks", bookIds);
+                    db.collection("users").document(userId).set(data, SetOptions.merge())
+                            .addOnSuccessListener(v -> finish());
+                });
+    }
+
     private void searchInFirebase(String searchText) {
-
-
         db.collection("books")
                 .orderBy("name")
                 .startAt(searchText)
                 .endAt(searchText + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         bookList.clear();
-                        if (task.getResult().isEmpty()) {
-                            android.util.Log.d("SEARCH_DEBUG", "No books found for: " + searchText);
-                        } else {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Book book = document.toObject(Book.class);
-                                book.setId(document.getId());
-                                bookList.add(book);
-                            }
-                            android.util.Log.d("SEARCH_DEBUG", "Found " + bookList.size() + " books!");
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Book book = document.toObject(Book.class);
+                            book.setId(document.getId());
+                            bookList.add(book);
                         }
                         adapter.notifyDataSetChanged();
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error getting documents: ", task.getException());
                     }
                 });
     }
 
-    private void saveSelectedBooksAndGoToProfile(List<String> bookIds) {
-        String userId = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // במקום ליצור Map חדש ולדרוס, אנחנו משתמשים ב-arrayUnion
-        db.collection("users").document(userId)
-                .update("topBooks", com.google.firebase.firestore.FieldValue.arrayUnion(bookIds.toArray()))
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "השירים נוספו בהצלחה!", Toast.LENGTH_SHORT).show();
-                    finish(); // חוזר לפרופיל
-                })
-                .addOnFailureListener(e -> {
-                    // אם המסמך לא קיים בכלל, update עלול להיכשל, אז נשתמש ב-set כגיבוי
-                    db.collection("users").document(userId)
-                            .set(new java.util.HashMap<String, Object>() {{
-                                put("topBooks", bookIds);
-                            }}, com.google.firebase.firestore.SetOptions.merge());
-                });
-    }
-
-
     private void loadAllBooks() {
         db.collection("books")
-                .orderBy("name") // מסדר אותם לפי א'-ב'
+                .orderBy("name")
                 .get()
                 .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         bookList.clear();
-                        if (task.getResult() != null) {
-                            for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
-                                Book book = document.toObject(Book.class);
-                                book.setId(document.getId());
-                                bookList.add(book);
-                            }
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot document : task.getResult()) {
+                            Book book = document.toObject(Book.class);
+                            book.setId(document.getId());
+                            bookList.add(book);
                         }
                         adapter.notifyDataSetChanged();
-                        android.util.Log.d("SEARCH_DEBUG", "Loaded all " + bookList.size() + " books");
-                    } else {
-                        android.util.Log.e("SEARCH_DEBUG", "Error loading books: ", task.getException());
                     }
                 });
     }

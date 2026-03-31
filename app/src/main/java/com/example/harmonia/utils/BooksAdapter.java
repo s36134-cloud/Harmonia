@@ -124,14 +124,19 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
             int currentPosition = holder.getAdapterPosition();
             if (currentPosition == RecyclerView.NO_POSITION) return;
 
-            // אם יש ליסנר (כמו בחיפוש) - תפעיל אותו
+            Book currentBook = bookList.get(currentPosition);
+
+            // 1. תמיד נהפוך את מצב הבחירה (זה מה שהיה חסר!)
+            currentBook.setSelected(!currentBook.isSelectedbook());
+
+            // 2. תמיד נעדכן את הנראות של השורה (שקיפות)
+            notifyItemChanged(currentPosition);
+
             if (listener != null) {
-                listener.onBookClick(book);
+                // 3. אם יש ליסנר, נפעיל אותו כדי שה-Activity יעדכן את כפתור ה-Done
+                listener.onBookClick(currentBook);
             } else {
-                // אם אין ליסנר (כמו בבחירה לרשימה) - תפעיל לוגיקת בחירה
-                Book currentBook = bookList.get(currentPosition);
-                currentBook.setSelected(!currentBook.isSelectedbook());
-                notifyItemChanged(currentPosition);
+                // 4. אם אין ליסנר, נעדכן את הכפתור ישירות
                 updateDoneButtonVisibility(v);
             }
         });
