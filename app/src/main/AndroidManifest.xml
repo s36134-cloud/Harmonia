@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".utils.HarmoniaApplication"
@@ -17,66 +18,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
+
+        <activity android:name=".ListActivity" android:exported="false" />
+        <activity android:name=".ListsActivity" android:exported="false" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".ConvActivity" android:exported="false" />
+        <activity android:name=".SearchChatActivity" android:exported="false" />
+        <activity android:name=".PlaylistActivity" android:exported="false" />
+        <activity android:name=".SearchCommActivity" android:exported="false" />
+        <activity android:name=".GenresActivity" android:exported="false" />
+        <activity android:name=".SearchBookSongPicActivity" android:exported="false" />
+        <activity android:name=".AddPostActivity" android:exported="false" />
+        <activity android:name=".GenreSelectionActivity" android:exported="false" />
+        <activity android:name=".SearchSongActivity" android:exported="false" />
+        <activity android:name=".SearchBookActivity" android:exported="false" />
+        <activity android:name=".CommunityActivity" android:exported="false" />
+        <activity android:name=".MessagesActivity" android:exported="false" />
+        <activity android:name=".ProfileActivity" android:exported="false" />
+        <activity android:name=".RegistrationActivity" android:exported="false" />
+
         <activity
-            android:name=".HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ConvActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SearchChatActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PlaylistActivity"
-            android:exported="false" />
+            android:name=".LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".utils.PostsNotificationService"
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
-        <activity
-            android:name=".SearchCommActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GenresActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SearchBookSongPicActivity"
-            android:exported="false" />
-        <activity
-            android:name=".AddPostActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GenreSelectionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SearchSongActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SearchBookActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CommunityActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MessagesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".RegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

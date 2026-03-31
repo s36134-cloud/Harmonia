@@ -125,7 +125,18 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         });
         // כפתור המידע סוף
 
+        Button YourlistssButton = findViewById(R.id.Your_listss);
+        YourlistssButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                Intent intent=new Intent(ProfileActivity.this, ListsActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+
+        });
         // כפתור היציאה התחלה
         Button signoutButton = findViewById(R.id.signout_button);
         signoutButton.setOnClickListener(new View.OnClickListener() {

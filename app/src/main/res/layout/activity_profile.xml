@@ -208,6 +208,15 @@
                 </LinearLayout>
 
                 <Button
+                    android:id="@+id/Your_listss"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#E1BEE7"
+                    android:text="Your lists"
+                    android:textStyle="bold"
+                    />
+
+                <Button
                     android:id="@+id/Genres_button"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
