@@ -41,7 +41,8 @@ public class SearchBookActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.searchResultsRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new BooksAdapter(bookList, null);
+        adapter = new BooksAdapter(bookList, null, R.layout.book);
+
         recyclerView.setAdapter(adapter);
 
         SearchView searchView = findViewById(R.id.searchViewbook);
@@ -64,25 +65,25 @@ public class SearchBookActivity extends AppCompatActivity {
                 return true;
             }
         });
-            Button btnDone = findViewById(R.id.btnDoneBooks);
+        Button btnDone = findViewById(R.id.btnDoneBooks);
         btnDone.setVisibility(android.view.View.GONE);
         btnDone.setOnClickListener(v -> {
-                // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
-                List<String> selectedBookIds = new ArrayList<>();
-                for (Book b : bookList) {
-                    if (b.isSelectedbook()) {
-                        selectedBookIds.add(b.getId());
-                    }
+            // 1. יצירת רשימה של ה-IDs של השירים שנבחרו
+            List<String> selectedBookIds = new ArrayList<>();
+            for (Book b : bookList) {
+                if (b.isSelectedbook()) {
+                    selectedBookIds.add(b.getId());
                 }
+            }
 
-                // 2. בדיקה אם המשתמש בחר שירים
-                if (selectedBookIds.isEmpty()) {
-                    Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+            // 2. בדיקה אם המשתמש בחר שירים
+            if (selectedBookIds.isEmpty()) {
+                Toast.makeText(this, "אנא בחרי לפחות שיר אחד", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                // 3. שמירה ל-Firebase ומעבר מסך
-                saveSelectedBooksAndGoToProfile(selectedBookIds);
+            // 3. שמירה ל-Firebase ומעבר מסך
+            saveSelectedBooksAndGoToProfile(selectedBookIds);
         });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -152,7 +153,7 @@ public class SearchBookActivity extends AppCompatActivity {
     }
 
 
-        private void loadAllBooks() {
+    private void loadAllBooks() {
         db.collection("books")
                 .orderBy("name") // מסדר אותם לפי א'-ב'
                 .get()

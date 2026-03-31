@@ -66,7 +66,7 @@ public class ListActivity extends AppCompatActivity {
             songsAdapter = new SongsAdapter(songResults, song -> {
                 addItemToList(song.getId());
                 Toast.makeText(this, song.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
-            });
+            }, R.layout.song_list); // <--- זה הפרמטר השלישי שהיה חסר
             recyclerViewsongbooklist.setAdapter(songsAdapter);
 
             searchViewbookorsong.setQueryHint("search song...");
@@ -86,7 +86,10 @@ public class ListActivity extends AppCompatActivity {
             });
 
         } else {
-            booksAdapter = new BooksAdapter(bookResults, imageUrl -> {});
+
+            booksAdapter = new BooksAdapter(bookResults, imageUrl -> {
+                // כאן הקוד שקורה בלחיצה (כרגע ריק אצלך)
+            }, R.layout.book_list);
             recyclerViewsongbooklist.setAdapter(booksAdapter);
 
             searchViewbookorsong.setQueryHint("search book...");

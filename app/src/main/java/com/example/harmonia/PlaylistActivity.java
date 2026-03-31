@@ -37,7 +37,7 @@ public class PlaylistActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewSongsPlaylist);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
-        songsAdapter = new SongsAdapter(songsList, null);
+        songsAdapter = new SongsAdapter(songsList, null, R.layout.song_list);
         recyclerView.setAdapter(songsAdapter);
 
         TextView playlistTitle = findViewById(R.id.title);

@@ -32,14 +32,16 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
     private List<Song> songList;
     private OnSongClickListener listener;
+    private int layoutResId; // המשתנה שקובע איזה XML להציג
 
     public interface OnSongClickListener {
         void onSongClick(Song song);
     }
 
-    public SongsAdapter(List<Song> songList, OnSongClickListener listener) {
+    public SongsAdapter(List<Song> songList, OnSongClickListener listener, int layoutResId) {
         this.songList = songList;
         this.listener = listener;
+        this.layoutResId = layoutResId;
     }
 
     public void updateList(List<Song> newList) {
@@ -56,6 +58,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             namesong = itemView.findViewById(R.id.namesong);
             artist = itemView.findViewById(R.id.artist);
             songimage = itemView.findViewById(R.id.songimage);
+            // עשויים להיות חסרים ב-XML המצומצם
             genresong = itemView.findViewById(R.id.genresong);
             sharesong = itemView.findViewById(R.id.sharesong);
         }
@@ -64,7 +67,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     @NonNull
     @Override
     public SongViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.song, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
         return new SongViewHolder(view);
     }
 
@@ -74,104 +77,78 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
 
         holder.namesong.setText(song.getName());
         holder.artist.setText(song.getArtist());
-        holder.genresong.setText(song.getGenre());
+
+        // בדיקות Null לרכיבים אופציונליים
+        if (holder.genresong != null) {
+            holder.genresong.setText(song.getGenre());
+        }
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
-        Glide.with(holder.itemView.getContext())
-                .load(imageUrl)
-                .placeholder(android.R.color.darker_gray)
-                .into(holder.songimage);
+        if (holder.songimage != null) {
+            Glide.with(holder.itemView.getContext())
+                    .load(imageUrl)
+                    .placeholder(android.R.color.darker_gray)
+                    .into(holder.songimage);
 
-        holder.songimage.setOnClickListener(v -> {
+            holder.songimage.setAlpha(song.isSelectedsong() ? 0.5f : 1.0f);
+        }
+
+        // לחיצה על כפתור השיתוף (אם קיים ב-Layout)
+        if (holder.sharesong != null) {
+            holder.sharesong.setOnClickListener(v -> showShareDialog(v, song));
+        }
+
+        // --- הוספת אפשרות הלחיצה על כל השורה ---
+        holder.itemView.setOnClickListener(v -> {
+            int currentPosition = holder.getAdapterPosition();
+            if (currentPosition == RecyclerView.NO_POSITION) return;
+
+            // עדכון מצב בחירה (ויזואלי)
             song.setSelected(!song.isSelectedsong());
-
-            if (song.isSelectedsong()) {
-                holder.songimage.setAlpha(0.5f);
-            } else {
-                holder.songimage.setAlpha(1.0f);
+            if (holder.songimage != null) {
+                holder.songimage.setAlpha(song.isSelectedsong() ? 0.5f : 1.0f);
             }
 
+            // הפעלת הליסנר שקיבלנו מה-Activity
             if (listener != null) {
                 listener.onSongClick(song);
             }
         });
-
-        holder.sharesong.setOnClickListener(v -> showShareDialog(v, song));
     }
 
     private void showShareDialog(View v, Song song) {
-        // שינוי ל-AlertDialog למרכוז הדיאלוג
         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
         View dialogView = LayoutInflater.from(v.getContext()).inflate(R.layout.dialog_select_chat, null);
         builder.setView(dialogView);
-
         AlertDialog alertDialog = builder.create();
-
-        // הפיכת הרקע לשקוף כדי לתמוך בעיצוב מעוגל ב-XML
-        if (alertDialog.getWindow() != null) {
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        }
-
+        if (alertDialog.getWindow() != null) alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
         RecyclerView rvChats = dialogView.findViewById(R.id.select_chat);
         rvChats.setLayoutManager(new LinearLayoutManager(v.getContext()));
-
         String currentUserId = FirebaseAuth.getInstance().getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("chats")
-                .whereArrayContains("users", currentUserId)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    List<ChatSummary> chatList = new ArrayList<>();
-                    ChatSummaryAdapter adapter = new ChatSummaryAdapter(chatList);
-                    rvChats.setAdapter(adapter);
-
-                    adapter.setOnItemClickListener(chat -> {
-                        sendSongToChat(chat.chatId, song, v.getContext());
-                        alertDialog.dismiss(); // סגירת הדיאלוג
-                    });
-
-                    for (DocumentSnapshot doc : queryDocumentSnapshots) {
-                        ChatSummary chat = doc.toObject(ChatSummary.class);
-                        if (chat != null) {
-                            chat.chatId = doc.getId();
-                            chatList.add(chat);
-
-                            String partnerId = "";
-                            if (chat.users != null) {
-                                for (String uid : chat.users) {
-                                    if (!uid.equals(currentUserId)) {
-                                        partnerId = uid;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!partnerId.isEmpty()) {
-                                db.collection("users").document(partnerId).get()
-                                        .addOnSuccessListener(userDoc -> {
-                                            if (userDoc.exists()) {
-                                                String nameFromDB = userDoc.getString("nickname");
-                                                chat.partnerName = (nameFromDB != null) ? nameFromDB : "Unknown";
-                                                chat.partnerId = userDoc.getId();
-                                                adapter.notifyDataSetChanged();
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                });
-
+        FirebaseFirestore.getInstance().collection("chats").whereArrayContains("users", currentUserId).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<ChatSummary> chatList = new ArrayList<>();
+            ChatSummaryAdapter adapter = new ChatSummaryAdapter(chatList);
+            rvChats.setAdapter(adapter);
+            adapter.setOnItemClickListener(chat -> {
+                sendSongToChat(chat.chatId, song, v.getContext());
+                alertDialog.dismiss();
+            });
+            for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                ChatSummary chat = doc.toObject(ChatSummary.class);
+                if (chat != null) {
+                    chat.chatId = doc.getId();
+                    chatList.add(chat);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
         alertDialog.show();
     }
 
     private void sendSongToChat(String chatId, Song song, android.content.Context context) {
-        String currentUserId = FirebaseAuth.getInstance().getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         Map<String, Object> message = new HashMap<>();
-        message.put("senderId", currentUserId);
+        message.put("senderId", FirebaseAuth.getInstance().getUid());
         message.put("text", song.getName());
         message.put("timestamp", FieldValue.serverTimestamp());
         message.put("songId", song.getId());
@@ -179,20 +156,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         message.put("artist", song.getArtist());
         message.put("genre", song.getGenre());
 
-        db.collection("chats").document(chatId).collection("messages")
-                .add(message)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(context, "Song shared!", Toast.LENGTH_SHORT).show();
-
-                    db.collection("chats").document(chatId)
-                            .update("lastMessage", "Shared a song: " + song.getName(),
-                                    "timestamp", FieldValue.serverTimestamp());
-                })
-                .addOnFailureListener(e -> Log.e("SongsAdapter", "Error sharing song", e));
+        FirebaseFirestore.getInstance().collection("chats").document(chatId).collection("messages").add(message)
+                .addOnSuccessListener(ref -> Toast.makeText(context, "Song shared!", Toast.LENGTH_SHORT).show());
     }
 
     @Override
-    public int getItemCount() {
-        return songList != null ? songList.size() : 0;
-    }
+    public int getItemCount() { return songList != null ? songList.size() : 0; }
 }

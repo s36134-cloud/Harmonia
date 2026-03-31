@@ -55,7 +55,7 @@ public class SearchSongActivity extends AppCompatActivity {
             }
             // אם נבחר שיר - הכפתור מופיע, אם לא - הוא נעלם
             btnDone.setVisibility(hasSelection ? View.VISIBLE : View.GONE);
-        });
+        }, R.layout.song_list); // <--- זה הפרמטר השלישי שהיה חסר!
 
         recyclerView.setAdapter(adapter);
 

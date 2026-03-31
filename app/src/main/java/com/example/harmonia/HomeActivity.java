@@ -71,13 +71,8 @@ public class HomeActivity extends AppCompatActivity {
         recyclerPlaylists.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        booksAdapter = new BooksAdapter(bookList, imageUrl -> {
-            // כאן תוכלי לפתוח מסך פרטי ספר אם תרצי
-        });
-        songsAdapter = new SongsAdapter(songList, song -> {
-            // כאן תוכלי לפתוח מסך פרטי שיר אם תרצי
-        });
-
+        booksAdapter = new BooksAdapter(bookList, null, R.layout.book);
+        songsAdapter = new SongsAdapter(songList, null, R.layout.song);
         playlistsAdapter = new PlaylistsAdapter(playlistsList, this ,playlist -> {
         });
 
