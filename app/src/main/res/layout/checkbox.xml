@@ -12,7 +12,7 @@
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:src="@drawable/ic_heart"
-        app:tint="#CE93D8"
+        app:tint="#FBE8CE"
          />
 
     <TextView
@@ -20,7 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rock"
-        android:textColor="#CE93D8"
+        android:fontFamily="@font/myfont4"
+        android:textColor="#DCCCAC"
         android:textStyle="bold"
         android:textSize="12sp"
         android:gravity="center"

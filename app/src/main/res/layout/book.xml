@@ -40,9 +40,9 @@
                     android:id="@+id/namebook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="שם הספר"
-                    android:textStyle="bold"
-                    android:textColor="#000000"
+                    android:text="book name"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textSize="13sp"
                     android:maxLines="2"
                     android:ellipsize="end" />
@@ -51,22 +51,24 @@
                     android:id="@+id/author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="סופר"
-                    android:textColor="#444444"
+                    android:text="author"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/genrebook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ז'אנר"
-                    android:textColor="#777777"
+                    android:text="genre"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textSize="10sp"
                     android:layout_marginTop="2dp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="14dp"
                     android:layout_marginTop="2dp">
 
                     <TextView
@@ -74,8 +76,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="גיל"
-                        android:textColor="#777777"
+                        android:fontFamily="@font/myfont4"
+                        android:text="age"
+                        android:textColor="#1A2B3C"
                         android:textSize="10sp" />
 
                     <ImageView
@@ -84,8 +87,9 @@
                         android:layout_height="20dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/ic_share"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        app:tint="#1A2B3C"/>
 
                 </RelativeLayout>
 

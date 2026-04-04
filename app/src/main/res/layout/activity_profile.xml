@@ -4,7 +4,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="#FFF8EC">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -26,10 +26,11 @@
             android:gravity="center"
             android:paddingStart="45dp"
             android:paddingEnd="45dp"
+            android:textStyle="bold"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="Profile"
-            android:textColor="#CE93D8"
+            android:textColor="#1A2B3C"
             android:textSize="36sp"
             android:fontFamily="@font/myfont4" />
     </androidx.cardview.widget.CardView>
@@ -86,7 +87,7 @@
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_person"
-                    app:tint="#E1BEE7"/>
+                    app:tint="#DCCCAC"/>
 
                 <Button
                     android:id="@+id/btn_choose_picture"
@@ -94,17 +95,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="16dp"
-                    android:backgroundTint="#E1BEE7"
+                    android:backgroundTint="#FBE8CE"
+                    android:textColor="#1A2B3C"
+                    android:fontFamily="@font/myfont4"
                     android:text="choose picture"
-                    android:textStyle="bold" />
+                   />
 
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Your favorite songs"
-                    android:textColor="#CE93D8"
+                    android:text="Your favorite Songs"
+                    android:textColor="#1A2B3C"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:fontFamily="@font/myfont4"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -118,6 +123,8 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="24dp"
                     android:orientation="horizontal">
+
+
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/btn_opensearchsongs"
@@ -140,10 +147,11 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:src="@drawable/ic_add"
-                                app:tint="#E1BEE7" />
+                                app:tint="#1A2B3C" />
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_songs"
@@ -156,10 +164,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Your favorite books"
-                    android:textColor="#CE93D8"
+                    android:textColor="#1A2B3C"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:fontFamily="@font/myfont4"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -195,7 +204,7 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:src="@drawable/ic_add"
-                                app:tint="#E1BEE7" />
+                                app:tint="#1A2B3C" />
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -211,18 +220,20 @@
                     android:id="@+id/Your_listss"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#E1BEE7"
+                    android:backgroundTint="#FBE8CE"
+                    android:textColor="#1A2B3C"
                     android:text="Your lists"
-                    android:textStyle="bold"
+                    android:fontFamily="@font/myfont4"
                     />
 
                 <Button
                     android:id="@+id/Genres_button"
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#E1BEE7"
+                    android:backgroundTint="#FBE8CE"
                     android:text="Choose Genres"
-                    android:textStyle="bold"
+                    android:textColor="#1A2B3C"
+                    android:fontFamily="@font/myfont4"
                     />
 
                 <Button
@@ -230,9 +241,11 @@
                     android:layout_width="290dp"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="30dp"
-                    android:backgroundTint="#E1BEE7"
+                    android:backgroundTint="#FBE8CE"
+                    android:textColor="#1A2B3C"
                     android:text="sign out"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/myfont4"
+                    />
 
             </LinearLayout>
         </ScrollView>

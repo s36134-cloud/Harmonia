@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     tools:context=".GenresActivity"
-    android:background="@drawable/background">
+    android:background="#FFF8EC">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -39,15 +39,18 @@
                 android:contentDescription="Back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                app:tint="#1A2B3C"
+                />
 
             <TextView
                 android:id="@+id/mainTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Genres"
-                android:textColor="#CE93D8"
+                android:textColor="#1A2B3C"
                 android:textSize="36sp"
+                android:textStyle="bold"
                 android:fontFamily="@font/myfont4"
                 android:layout_marginStart="10dp" /> </LinearLayout>
 
@@ -82,10 +85,11 @@
                     android:id="@+id/SongsGenres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CE93D8"
-                    android:textStyle="bold"
+                    android:textColor="#1A2B3C"
+                    android:fontFamily="@font/myfont4"
                     android:text="Songs Genres"
                     android:textSize="20sp"
+                    android:textStyle="bold"
                     android:paddingBottom="8dp"
                     android:gravity="center"
                     />
@@ -113,10 +117,11 @@
                     android:id="@+id/BooksGenres"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CE93D8"
-                    android:textStyle="bold"
+                    android:textColor="#1A2B3C"
+                    android:fontFamily="@font/myfont4"
                     android:text="Books Genres"
                     android:textSize="20sp"
+                    android:textStyle="bold"
                     android:paddingBottom="8dp"
                     android:gravity="center"/>
 
@@ -143,8 +148,9 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:backgroundTint="#E1BEE7"
+                    android:fontFamily="@font/myfont4"
+                    android:backgroundTint="#FBE8CE"
+                    android:textColor="#1A2B3C"
                     android:text="save"
                     android:visibility="gone"/>
 

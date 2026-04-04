@@ -41,9 +41,9 @@
                     android:id="@+id/namesong"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="שם השיר"
-                    android:textStyle="bold"
-                    android:textColor="#444444"
+                    android:text="song name"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textSize="13sp"
                     android:maxLines="2"
                     android:ellipsize="end" />
@@ -52,8 +52,9 @@
                     android:id="@+id/artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="אומן"
-                    android:textColor="#444444"
+                    android:text="artist"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textSize="11sp" />
 
                 <RelativeLayout
@@ -66,8 +67,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
-                        android:text="ז'אנר"
-                        android:textColor="#777777"
+                        android:text="Genre"
+                        android:fontFamily="@font/myfont4"
+                        android:textColor="#1A2B3C"
                         android:textSize="10sp" />
 
                     <ImageView
@@ -77,7 +79,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/ic_share"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:tint="#1A2B3C"/>
 
                 </RelativeLayout>
 

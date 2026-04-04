@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@drawable/background"
+    android:background="#FFF8EC"
     tools:context=".AddPostActivity">
 
     <androidx.cardview.widget.CardView
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Your list"
-                android:textColor="#CE93D8"
+                android:textColor="#1A2B3C"
                 android:textSize="30sp"
                 android:fontFamily="@font/myfont4"
                 android:layout_marginStart="10dp" />
@@ -67,14 +67,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp"
-            android:gravity="center_horizontal">
+            android:padding="16dp">
 
-
+            <!-- שורת חיפוש -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
@@ -90,16 +89,36 @@
 
             </androidx.cardview.widget.CardView>
 
+            <!-- תוצאות חיפוש -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewsongbooklist"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:padding="10dp"
+                android:padding="4dp"
                 android:clipToPadding="false" />
 
+            <!-- כותרת הרשימה -->
+            <TextView
+                android:id="@+id/tvYourListTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Your list:"
+                android:textColor="#CE93D8"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:paddingStart="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="4dp"/>
 
-
+            <!-- פריטים שברשימה -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMyList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                android:clipToPadding="false" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

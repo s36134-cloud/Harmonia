@@ -46,9 +46,9 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
 
         // עיצוב לפי מצב בחירה
         if (checkedPositions.contains(position)) {
-            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#CE93D8"));
+            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#E8DBB3"));
         } else {
-            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#E1BEE7"));
+            holder.heartIcon.setColorFilter(android.graphics.Color.parseColor("#FBE8CE"));
         }
 
         holder.itemView.setOnClickListener(v -> {

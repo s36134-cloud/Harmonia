@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@drawable/background"
+    android:background="#FFF8EC"
     tools:context=".PlaylistActivity">
 
     <androidx.cardview.widget.CardView
@@ -40,14 +40,16 @@
                 android:contentDescription="Back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                app:tint="#1A2B3C"/>
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Name"
-                android:textColor="#CE93D8"
+                android:textStyle="bold"
+                android:textColor="#1A2B3C"
                 android:textSize="36sp"
                 android:fontFamily="@font/myfont4"
                 android:layout_marginStart="10dp" />

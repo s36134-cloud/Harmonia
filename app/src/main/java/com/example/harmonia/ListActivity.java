@@ -1,7 +1,6 @@
 package com.example.harmonia;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,26 +20,31 @@ import java.util.List;
 public class ListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewsongbooklist;
+    private RecyclerView recyclerViewMyList;
     private SearchView searchViewbookorsong;
     private FirebaseFirestore db;
     private String currentUserId, listId, listType;
 
-    // רשימה לתוצאות החיפוש בלבד
     private List<Song> songResults = new ArrayList<>();
     private List<Book> bookResults = new ArrayList<>();
+    private List<Song> songsInList = new ArrayList<>();
+    private List<Book> booksInList = new ArrayList<>();
 
-    // רשימה של מה שכבר קיים ברשימה (כדי שלא ייעלם)
-    private List<Song> existingSongs = new ArrayList<>();
-    private List<Book> existingBooks = new ArrayList<>();
-
-    private SongsAdapter songsAdapter;
-    private BooksAdapter booksAdapter;
+    private SongsAdapter songsSearchAdapter;
+    private SongsAdapter songsListAdapter;
+    private BooksAdapter booksSearchAdapter;
+    private BooksAdapter booksListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         db = FirebaseFirestore.getInstance();
         currentUserId = FirebaseAuth.getInstance().getUid();
@@ -54,56 +58,66 @@ public class ListActivity extends AppCompatActivity {
         findViewById(R.id.Back_to_community).setOnClickListener(v -> finish());
 
         recyclerViewsongbooklist = findViewById(R.id.recyclerViewsongbooklist);
+        recyclerViewMyList = findViewById(R.id.recyclerViewMyList);
         recyclerViewsongbooklist.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewMyList.setLayoutManager(new LinearLayoutManager(this));
 
         searchViewbookorsong = findViewById(R.id.searchViewbookorsong);
 
-        setupAdapterAndSearch();
-        loadExistingItems(); // טעינת הפריטים שכבר ברשימה בהתחלה
+        setupAdapters();
+        loadListItems();
     }
 
-    private void setupAdapterAndSearch() {
-        if ("songs".equals(listType)) {
-            // האדאפטר מציג את songResults (שמתחילה ריקה בחיפוש)
-            songsAdapter = new SongsAdapter(songResults, song -> {
+    private void setupAdapters() {
+        if (listType.equals("songs")) {
+            songsSearchAdapter = new SongsAdapter(songResults, song -> {
                 addItemToList(song.getId());
-                Toast.makeText(this, song.getName() + " נוסף!", Toast.LENGTH_SHORT).show();
+                songsInList.add(song);
+                songsListAdapter.updateList(songsInList);
+                Toast.makeText(this, song.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
             }, R.layout.song_list);
-            recyclerViewsongbooklist.setAdapter(songsAdapter);
+            recyclerViewsongbooklist.setAdapter(songsSearchAdapter);
 
+            songsListAdapter = new SongsAdapter(songsInList, song -> {}, R.layout.song_list);
+            recyclerViewMyList.setAdapter(songsListAdapter);
+
+            searchViewbookorsong.setQueryHint("search song...");
             searchViewbookorsong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) { return false; }
-
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (newText.isEmpty()) {
-                        // אם החיפוש ריק - מציגים את מה שכבר היה ברשימה
-                        songsAdapter.updateList(existingSongs);
-                    } else {
-                        searchSongs(newText);
+                    if (!newText.isEmpty()) searchSongs(newText);
+                    else {
+                        songResults.clear();
+                        songsSearchAdapter.updateList(songResults);
                     }
                     return true;
                 }
             });
 
         } else {
-            booksAdapter = new BooksAdapter(bookResults, book -> {
+            booksSearchAdapter = new BooksAdapter(bookResults, book -> {
                 addItemToList(book.getId());
-                Toast.makeText(this, book.getName() + " נוסף!", Toast.LENGTH_SHORT).show();
+                booksInList.add(book);
+                booksListAdapter.updateList(booksInList);
+                Toast.makeText(this, book.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
             }, R.layout.book_list);
-            recyclerViewsongbooklist.setAdapter(booksAdapter);
+            recyclerViewsongbooklist.setAdapter(booksSearchAdapter);
 
+            booksListAdapter = new BooksAdapter(booksInList, book -> {}, R.layout.book_list);
+            recyclerViewMyList.setAdapter(booksListAdapter);
+
+            searchViewbookorsong.setQueryHint("search book...");
             searchViewbookorsong.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) { return false; }
-
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (newText.isEmpty()) {
-                        booksAdapter.updateList(existingBooks);
-                    } else {
-                        searchBooks(newText);
+                    if (!newText.isEmpty()) searchBooks(newText);
+                    else {
+                        bookResults.clear();
+                        booksSearchAdapter.updateList(bookResults);
                     }
                     return true;
                 }
@@ -126,7 +140,7 @@ public class ListActivity extends AppCompatActivity {
                             songResults.add(song);
                         }
                     }
-                    songsAdapter.updateList(songResults);
+                    songsSearchAdapter.updateList(songResults);
                 });
     }
 
@@ -145,56 +159,47 @@ public class ListActivity extends AppCompatActivity {
                             bookResults.add(book);
                         }
                     }
-                    booksAdapter.updateList(bookResults);
-                });
-    }
-
-    // טעינת הפריטים שכבר קיימים ברשימה ב-Firestore
-    private void loadExistingItems() {
-        db.collection("users").document(currentUserId)
-                .collection("lists").document(listId) // וודאי שזה הנתיב הנכון אצלך
-                .addSnapshotListener((value, error) -> {
-                    if (value != null && value.exists()) {
-                        List<String> ids = (List<String>) value.get("itemIds");
-                        if (ids != null && !ids.isEmpty()) {
-                            fetchDetailsForExistingItems(ids);
-                        }
-                    }
-                });
-    }
-
-    private void fetchDetailsForExistingItems(List<String> ids) {
-        String collection = "songs".equals(listType) ? "songs" : "books";
-        db.collection(collection).whereIn(FieldPath.documentId(), ids).get()
-                .addOnSuccessListener(snapshot -> {
-                    if ("songs".equals(listType)) {
-                        existingSongs.clear();
-                        for (DocumentSnapshot doc : snapshot) {
-                            Song s = doc.toObject(Song.class);
-                            s.setId(doc.getId());
-                            existingSongs.add(s);
-                        }
-                        // אם החיפוש כרגע ריק, תציג את הקיימים
-                        if (searchViewbookorsong.getQuery().toString().isEmpty()) {
-                            songsAdapter.updateList(existingSongs);
-                        }
-                    } else {
-                        existingBooks.clear();
-                        for (DocumentSnapshot doc : snapshot) {
-                            Book b = doc.toObject(Book.class);
-                            b.setId(doc.getId());
-                            existingBooks.add(b);
-                        }
-                        if (searchViewbookorsong.getQuery().toString().isEmpty()) {
-                            booksAdapter.updateList(existingBooks);
-                        }
-                    }
+                    booksSearchAdapter.updateList(bookResults);
                 });
     }
 
     private void addItemToList(String itemId) {
         db.collection("users").document(currentUserId)
                 .collection("lists").document(listId)
-                .update("itemIds", FieldValue.arrayUnion(itemId));
+                .update("itemIds", FieldValue.arrayUnion(itemId))
+                .addOnFailureListener(e ->
+                        Toast.makeText(this, "שגיאה בהוספה לרשימה", Toast.LENGTH_SHORT).show());
+    }
+
+    private void loadListItems() {
+        db.collection("users").document(currentUserId)
+                .collection("lists").document(listId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    List<String> itemIds = (List<String>) doc.get("itemIds");
+                    if (itemIds == null || itemIds.isEmpty()) return;
+
+                    String collection = listType.equals("songs") ? "songs" : "books";
+                    for (String itemId : itemIds) {
+                        db.collection(collection).document(itemId).get()
+                                .addOnSuccessListener(itemDoc -> {
+                                    if (listType.equals("songs")) {
+                                        Song song = itemDoc.toObject(Song.class);
+                                        if (song != null) {
+                                            song.setId(itemDoc.getId());
+                                            songsInList.add(song);
+                                            songsListAdapter.updateList(songsInList);
+                                        }
+                                    } else {
+                                        Book book = itemDoc.toObject(Book.class);
+                                        if (book != null) {
+                                            book.setId(itemDoc.getId());
+                                            booksInList.add(book);
+                                            booksListAdapter.updateList(booksInList);
+                                        }
+                                    }
+                                });
+                    }
+                });
     }
 }

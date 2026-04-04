@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@drawable/background" tools:context=".LoginActivity">
+    android:background="#FFF8EC" tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -31,7 +31,8 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="Harmonia"
-            android:textColor="#CE93D8"
+            android:textStyle="bold"
+            android:textColor="#1A2B3C"
             android:textSize="36sp"
             android:fontFamily="@font/myfont4" />
     </androidx.cardview.widget.CardView>
@@ -69,10 +70,11 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="30dp"
                 android:text="Log in"
-                android:textColor="#BA68C8"
+                android:textStyle="bold"
+                android:textColor="#1A2B3C"
                 android:textSize="32sp"
-
-                android:textStyle="bold" />
+                android:fontFamily="@font/myfont4"
+                />
 
 
 
@@ -93,7 +95,9 @@
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
                 app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="#8A2BE2">
+                app:startIconTint="#1A2B3C"
+                >
+
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/email_edit_text"
@@ -102,7 +106,9 @@
                     android:background="@android:color/transparent"
                     android:inputType="textEmailAddress"
                     android:paddingTop="18dp"
-                    android:paddingBottom="18dp" />
+                    android:fontFamily="@font/myfont4"
+                    android:paddingBottom="18dp"
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -122,7 +128,7 @@
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
                 app:startIconDrawable="@drawable/ic_lock"
-                app:startIconTint="#8A2BE2">
+                app:startIconTint="#1A2B3C">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password_edit_text"
@@ -131,6 +137,7 @@
                     android:background="@android:color/transparent"
                     android:inputType="textPassword"
                     android:paddingTop="18dp"
+                    android:fontFamily="@font/myfont4"
                     android:paddingBottom="18dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -139,13 +146,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:backgroundTint="#E1BEE7"
+                android:backgroundTint="#FBE8CE"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:text="Log in"
-                android:textColor="@android:color/white"
+                android:fontFamily="@font/myfont4"
+                android:textColor="#1A2B3C"
                 android:textSize="18sp"
-                android:textStyle="bold"
                 app:cornerRadius="30dp" />
 
             <TextView
@@ -155,21 +162,23 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
                 android:text="Don't have an account?"
-                android:textColor="#BA68C8"
+                android:textColor="#1A2B3C"
+                android:textStyle="bold"
+                android:fontFamily="@font/myfont4"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/dont_have_account_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#E1BEE7"
+                android:backgroundTint="#FBE8CE"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:text="Sign up"
-                android:textColor="@android:color/white"
+                android:textColor="#1A2B3C"
                 android:textSize="18sp"
-                android:textStyle="bold"
+                android:fontFamily="@font/myfont4"
                 app:cornerRadius="30dp" />
 
 

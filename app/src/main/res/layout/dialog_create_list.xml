@@ -32,9 +32,22 @@
                     android:gravity="center"
                     android:paddingBottom="10dp"
                     android:text="create new list"
-                    android:textColor="#CE93D8"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    />
+
+                <ImageView
+                    android:id="@+id/ivListImagePreview"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/rounded_input_background"
+                    android:src="@android:drawable/ic_menu_gallery"
+                    android:layout_marginBottom="10dp"/>
+
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -50,7 +63,9 @@
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/rounded_input_background"
                         android:gravity="center"
-                        android:hint="list name" />
+                        android:hint="list name"
+                        android:fontFamily="@font/myfont4"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -69,7 +84,9 @@
                         android:gravity="center"
                         android:hint="Description"
                         android:minLines="3"
-                        android:padding="15dp" />
+                        android:padding="15dp"
+                        android:fontFamily="@font/myfont4"
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -77,7 +94,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="Select list type:"
-                    android:textColor="#CE93D8"
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"
                     android:textStyle="bold" />
 
                 <RadioGroup
@@ -95,14 +113,18 @@
                         android:layout_marginEnd="20dp"
                         android:buttonTint="#CE93D8"
                         android:checked="true"
-                        android:text="Songs" />
+                        android:text="Songs"
+                        android:fontFamily="@font/myfont4"
+                        android:textColor="#1A2B3C"/>
 
                     <RadioButton
                         android:id="@+id/radioBooks"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:buttonTint="#CE93D8"
-                        android:text="Books" />
+                        android:text="Books"
+                        android:fontFamily="@font/myfont4"
+                        android:textColor="#1A2B3C"/>
                 </RadioGroup>
 
                 <ImageView
@@ -122,15 +144,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
-                        android:backgroundTint="#E1BEE7"
-                        android:text="גלריה" />
+                        android:backgroundTint="#FBE8CE"
+                        android:text="Gallery"
+                        android:fontFamily="@font/myfont4"
+                        android:textColor="#1A2B3C"/>
 
                     <Button
                         android:id="@+id/btnPickCamera"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#E1BEE7"
-                        android:text="מצלמה" />
+                        android:backgroundTint="#FBE8CE"
+                        android:text="Camera"
+                        android:fontFamily="@font/myfont4"
+                        android:textColor="#1A2B3C"/>
 
                 </LinearLayout>
 
@@ -139,9 +165,10 @@
                     android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:backgroundTint="#E1BEE7"
+                    android:backgroundTint="#FBE8CE"
                     android:text="Create"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/myfont4"
+                    android:textColor="#1A2B3C"/>
 
             </LinearLayout>
         </ScrollView>

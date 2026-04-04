@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="#FFF8EC">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -26,15 +26,14 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:paddingStart="45dp"
+            android:textStyle="bold"
             android:paddingEnd="45dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="Messages"
-            android:textColor="#CE93D8"
+            android:textColor="#1A2B3C"
             android:textSize="36sp"
             android:fontFamily="@font/myfont4"/>
-
-         />
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -54,7 +53,6 @@
         android:background="@drawable/bottom_nav_bg"
         app:backgroundTint="@null"/>
 
-
     <androidx.cardview.widget.CardView
         android:id="@+id/whiteCard"
         android:layout_width="0dp"
@@ -70,38 +68,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleCard">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:scrollbars="none">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:scrollbars="none">
 
-
-
-                <Button
-                    android:id="@+id/start_conv_button"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
-                    android:backgroundTint="#E1BEE7"
-                    android:text="Start conversation" />
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewchats"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="10dp"
-                    android:clipToPadding="false" />
-            </LinearLayout>
-        </ScrollView>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerViewchats"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false" />
+                </LinearLayout>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/start_conv_button"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="#FBE8CE"
+                android:textColor="#1A2B3C"
+                android:fontFamily="@font/myfont4"
+                android:text="Start conversation" />
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -28,9 +28,7 @@ import java.util.UUID;
 public class ListsActivity extends AppCompatActivity {
 
     private static final String supabaseUrl = "https://nbliklmpfsjemwizicuh.supabase.co";
-
     private static final String supabaseKey = "sb_publishable_HZttWd_l_Xf_FOSpiwgyvQ_NTeYzNgy";
-
     private static final String SUPABASE_BUCKET = "Harmonia-bucket";
 
     private RecyclerView recyclerViewlists;
@@ -106,7 +104,7 @@ public class ListsActivity extends AppCompatActivity {
         TextInputEditText etName = dialogView.findViewById(R.id.list_name);
         TextInputEditText etDescription = dialogView.findViewById(R.id.list_description);
         RadioGroup radioGroupType = dialogView.findViewById(R.id.radioGroupType);
-        ivListImagePreview = dialogView.findViewById(R.id.upload_image);
+        ivListImagePreview = dialogView.findViewById(R.id.ivListImagePreview);
         Button btnGallery = dialogView.findViewById(R.id.btnPickGallery);
         Button btnCamera = dialogView.findViewById(R.id.btnPickCamera);
         Button btnCreate = dialogView.findViewById(R.id.Create_list);
@@ -192,6 +190,7 @@ public class ListsActivity extends AppCompatActivity {
             Toast.makeText(this, "שגיאה בקריאת התמונה", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void createListInFirestore(String name, String description, String type, String imageUrl, AlertDialog dialog) {
         UserList newList = new UserList(name, description, type, imageUrl);
 

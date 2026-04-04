@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main"
-    android:background="@drawable/background" tools:context=".LoginActivity">
+    android:background="#FFF8EC"
+    tools:context=".LoginActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -29,9 +30,10 @@
             android:paddingStart="45dp"
             android:paddingEnd="45dp"
             android:paddingTop="10dp"
+            android:textStyle="bold"
             android:paddingBottom="10dp"
             android:text="Harmonia"
-            android:textColor="#CE93D8"
+            android:textColor="#1A2B3C"
             android:textSize="36sp"
             android:fontFamily="@font/myfont4" />
     </androidx.cardview.widget.CardView>
@@ -73,11 +75,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Register"
-                android:textStyle="bold"
                 android:textSize="32sp"
-                android:textColor="#BA68C8"
+                android:textColor="#1A2B3C"
                 android:layout_gravity="center"
-                android:layout_marginBottom="30dp"/>
+                android:layout_marginBottom="30dp"
+                android:textStyle="bold"
+
+                android:fontFamily="@font/myfont4"/>
 
 
 
@@ -87,8 +91,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Name"
-                app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="#8A2BE2"
+                app:startIconDrawable="@drawable/ic_name"
+                app:startIconTint="#1A2B3C"
                 android:layout_marginBottom="10dp"
                 app:boxCornerRadiusTopStart="30dp"
                 app:boxCornerRadiusTopEnd="30dp"
@@ -106,7 +110,8 @@
                     android:background="@android:color/transparent"
                     android:inputType="textEmailAddress"
                     android:paddingTop="18dp"
-                    android:paddingBottom="18dp" />
+                    android:paddingBottom="18dp"
+                    android:fontFamily="@font/myfont4"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -136,8 +141,8 @@
                 app:boxCornerRadiusTopStart="30dp"
                 app:boxStrokeWidth="0dp"
                 app:boxStrokeWidthFocused="0dp"
-                app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="#8A2BE2">
+                app:startIconDrawable="@drawable/ic_cake"
+                app:startIconTint="#1A2B3C">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_age"
@@ -146,7 +151,8 @@
                     android:background="@android:color/transparent"
                     android:inputType="textEmailAddress"
                     android:paddingTop="18dp"
-                    android:paddingBottom="18dp" />
+                    android:paddingBottom="18dp"
+                    android:fontFamily="@font/myfont4"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -158,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 app:startIconDrawable="@drawable/ic_email"
-                app:startIconTint="#8A2BE2"
+                app:startIconTint="#1A2B3C"
                 android:layout_marginBottom="10dp"
 
                 app:boxCornerRadiusTopStart="30dp"
@@ -177,7 +183,8 @@
                     android:inputType="textEmailAddress"
                     android:paddingTop="18dp"
                     android:paddingBottom="18dp"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/myfont4"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -189,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Password"
                 app:startIconDrawable="@drawable/ic_lock"
-                app:startIconTint="#8A2BE2"
+                app:startIconTint="#1A2B3C"
                 android:layout_marginBottom="10dp"
 
                 app:boxCornerRadiusTopStart="30dp"
@@ -208,7 +215,8 @@
                     android:inputType="textPassword"
                     android:paddingTop="18dp"
                     android:paddingBottom="18dp"
-                    android:background="@android:color/transparent" />
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/myfont4"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -218,24 +226,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
+                android:fontFamily="@font/myfont4"
+                android:textColor="#1A2B3C"
                 android:textSize="18sp"
                 android:paddingTop="18dp"
+                android:backgroundTint="#FBE8CE"
                 android:paddingBottom="18dp"
-                android:backgroundTint="#E1BEE7"
-                app:cornerRadius="30dp" android:layout_marginBottom="20dp" />
+                app:cornerRadius="30dp"
+                android:layout_marginBottom="20dp" />
 
             <TextView
                 android:id="@+id/already_have_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Already have an account?"
-                android:textStyle="bold"
+                android:fontFamily="@font/myfont4"
                 android:textSize="16sp"
-                android:textColor="#BA68C8"
+                android:textColor="#1A2B3C"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+
                 />
 
 
@@ -244,13 +255,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Log in"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
+                android:fontFamily="@font/myfont4"
+                android:textColor="#1A2B3C"
                 android:textSize="18sp"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
-
-                android:backgroundTint="#E1BEE7"
+                android:backgroundTint="#FBE8CE"
                 app:cornerRadius="30dp" />
         </LinearLayout>
         </ScrollView>

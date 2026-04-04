@@ -8,7 +8,7 @@
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
-    app:cardBackgroundColor="#F3E5F5">
+    app:cardBackgroundColor="#F9F7F2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,20 +37,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="book name"
+                android:fontFamily="@font/myfont4"
                 android:textSize="16sp"
-                android:textColor="#4A148C"
-                android:textStyle="bold" />
+                android:textColor="#1A2B3C"
+               />
 
             <TextView
                 android:id="@+id/author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="author"
+                android:fontFamily="@font/myfont4"
                 android:textSize="13sp"
-                android:textColor="#7B1FA2"
+                android:textColor="#1A2B3C"
                 android:layout_marginTop="2dp"
                 android:maxLines="1"
                 android:ellipsize="end" />
+
+            <ImageView
+                android:id="@+id/btnFinished"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@android:drawable/checkbox_off_background"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                android:layout_marginStart="8dp"/>
 
         </LinearLayout>
 

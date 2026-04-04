@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     android:orientation="vertical"
-    android:background="@drawable/background">
+    android:background="#FFF8EC">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -20,7 +20,9 @@
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingStart="12dp"
-            android:paddingEnd="8dp">
+            android:paddingEnd="8dp"
+            app:theme="@style/MySearchFont"
+            >
 
             <ImageView
                 android:id="@+id/imageViewbooksearch"

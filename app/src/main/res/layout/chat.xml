@@ -8,7 +8,7 @@
     android:layout_marginBottom="10dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="0dp"
-    app:cardBackgroundColor="#F3E5F5">
+    app:cardBackgroundColor="#F9F7F2">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -28,6 +28,7 @@
                 android:layout_height="40dp"
                 android:background="@drawable/ic_account"
                 android:layout_marginEnd="12dp"
+                app:tint="#1A2B3C"
                 />
 
 
@@ -35,10 +36,10 @@
                 android:id="@+id/tv_partner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="שם המשתמש"
+                android:text="name"
+                android:fontFamily="@font/myfont4"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="#4A148C"
+                android:textColor="#1A2B3C"
                 android:layout_marginEnd="12dp" />
 
             <TextView
@@ -51,27 +52,17 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/backhome"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@id/layout_header"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/ic_chat"
-            app:tint="#CE93D8"
-            android:background="?attr/selectableItemBackgroundBorderless" />
 
         <TextView
             android:id="@+id/tv_reason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout_header"
-            android:layout_toStartOf="@id/backhome"
             android:layout_marginTop="8dp"
             android:layout_marginStart="52dp"
-            android:text="שניכם אוהבים מוזיקת רוק וספרי מתח..."
-            android:textColor="#666666"
+            android:fontFamily="@font/myfont4"
+            android:text="Both.."
+            android:textColor="#1A2B3C"
             android:textSize="14sp" />
 
         <Button

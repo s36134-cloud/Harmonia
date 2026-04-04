@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background">
+    android:background="#FFF8EC">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
@@ -30,7 +30,8 @@
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:text="Home"
-            android:textColor="#CE93D8"
+            android:textStyle="bold"
+            android:textColor="#1A2B3C"
             android:textSize="36sp"
             android:fontFamily="@font/myfont4" />
     </androidx.cardview.widget.CardView>
@@ -83,12 +84,13 @@
                     android:id="@+id/booksrec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CE93D8"
-                    android:textStyle="bold"
-                    android:text="Books"
+                    android:textColor="#1A2B3C"
+                    android:text="Recommended Books"
                     android:textSize="20sp"
                     android:paddingBottom="8dp"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/myfont4"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -113,12 +115,13 @@
                     android:id="@+id/songsrec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CE93D8"
-                    android:textStyle="bold"
-                    android:text="Songs"
+                    android:textColor="#1A2B3C"
+                    android:text="Recommended Songs"
                     android:textSize="20sp"
                     android:paddingBottom="8dp"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/myfont4"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -142,12 +145,13 @@
                     android:id="@+id/playlistrec"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#CE93D8"
-                    android:textStyle="bold"
-                    android:text="playlists"
+                    android:textColor="#1A2B3C"
+                    android:text="Recommended Playlists"
                     android:textSize="20sp"
                     android:paddingBottom="8dp"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/myfont4"/>
 
                 <View
                     android:layout_width="match_parent"

@@ -7,14 +7,16 @@
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
     app:cardElevation="4dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="#F9F7F2">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="12dp">
+        android:paddingBottom="12dp"
+       >
 
 
 
@@ -33,7 +35,7 @@
                 android:text="TITLE"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:textStyle="bold"
+                android:fontFamily="@font/myfont4"
                 android:textSize="18sp"
                 android:maxLines="2"
                 android:ellipsize="end" />
@@ -46,6 +48,7 @@
                 android:text="DESCRIPTION"
                 android:gravity="center"
                 android:textSize="14sp"
+                android:fontFamily="@font/myfont4"
                 android:maxLines="5"
                 android:paddingBottom="15dp"
                 android:ellipsize="end" />
@@ -72,6 +75,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="OWNER"
+                    android:fontFamily="@font/myfont4"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -80,6 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="DATE"
+                    android:fontFamily="@font/myfont4"
                     android:textSize="12sp" />
 
                 <ImageView
@@ -88,6 +93,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:gravity="center"
+                    app:tint="#1A2B3C"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_delete"
                     android:visibility="gone"/>
