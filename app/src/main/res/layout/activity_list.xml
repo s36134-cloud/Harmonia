@@ -33,16 +33,18 @@
                 android:id="@+id/Back_to_community"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_pback"
+                android:src="@drawable/ic_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                app:tint="#1A2B3C"/>
 
             <TextView
                 android:id="@+id/Your_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Your list"
+                android:textStyle="bold"
                 android:textColor="#1A2B3C"
                 android:textSize="30sp"
                 android:fontFamily="@font/myfont4"
@@ -67,7 +69,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            app:theme="@style/MySearchFont"
+            >
 
             <!-- שורת חיפוש -->
             <androidx.cardview.widget.CardView
@@ -75,7 +79,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardElevation="2dp"
+                >
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/searchViewbookorsong"
@@ -94,7 +99,7 @@
                 android:id="@+id/recyclerViewsongbooklist"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:padding="4dp"
                 android:clipToPadding="false" />
 
@@ -104,11 +109,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Your list:"
-                android:textColor="#CE93D8"
                 android:textStyle="bold"
                 android:textSize="16sp"
+                android:textColor="#1A2B3C"
                 android:paddingStart="8dp"
                 android:paddingTop="8dp"
+                android:fontFamily="@font/myfont4"
+
                 android:paddingBottom="4dp"/>
 
             <!-- פריטים שברשימה -->

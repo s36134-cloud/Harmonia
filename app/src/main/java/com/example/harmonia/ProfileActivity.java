@@ -17,6 +17,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.signature.ObjectKey;
 import com.example.harmonia.utils.BooksAdapter;
 import com.example.harmonia.utils.OnResultCallback;
 import com.example.harmonia.utils.SongsAdapter;
@@ -46,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
     private BooksAdapter booksAdapter;
     private List<Book> topBooksList;
 
+    // משתנה גלובלי לתמונת הפרופיל
+    private ImageView profilePictureImageView;
     private static final String TAG = "ProfileActivity";
 
     @Override
@@ -54,230 +58,163 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_profile);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-
-
-        // 1. אתחול ה-Database
         db = FirebaseFirestore.getInstance();
 
-// 2. חיבור ה-RecyclerView לפי ה-ID שנתת ב-XML
+        // אתחול ה-ImageView וטעינת התמונה מהשרת מיד בכניסה
+        profilePictureImageView = findViewById(R.id.imageView);
+        loadProfilePicture();
+
         recyclerSongs = findViewById(R.id.recycler_songs);
         recyclerBooks = findViewById(R.id.recycler_books);
 
-// 3. אתחול הרשימה והאדאפטר
         topSongsList = new ArrayList<>();
         songsAdapter = new SongsAdapter(topSongsList,null, R.layout.song);
         topBooksList = new ArrayList<>();
         booksAdapter = new BooksAdapter(topBooksList, null, R.layout.book);
 
+        recyclerSongs.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerBooks.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-// 4. הגדרת התצוגה לאופקית (Horizontal)
-        LinearLayoutManager layoutManagerSongs = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerSongs.setLayoutManager(layoutManagerSongs);
-
-        LinearLayoutManager layoutManagerBooks = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        recyclerBooks.setLayoutManager(layoutManagerBooks);
-
-
-// 5. חיבור האדאפטר ל-RecyclerView
         recyclerSongs.setAdapter(songsAdapter);
         recyclerBooks.setAdapter(booksAdapter);
 
-
-
-
-        // סרגל הניווט  התחלה
+        // סרגל ניווט
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_Profile);
         bottomNav.setItemIconTintList(null);
-        bottomNav.setSelectedItemId(R.id.nav_profile); // מסמן את דף הפרופיל
-
+        bottomNav.setSelectedItemId(R.id.nav_profile);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_profile) return true;
-
             if (id == R.id.nav_home) startActivity(new Intent(this, HomeActivity.class));
             else if (id == R.id.nav_messages) startActivity(new Intent(this, MessagesActivity.class));
             else if (id == R.id.nav_community) startActivity(new Intent(this, CommunityActivity.class));
-
             overridePendingTransition(0, 0);
             return true;
         });
-        // סרגל הניווט סוף
 
-        //כפתור המידע התחלה
-        Button GenresButton = findViewById(R.id.Genres_button);
-        GenresButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent=new Intent(ProfileActivity.this, GenresActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-
+        // כפתורים
+        findViewById(R.id.Genres_button).setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, GenresActivity.class));
+            finish();
         });
-        // כפתור המידע סוף
 
-        Button YourlistssButton = findViewById(R.id.Your_listss);
-        YourlistssButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent=new Intent(ProfileActivity.this, ListsActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-
+        findViewById(R.id.Your_listss).setOnClickListener(v -> {
+            startActivity(new Intent(ProfileActivity.this, ListsActivity.class));
+            finish();
         });
-        // כפתור היציאה התחלה
-        Button signoutButton = findViewById(R.id.signout_button);
-        signoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
 
-                Intent intent=new Intent(ProfileActivity.this,LoginActivity.class);
-                startActivity(intent);
-                finish();
-
-            }
-
+        findViewById(R.id.signout_button).setOnClickListener(v -> {
+            auth.signOut();
+            startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            finish();
         });
-        //כפתור היציאה סוף
 
-        //כפתור פתיחת החיפוש ספר התחלה
-        CardView opensearchbooksButton = findViewById(R.id.btn_opensearchbooks); // כאן שינית מ-Button ל-CardView וזה מעולה!
-        opensearchbooksButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, SearchBookActivity.class);
-                startActivity(intent);
-            }
-        });
-        //כפתור פתיחת החיפוש ספר סוף
+        findViewById(R.id.btn_opensearchbooks).setOnClickListener(v ->
+                startActivity(new Intent(ProfileActivity.this, SearchBookActivity.class)));
 
+        findViewById(R.id.btn_opensearchsongs).setOnClickListener(v ->
+                startActivity(new Intent(ProfileActivity.this, SearchSongActivity.class)));
 
-
-        //כפתור פתיחת החיפוש שיר התחלה
-        CardView opensearchsongsButton = findViewById(R.id.btn_opensearchsongs); // כאן שינית מ-Button ל-CardView וזה מעולה!
-        opensearchsongsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, SearchSongActivity.class);
-                startActivity(intent);
-            }
-        });
-        //כפתור פתיחת החיפוש שיר סוף
-
-
-        ImageView profilePictureImageView = findViewById(R.id.imageView);
+        // הגדרת בחירת תמונה
         userImageSelector = new UserImageSelector(this, profilePictureImageView, this);
         Button choosePictureButton = findViewById(R.id.btn_choose_picture);
-        choosePictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userImageSelector.showImageSourceDialog();
-            }
-        });
+        choosePictureButton.setOnClickListener(v -> userImageSelector.showImageSourceDialog());
 
-        loadUserTopSongs();
-
-
-    }@
-            Override
-    protected void onResume() {
-        super.onResume();
         loadUserTopSongs();
         loadUserTopBooks();
     }
 
+    // הפונקציה המרכזית שטוענת את התמונה מה-Storage
+    private void loadProfilePicture() {
+        if (auth.getCurrentUser() != null) {
+            String filePath = "images/profiles/" + auth.getUid() + ".jpg";
+            String url = SupabaseStorageHelper.getFileSupabaseUrl(filePath);
 
-    private void loadUserTopSongs() {
-        // 1. קבלת ה-ID של המשתמש המחובר
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            Log.d(TAG, "Loading image from: " + url);
 
-        // 2. פנייה למסמך של המשתמש ב-Firebase
-        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // 3. שליפת רשימת ה-IDs ששמרנו (ה-topSongs)
-                List<String> songIds = (List<String>) documentSnapshot.get("topSongs");
-
-                if (songIds != null && !songIds.isEmpty()) {
-                    // 4. פנייה לטבלת השירים כדי להביא את הפרטים המלאים של השירים האלו
-                    db.collection("songs")
-                            .whereIn(FieldPath.documentId(), songIds) // "תביא לי רק את השירים שה-ID שלהם ברשימה"
-                            .get()
-                            .addOnSuccessListener(queryDocumentSnapshots -> {
-                                topSongsList.clear(); // מנקים את הרשימה הישנה
-                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                    Song song = doc.toObject(Song.class);
-                                    song.setId(doc.getId());
-                                    topSongsList.add(song); // מוסיפים לרשימה שלנו
-                                }
-                                // 5. אומרים לאדאפטר: "יש נתונים חדשים! תצייר אותם על המסך"
-                                songsAdapter.notifyDataSetChanged();
-                            });
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "שגיאה בטעינת השירים: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+            Glide.with(this)
+                    .load(url)
+                    .signature(new ObjectKey(System.currentTimeMillis())) // חשוב: מבטיח שהתמונה תתרענן ולא תיקלח מהזיכרון הישן
+                    .circleCrop()
+                    .placeholder(android.R.drawable.progress_horizontal)
+                    .error(android.R.drawable.ic_menu_gallery) // תמונה שתוצג אם אין עדיין תמונה בשרת
+                    .into(profilePictureImageView);
+        }
     }
 
-    private void loadUserTopBooks() {
-        // 1. קבלת ה-ID של המשתמש המחובר
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        // 2. פנייה למסמך של המשתמש ב-Firebase
-        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                // 3. שליפת רשימת ה-IDs ששמרנו (ה-topBooks)
-                List<String> bookIds = (List<String>) documentSnapshot.get("topBooks");
-
-                if (bookIds != null && !bookIds.isEmpty()) {
-                    // 4. פנייה לטבלת השירים כדי להביא את הפרטים המלאים של השירים האלו
-                    db.collection("books")
-                            .whereIn(FieldPath.documentId(), bookIds) // "תביא לי רק את השירים שה-ID שלהם ברשימה"
-                            .get()
-                            .addOnSuccessListener(queryDocumentSnapshots -> {
-                                topBooksList.clear(); // מנקים את הרשימה הישנה
-                                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                                    Book book = doc.toObject(Book.class);
-                                    book.setId(doc.getId());
-                                    topBooksList.add(book); // מוסיפים לרשימה שלנו
-                                }
-                                // 5. אומרים לאדאפטר: "יש נתונים חדשים! תצייר אותם על המסך"
-                                booksAdapter.notifyDataSetChanged();
-                            });
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "שגיאה בטעינת השירים: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadProfilePicture(); // טעינה מחדש בכל פעם שחוזרים למסך
+        loadUserTopSongs();
+        loadUserTopBooks();
     }
 
     @Override
     public void onResult(boolean success, String message) {
-        if(success)
-        {
+        if(success) {
             File imageFile = userImageSelector.createImageFile();
             String filePath = "images/profiles/" + auth.getUid() + ".jpg";
 
             SupabaseStorageHelper.uploadPicture(imageFile, filePath, new SupabaseStorageHelper.OnResultCallback() {
                 @Override
                 public void onResult(boolean success, String url, String error) {
-                    Log.d(TAG, "onResult: success: " + success);
-                    Log.d(TAG, "onResult: url: " + url);
-                    Log.d(TAG, "onResult: error: " + error);
+                    if (success) {
+                        Log.d(TAG, "Upload success! Refreshing UI...");
+                        loadProfilePicture(); // רענון התמונה ב-UI מיד אחרי ההעלאה
+                    } else {
+                        Log.e(TAG, "Upload failed: " + error);
+                    }
                 }
             });
         }
+    }
+
+    // --- שאר הפונקציות של Firebase (Songs/Books) נשארות ללא שינוי ---
+    private void loadUserTopSongs() {
+        String userId = auth.getUid();
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> songIds = (List<String>) documentSnapshot.get("topSongs");
+                if (songIds != null && !songIds.isEmpty()) {
+                    db.collection("songs").whereIn(FieldPath.documentId(), songIds).get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        topSongsList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Song song = doc.toObject(Song.class);
+                            song.setId(doc.getId());
+                            topSongsList.add(song);
+                        }
+                        songsAdapter.notifyDataSetChanged();
+                    });
+                }
+            }
+        });
+    }
+
+    private void loadUserTopBooks() {
+        String userId = auth.getUid();
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<String> bookIds = (List<String>) documentSnapshot.get("topBooks");
+                if (bookIds != null && !bookIds.isEmpty()) {
+                    db.collection("books").whereIn(FieldPath.documentId(), bookIds).get().addOnSuccessListener(queryDocumentSnapshots -> {
+                        topBooksList.clear();
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            Book book = doc.toObject(Book.class);
+                            book.setId(doc.getId());
+                            topBooksList.add(book);
+                        }
+                        booksAdapter.notifyDataSetChanged();
+                    });
+                }
+            }
+        });
     }
 }

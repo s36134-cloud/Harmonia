@@ -33,10 +33,11 @@
                 android:id="@+id/Back_to_community"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_pback"
+                android:src="@drawable/ic_back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                app:tint="#1A2B3C"/>
 
             <TextView
                 android:id="@+id/Your_lists"
@@ -45,6 +46,8 @@
                 android:text="Your lists"
                 android:textColor="#1A2B3C"
                 android:textSize="30sp"
+                android:textStyle="bold"
+
                 android:fontFamily="@font/myfont4"
                 android:layout_marginStart="10dp" />
         </LinearLayout>
@@ -92,9 +95,10 @@
                 android:id="@+id/btn_somewhere"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:backgroundTint="#E1BEE7"
-                android:text="Back to somewhere" />
+                android:textColor="#1A2B3C"
+                android:backgroundTint="#FBE8CE"
+                android:text="Back to somewhere"
+                android:fontFamily="@font/myfont4"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
