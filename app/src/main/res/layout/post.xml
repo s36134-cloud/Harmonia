@@ -10,15 +10,11 @@
     app:cardCornerRadius="8dp"
     app:cardBackgroundColor="#F9F7F2">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="12dp"
-       >
-
-
+        android:orientation="vertical"
+        android:paddingBottom="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +63,49 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+                android:layout_marginTop="8dp"
+                android:padding="4dp">
+
+                <ImageView
+                    android:id="@+id/like"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_heart_outline"
+                    />
+
+                <TextView
+                    android:id="@+id/like_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="0"
+                    android:fontFamily="@font/myfont4"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/comment"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_comment"
+                    app:tint="#1A2B3C" />
+
+                <TextView
+                    android:id="@+id/comment_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="0"
+                    android:fontFamily="@font/myfont4"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
 
                 <TextView
                     android:id="@+id/tv_post_owner"
@@ -92,14 +130,9 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:gravity="center"
                     app:tint="#1A2B3C"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_delete"
                     android:visibility="gone"/>
-
-
-
 
             </LinearLayout>
         </LinearLayout>

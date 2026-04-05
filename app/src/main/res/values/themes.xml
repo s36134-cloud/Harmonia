@@ -11,4 +11,9 @@
         <item name="android:fontFamily">@font/myfont4</item>
         <item name="fontFamily">@font/myfont4</item>
     </style>
+
+    <style name="CircleImage" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
 </resources>
