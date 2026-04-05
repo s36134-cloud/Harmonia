@@ -90,7 +90,9 @@
                     app:queryHint="search book or song"
                     app:queryBackground="@android:color/transparent"
                     android:layoutDirection="ltr"
-                    app:searchIcon="@drawable/abc_ic_search_api_material" />
+                    app:searchIcon="@drawable/abc_ic_search_api_material"
+                    android:background="@drawable/comment_bubble"
+                    />
 
             </androidx.cardview.widget.CardView>
 

@@ -21,7 +21,9 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="8dp"
-            app:theme="@style/MySearchFont">
+            app:theme="@style/MySearchFont"
+            android:background="@drawable/comment_bubble"
+            >
 
             <ImageView
                 android:id="@+id/imageViewbooksongsearch"

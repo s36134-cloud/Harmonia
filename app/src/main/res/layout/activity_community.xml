@@ -91,7 +91,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="20dp"
-                    app:theme="@style/MySearchFont">
+                    app:theme="@style/MySearchFont"
+                    >
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -110,6 +111,8 @@
                             app:queryBackground="@android:color/transparent"
                             android:layoutDirection="ltr"
                             app:searchIcon="@drawable/abc_ic_search_api_material"
+                            android:background="@drawable/comment_bubble"
+
                             />
 
                     </androidx.cardview.widget.CardView>

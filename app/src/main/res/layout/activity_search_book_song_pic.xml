@@ -24,7 +24,9 @@
             app:iconifiedByDefault="false"
             app:queryHint="Search books or songs"
             app:queryBackground="@android:color/transparent"
-            android:layoutDirection="ltr" />
+            android:layoutDirection="ltr"
+            android:background="@drawable/comment_bubble"
+            />
 
     </androidx.cardview.widget.CardView>
 

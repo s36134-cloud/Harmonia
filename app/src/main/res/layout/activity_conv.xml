@@ -105,6 +105,8 @@
             android:orientation="horizontal"
             android:padding="8dp"
             app:theme="@style/MySearchFont"
+            android:background="@drawable/comment_bubble"
+
             >
 
             <EditText

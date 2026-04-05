@@ -22,6 +22,8 @@
             android:paddingStart="12dp"
             android:paddingEnd="8dp"
             app:theme="@style/MySearchFont"
+            android:background="@drawable/comment_bubble"
+
             >
 
             <ImageView
@@ -30,9 +32,9 @@
                 android:layout_height="32dp"
                 android:src="@drawable/ic_back"
                 android:contentDescription="Back"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                />
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchViewbook"
@@ -42,7 +44,8 @@
                 app:iconifiedByDefault="false"
                 app:queryHint="search book"
                 app:queryBackground="@android:color/transparent"
-                android:layoutDirection="ltr" />
+                android:layoutDirection="ltr"
+                />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
