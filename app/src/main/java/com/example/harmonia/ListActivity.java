@@ -1,5 +1,6 @@
 package com.example.harmonia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.*;
 import androidx.activity.EdgeToEdge;
@@ -55,7 +56,11 @@ public class ListActivity extends AppCompatActivity {
         TextView yourList = findViewById(R.id.Your_list);
         yourList.setText(listName);
 
-        findViewById(R.id.Back_to_community).setOnClickListener(v -> finish());
+        ImageView BacktolistsImageView = findViewById(R.id.Back_to_lists);
+        BacktolistsImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(ListActivity.this, ListsActivity.class);
+            startActivity(intent);
+        });
 
         recyclerViewsongbooklist = findViewById(R.id.recyclerViewsongbooklist);
         recyclerViewMyList = findViewById(R.id.recyclerViewMyList);

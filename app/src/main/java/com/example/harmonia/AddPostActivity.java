@@ -46,7 +46,7 @@ public class AddPostActivity extends AppCompatActivity {
                         Glide.with(this)
                                 .load(selectedImageUrl)
                                 .placeholder(R.drawable.transparent_placeholder)
-                                .error(R.drawable.pic_image)
+                                .error(R.drawable.ic_cake)
                                 .into(imageView);
                         Log.d(TAG, "Image URL received: " + selectedImageUrl);
                     }

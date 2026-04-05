@@ -35,7 +35,7 @@
                 android:id="@+id/backtoprofile"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@drawable/ic_pback"
+                android:src="@drawable/ic_back"
                 android:contentDescription="Back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"

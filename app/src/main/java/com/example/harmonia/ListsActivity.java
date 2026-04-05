@@ -68,7 +68,12 @@ public class ListsActivity extends AppCompatActivity {
         });
         recyclerViewlists.setAdapter(listsAdapter);
 
-        findViewById(R.id.Back_to_community).setOnClickListener(v -> finish());
+        ImageView BacktoprofilefromlistsImageView = findViewById(R.id.Back_to_profilefromlists);
+        BacktoprofilefromlistsImageView.setOnClickListener(v -> {
+            Intent intent = new Intent(ListsActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
         findViewById(R.id.create_list).setOnClickListener(v -> showCreateListDialog());
         findViewById(R.id.btn_somewhere).setOnClickListener(v -> finish());
 
