@@ -58,19 +58,29 @@
         android:paddingHorizontal="8dp"
         android:clipToPadding="false" />
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDoneBooks"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#E1BEE7"
-        android:paddingTop="18dp"
-        android:paddingBottom="18dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:paddingHorizontal="48dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         android:text="Done"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:cornerRadius="30dp"
-        android:visibility="gone"/>
+        android:textAllCaps="false"
+        android:textSize="17sp"
+        app:backgroundTint="#FFF1E0"
+        app:cornerRadius="28dp"
+        app:elevation="0dp"
+        app:strokeColor="#FBE8CE"
+        app:strokeWidth="1.5dp"
+        app:rippleColor="#F5F5F5"
+        android:textColor="#1A2B3C"
+        android:backgroundTint="#FBE8CE"
+        android:fontFamily="@font/myfont4"
+        android:visibility="gone"
+        />
 
 </LinearLayout>
