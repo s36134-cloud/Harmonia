@@ -120,26 +120,32 @@ public class CommunityActivity extends AppCompatActivity {
     }
 
     private void loadPosts() {
-        Log.d(TAG, "loadPosts: start");
+        Log.d(TAG, "loadPosts: start listening");
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // שימוש ב-addSnapshotListener במקום ב-get() הופך את הרשימה ל"חיה"
         db.collection("posts")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    posts.clear();
-                    Log.d(TAG, "loadPosts succeeded: " + queryDocumentSnapshots.size() + " documents");
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        HarmoniaPost post = doc.toObject(HarmoniaPost.class);
-
-                        post.setPostId(doc.getId());
-                        posts.add(post);
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
+                    if (e != null) {
+                        Log.e(TAG, "Listen failed: " + e.getMessage());
+                        return;
                     }
-                    postsAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Failed to load posts: " + e.getMessage()));
-    }
 
+                    if (queryDocumentSnapshots != null) {
+                        posts.clear(); // מנקים את הרשימה כדי שלא יהיו כפילויות
+                        Log.d(TAG, "Posts updated: " + queryDocumentSnapshots.size() + " documents");
+
+                        for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                            HarmoniaPost post = doc.toObject(HarmoniaPost.class);
+                            post.setPostId(doc.getId());
+                            posts.add(post);
+                        }
+                        postsAdapter.notifyDataSetChanged(); // מעדכן את ה-UI מיד
+                    }
+                });
+    }
 
     private void askNotificationPermission() {
         // This is only necessary for API level 33 and above.
