@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,8 @@ public class ConvActivity extends AppCompatActivity {
     private com.google.firebase.firestore.ListenerRegistration chatListener;
     private TextView tvPartnerName;
     private EditText etMessage;
-    private ImageButton btnSend, btnBack;
+    private ImageView btnBack;
+    private  ImageButton btnSend;
     private RecyclerView recyclerView;
     private ConvAdapter adapter;
     private List<Conv> messageList = new ArrayList<>();
