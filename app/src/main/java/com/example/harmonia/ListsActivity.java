@@ -28,7 +28,7 @@ import java.util.UUID;
 public class ListsActivity extends AppCompatActivity {
 
     private static final String supabaseUrl = "https://nbliklmpfsjemwizicuh.supabase.co";
-    private static final String supabaseKey = "sb_publishable_HZttWd_l_Xf_FOSpiwgyvQ_NTeYzNgy";
+    private static final String supabaseKey = "sb_secret_xk7mI10aGweDiA3TXm8Qgw_FrJAsMd-";
     private static final String SUPABASE_BUCKET = "Harmonia-bucket";
 
     private RecyclerView recyclerViewlists;
@@ -75,7 +75,6 @@ public class ListsActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.create_list).setOnClickListener(v -> showCreateListDialog());
-        findViewById(R.id.btn_somewhere).setOnClickListener(v -> finish());
 
         galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -132,7 +131,7 @@ public class ListsActivity extends AppCompatActivity {
             String description = etDescription.getText().toString().trim();
 
             if (name.isEmpty()) {
-                etName.setError("נא להזין שם");
+                etName.setError("Please enter name");
                 return;
             }
 
@@ -187,7 +186,7 @@ public class ListsActivity extends AppCompatActivity {
 
                 } catch (Exception e) {
                     runOnUiThread(() ->
-                            Toast.makeText(this, "שגיאה: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                            Toast.makeText(this, "Error " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 }
             }).start();
 

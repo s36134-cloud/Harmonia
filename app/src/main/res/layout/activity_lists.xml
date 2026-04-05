@@ -81,24 +81,16 @@
                 android:padding="10dp"
                 android:clipToPadding="false" />
 
-            <ImageView
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/create_list"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginBottom="8dp"
-                android:src="@drawable/ic_add"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true" />
-
-            <Button
-                android:id="@+id/btn_somewhere"
-                android:layout_width="250dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#1A2B3C"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add"
                 android:backgroundTint="#FBE8CE"
-                android:text="Back to somewhere"
-                android:fontFamily="@font/myfont4"/>
+                app:tint="#1A2B3C"
+                app:fabSize="mini" />
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

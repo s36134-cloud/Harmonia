@@ -194,41 +194,53 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadPlaylistsByGenres(List<String> genres) {
-        // 1. ניקוי הרשימה ושימוש ב-Set למניעת כפילויות
-        playlistsList.clear();
-        java.util.Set<String> processedIds = new java.util.HashSet<>();
+        // במקום לנקות ולהוסיף כל פעם, נטען הכל לסט זמני
+        java.util.Set<Playlist> temporarySet = new java.util.LinkedHashSet<>();
 
-        // 2. רשימת פלייליסטים שיופיעו לכולם (חובה)
+        // רשימת ה-IDs של פלייליסטים חובה
         List<String> mandatoryPlaylists = java.util.Arrays.asList("Calm songs", "Sad songs");
 
-        // שליפת פלייליסטים חובה בנפרד
+        // שאילתה מאוחדת לפלייליסטים חובה
         db.collection("playlists")
                 .whereIn(com.google.firebase.firestore.FieldPath.documentId(), mandatoryPlaylists)
                 .get()
                 .addOnSuccessListener(querySnapshots -> {
                     for (DocumentSnapshot doc : querySnapshots) {
-                        addPlaylistFromDoc(doc, processedIds);
+                        Playlist p = doc.toObject(Playlist.class);
+                        if (p != null) {
+                            p.setId(doc.getId());
+                            p.setName(doc.getId());
+                            temporarySet.add(p);
+                        }
                     }
-                    // עדכון ה-Adapter אחרי טעינת פלייליסטים חובה
-                    playlistsAdapter.updateList(new ArrayList<>(playlistsList));
+
+                    // רק אחרי שסיימנו עם החובה, נבדוק אם צריך ז'אנרים
+                    if (genres != null && !genres.isEmpty()) {
+                        // הגבלה: קח רק את 5 הז'אנרים הראשונים כדי לא לחנוק את המכשיר
+                        List<String> limitedGenres = genres.subList(0, Math.min(genres.size(), 10));
+
+                        db.collection("playlists")
+                                .whereArrayContainsAny("genres", limitedGenres)
+                                .get()
+                                .addOnSuccessListener(genreSnapshots -> {
+                                    for (DocumentSnapshot doc : genreSnapshots) {
+                                        Playlist p = doc.toObject(Playlist.class);
+                                        if (p != null) {
+                                            p.setId(doc.getId());
+                                            p.setName(doc.getId());
+                                            temporarySet.add(p);
+                                        }
+                                    }
+                                    playlistsList.clear();
+                                    playlistsList.addAll(temporarySet);
+                                    playlistsAdapter.updateList(playlistsList);
+                                });
+                    } else {
+                        playlistsList.clear();
+                        playlistsList.addAll(temporarySet);
+                        playlistsAdapter.updateList(playlistsList);
+                    }
                 });
-
-        // 3. שליפת פלייליסטים לפי ז'אנרים (אם קיימים)
-        if (genres != null && !genres.isEmpty()) {
-            for (int i = 0; i < genres.size(); i += 10) {
-                List<String> chunk = genres.subList(i, Math.min(i + 10, genres.size()));
-
-                db.collection("playlists")
-                        .whereArrayContainsAny("genres", chunk)
-                        .get()
-                        .addOnSuccessListener(querySnapshots -> {
-                            for (DocumentSnapshot doc : querySnapshots) {
-                                addPlaylistFromDoc(doc, processedIds);
-                            }
-                            playlistsAdapter.updateList(new ArrayList<>(playlistsList));
-                            Log.d("HomeActivity", "Total playlists loaded: " + playlistsList.size());                        });
-            }
-        }
     }
 
     // פונקציית עזר כדי לא לשכפל קוד של יצירת האובייקט והגדרת השם
