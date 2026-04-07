@@ -23,7 +23,9 @@
             android:padding="12dp"
             android:text="הודעה לדוגמה"
             android:textColor="#1A2B3C"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:fontFamily="@font/myfont4"
+            />
 
     </androidx.cardview.widget.CardView>
 </RelativeLayout>
