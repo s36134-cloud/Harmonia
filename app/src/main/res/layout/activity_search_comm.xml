@@ -33,7 +33,8 @@
                 android:contentDescription="Back"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                app:tint="#1A2B3C"/>
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/et_search"

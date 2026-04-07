@@ -34,6 +34,7 @@
                 android:contentDescription="Back"
                 android:clickable="true"
                 android:focusable="true"
+                app:tint="#1A2B3C"
                 />
 
             <androidx.appcompat.widget.SearchView
