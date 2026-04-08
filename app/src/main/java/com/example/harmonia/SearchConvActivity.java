@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,9 +30,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SearchChatActivity extends AppCompatActivity {
+public class SearchConvActivity extends AppCompatActivity {
     private List<DocumentSnapshot> lastFetchedUsers;
     private RecyclerView recyclerView;
+
     private ProgressBar progressBar;
     private static final String TAG = "SearchConvActivity";
 
@@ -43,6 +45,8 @@ public class SearchChatActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewMatches);
         progressBar = findViewById(R.id.progressBar);
+
+
 
         if (recyclerView != null) {
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -149,7 +153,7 @@ public class SearchChatActivity extends AppCompatActivity {
                 int score = obj.optInt("score", 0);
                 String reason = obj.optString("reason", "");
 
-                if (score > 10) { // הורדתי קצת את הרף כדי שיהיו תוצאות
+                if (score > 99) { // הורדתי קצת את הרף כדי שיהיו תוצאות
                     String realName = "User";
                     if (lastFetchedUsers != null) {
                         for (DocumentSnapshot doc : lastFetchedUsers) {
@@ -207,7 +211,7 @@ public class SearchChatActivity extends AppCompatActivity {
             public void onError(Throwable error) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(SearchChatActivity.this, "AI Currently Unavailable", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchConvActivity.this, "AI Currently Unavailable", Toast.LENGTH_SHORT).show();
                 });
             }
         });

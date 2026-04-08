@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:id="@+id/main"
     android:background="#FFF8EC"
-    tools:context=".SearchChatActivity">
+    tools:context=".SearchConvActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -71,7 +71,8 @@
                 android:gravity="center_vertical"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:layout_marginBottom="15dp"> <TextView
+                android:layout_marginBottom="15dp">
+                <TextView
                 android:id="@+id/search_conv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

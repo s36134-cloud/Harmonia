@@ -34,7 +34,7 @@
             android:name=".ConvActivity"
             android:exported="false" />
         <activity
-            android:name=".SearchChatActivity"
+            android:name=".SearchConvActivity"
             android:exported="false" />
         <activity
             android:name=".PlaylistActivity"

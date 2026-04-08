@@ -73,7 +73,7 @@ public class MessagesActivity extends AppCompatActivity {
                             ArrayList<String> bookGenres = (ArrayList<String>) documentSnapshot.get("selectedBookGenres");  // תוקן
                             String userName = documentSnapshot.getString("nickname");                                        // תוקן
 
-                            Intent intent = new Intent(MessagesActivity.this, SearchChatActivity.class);
+                            Intent intent = new Intent(MessagesActivity.this, SearchConvActivity.class);
                             intent.putStringArrayListExtra("myMusic", musicGenres);
                             intent.putStringArrayListExtra("myBooks", bookGenres);
                             intent.putExtra("myName", userName);
