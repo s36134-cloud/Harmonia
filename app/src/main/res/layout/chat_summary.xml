@@ -24,9 +24,10 @@
             android:layout_height="48dp"
             android:gravity="center"
             android:textSize="24sp"
-            android:background="@drawable/ic_account"
             android:layout_marginEnd="12dp"
-            android:backgroundTint="#1A2B3C"/>
+            android:backgroundTint="#1A2B3C"
+            android:src="@drawable/ic_person"
+            app:tint="#DCCCAC"/>
 
         <!-- שם + הודעה אחרונה -->
         <LinearLayout
