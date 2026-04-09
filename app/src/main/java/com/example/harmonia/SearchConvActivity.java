@@ -35,6 +35,8 @@ public class SearchConvActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
 
     private ProgressBar progressBar;
+
+    private TextView statusTitle;
     private static final String TAG = "SearchConvActivity";
 
     @Override
@@ -45,7 +47,7 @@ public class SearchConvActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewMatches);
         progressBar = findViewById(R.id.progressBar);
-
+        statusTitle = findViewById(R.id.search_conv);
 
 
         if (recyclerView != null) {
@@ -63,6 +65,8 @@ public class SearchConvActivity extends AppCompatActivity {
 
     private void startProcess() {
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
+        // עדכון כותרת בתחילת החיפוש
+        if (statusTitle != null) statusTitle.setText("finding the perfect person for you");
 
         String myUid = FirebaseAuth.getInstance().getUid();
         if (myUid == null) {
@@ -128,6 +132,7 @@ public class SearchConvActivity extends AppCompatActivity {
                                     runAIGenreMatching(myName, myMusic, myBooks, filteredUsers);
                                 } else {
                                     if (progressBar != null) progressBar.setVisibility(View.GONE);
+                                    if (statusTitle != null) statusTitle.setText("We haven't found your perfect match yet");
                                     Toast.makeText(this, "אין משתמשים חדשים להציע כרגע", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -148,14 +153,11 @@ public class SearchConvActivity extends AppCompatActivity {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
-                // תומך גם ב-ID וגם ב-user_id למקרה שג'מיני יחליט לשנות
                 String userId = obj.optString("ID", obj.optString("user_id", ""));
                 int score = obj.optInt("score", 0);
                 String reason = obj.optString("reason", "");
 
-                Log.d(TAG, "processAIResult: userId: " + userId);
-                Log.d(TAG, "processAIResult: score: " + score + ", reason: " + reason);
-                if (score > 50) { // הורדתי קצת את הרף כדי שיהיו תוצאות
+                if (score > 50) {
                     String realName = "User";
                     if (allUsers != null) {
                         for (DocumentSnapshot doc : allUsers) {
@@ -165,19 +167,31 @@ public class SearchConvActivity extends AppCompatActivity {
                             }
                         }
                     }
-                    Log.d(TAG, "processAIResult: real name: " + realName);
                     recommendedList.add(new RecommendedUser(userId, realName, score, reason));
                 }
             }
 
             runOnUiThread(() -> {
                 if (progressBar != null) progressBar.setVisibility(View.GONE);
+
+                // עדכון הכותרת לפי התוצאות
+                if (statusTitle != null) {
+                    if (recommendedList.isEmpty()) {
+                        statusTitle.setText("We haven't found your perfect match yet");
+                    } else {
+                        statusTitle.setText("We found your perfect match");
+                    }
+                }
+
                 recyclerView.setAdapter(new ChatAdapter(recommendedList));
             });
 
         } catch (JSONException e) {
             Log.e("AI_ERROR", "JSON parsing error: " + e.getMessage());
-            runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+            runOnUiThread(() -> {
+                if (progressBar != null) progressBar.setVisibility(View.GONE);
+                if (statusTitle != null) statusTitle.setText("We haven't found your perfect match yet");
+            });
         }
     }
 
@@ -185,6 +199,7 @@ public class SearchConvActivity extends AppCompatActivity {
         if (allUsers.isEmpty()) {
             runOnUiThread(() -> {
                 progressBar.setVisibility(View.GONE);
+                if (statusTitle != null) statusTitle.setText("We haven't found your perfect match yet");
                 Toast.makeText(this, "אין משתמשים חדשים להציע", Toast.LENGTH_SHORT).show();
             });
             return;
@@ -220,8 +235,6 @@ public class SearchConvActivity extends AppCompatActivity {
                 "The 'reason' must be a very short phrase (max 6 words). " +
                 "Users to rank:\n" + potentialMatchesStr;
 
-        Log.d(TAG, "runAIGenreMatching: prompt: " + prompt);
-
         GeminiManager.getInstance().sendText(prompt, this, new GeminiManager.GeminiCallback() {
             @Override
             public void onSuccess(String result) {
@@ -232,6 +245,7 @@ public class SearchConvActivity extends AppCompatActivity {
             public void onError(Throwable error) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
+                    if (statusTitle != null) statusTitle.setText("We haven't found your perfect match yet");
                     Toast.makeText(SearchConvActivity.this, "AI Currently Unavailable", Toast.LENGTH_SHORT).show();
                 });
             }
