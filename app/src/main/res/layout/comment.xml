@@ -13,7 +13,8 @@
         app:shapeAppearanceOverlay="@style/CircleImage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_person" />
+        android:src="@drawable/ic_person"
+        app:tint="#DCCCAC"/>
 
     <LinearLayout
         android:id="@+id/commentBubble"
