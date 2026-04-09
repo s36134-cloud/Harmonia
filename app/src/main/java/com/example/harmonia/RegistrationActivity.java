@@ -84,11 +84,27 @@ public class RegistrationActivity extends AppCompatActivity {
     private void registerButtonClick() {
         Log.d(TAG, "Register button clicked");
 
+        String ageString = ageEditText.getText().toString();
+
+        if( emailEditText.getText().toString().isEmpty() ||
+            passwordEditText.getText().toString().isEmpty() ||
+                nicknameEditText.getText().toString().isEmpty())
+        {
+            Toast.makeText(RegistrationActivity.this, "Please fill all fields.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if(ageString == null || ageString.isEmpty())
+        {
+            Toast.makeText(RegistrationActivity.this, "Please fill age field.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         createUser(
                 emailEditText.getText().toString(),
                 passwordEditText.getText().toString(),
                 nicknameEditText.getText().toString(),
-                Integer.valueOf(ageEditText.getText().toString())
+                Integer.valueOf(ageString)
         );
     }
 

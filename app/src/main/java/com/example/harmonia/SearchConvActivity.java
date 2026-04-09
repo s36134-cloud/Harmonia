@@ -138,7 +138,7 @@ public class SearchConvActivity extends AppCompatActivity {
                 });
     }
 
-    private void processAIResult(String jsonResult) {
+    private void processAIResult(String jsonResult, List<DocumentSnapshot> allUsers) {
         if (jsonResult == null) return;
         try {
             String cleanJson = jsonResult.replaceAll("```json", "").replaceAll("```", "").trim();
@@ -153,16 +153,19 @@ public class SearchConvActivity extends AppCompatActivity {
                 int score = obj.optInt("score", 0);
                 String reason = obj.optString("reason", "");
 
-                if (score > 99) { // הורדתי קצת את הרף כדי שיהיו תוצאות
+                Log.d(TAG, "processAIResult: userId: " + userId);
+                Log.d(TAG, "processAIResult: score: " + score + ", reason: " + reason);
+                if (score > 50) { // הורדתי קצת את הרף כדי שיהיו תוצאות
                     String realName = "User";
-                    if (lastFetchedUsers != null) {
-                        for (DocumentSnapshot doc : lastFetchedUsers) {
+                    if (allUsers != null) {
+                        for (DocumentSnapshot doc : allUsers) {
                             if (doc.getId().equals(userId)) {
                                 realName = doc.getString("nickname") != null ? doc.getString("nickname") : doc.getString("name");
                                 break;
                             }
                         }
                     }
+                    Log.d(TAG, "processAIResult: real name: " + realName);
                     recommendedList.add(new RecommendedUser(userId, realName, score, reason));
                 }
             }
@@ -196,15 +199,33 @@ public class SearchConvActivity extends AppCompatActivity {
                     .append("\n");
         }
 
-        String prompt = "You are a matchmaking assistant. Rank these users for " + myName + " (0-100) based on shared interests. " +
+        StringBuilder myMusicGenres = new StringBuilder();
+        for (String genre : myMusic) {
+            myMusicGenres.append(genre).append(", ");
+        }
+
+        StringBuilder myBooksGenres = new StringBuilder();
+        for (String genre : myBooks) {
+            myBooksGenres.append(genre).append(", ");
+        }
+
+
+        String prompt = "You are a matchmaking assistant. Rank these users for the user " + myName + ". " +
+                myName + " likes these music genres: " + myMusicGenres + "\n" +
+                myName + " likes these books genres: " + myBooksGenres + "\n" +
+                "The score is (0-100) and based on shared interests. " +
+                "if the user music genres list is empty, do not consider music taste for the matching." +
+                "if the user books genres list is empty, do not consider books taste for the matching." +
                 "Return ONLY a raw JSON array. Use keys: 'ID', 'score', 'reason'. " +
                 "The 'reason' must be a very short phrase (max 6 words). " +
                 "Users to rank:\n" + potentialMatchesStr;
 
+        Log.d(TAG, "runAIGenreMatching: prompt: " + prompt);
+
         GeminiManager.getInstance().sendText(prompt, this, new GeminiManager.GeminiCallback() {
             @Override
             public void onSuccess(String result) {
-                processAIResult(result);
+                processAIResult(result, allUsers);
             }
 
             @Override
