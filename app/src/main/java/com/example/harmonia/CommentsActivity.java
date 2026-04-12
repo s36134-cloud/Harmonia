@@ -72,7 +72,6 @@ public class CommentsActivity extends AppCompatActivity {
             }
         });
 
-        // טיפול ב-Padding (הקוד המקור שלך)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -108,7 +107,7 @@ public class CommentsActivity extends AppCompatActivity {
         db.collection("users").document(currentUserId).get().addOnSuccessListener(doc -> {
             if (doc.exists()) {
                 String userName = doc.getString("nickname"); // ודאי שזה השם ב-DB שלך
-                String profileUrl = doc.getString("profileImageUrl");
+                String profileUrl = doc.getString("String profileUrl = null;");
 
                 // 2. יצירת ה-ID והאובייקט לתגובה
                 String commentId = db.collection("posts").document(postId)
@@ -134,5 +133,6 @@ public class CommentsActivity extends AppCompatActivity {
                         });
             }
         });
+
     }
 }

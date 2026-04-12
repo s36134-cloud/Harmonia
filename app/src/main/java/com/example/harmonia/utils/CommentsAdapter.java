@@ -1,5 +1,6 @@
 package com.example.harmonia.utils;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // וודאי ששם ה-XML של התגובה הבודדת הוא comment.xml
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment, parent, false);
         return new CommentViewHolder(view);
     }
@@ -43,15 +45,15 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         String dateString = sdf.format(new Date(comment.getTimestamp()));
         holder.tvTime.setText(dateString);
 
-        // טעינת תמונת הפרופיל של המגיב עם Glide
-        if (comment.getUserProfileUrl() != null && !comment.getUserProfileUrl().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(comment.getUserProfileUrl())
-                    .placeholder(R.drawable.ic_person) // תמונת ברירת מחדל
-                    .into(holder.ivUserProfile);
-        } else {
-            holder.ivUserProfile.setImageResource(R.drawable.ic_person);
-        }
+        String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
+                + comment.getUserId() + ".jpg";
+
+        Glide.with(holder.itemView.getContext())
+                .load(profileUrl)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .circleCrop()
+                .into(holder.ivUserProfile);
     }
 
     @Override
