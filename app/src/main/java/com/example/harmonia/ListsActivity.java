@@ -28,7 +28,7 @@ import java.util.UUID;
 public class ListsActivity extends AppCompatActivity {
 
     private static final String supabaseUrl = "https://nbliklmpfsjemwizicuh.supabase.co";
-    private static final String supabaseKey = "sb_secret_xk7mI10aGweDiA3TXm8Qgw_FrJAsMd-";
+    private static final String supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ibGlrbG1wZnNqZW13aXppY3VoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2ODE1MjE5MSwiZXhwIjoyMDgzNzI4MTkxfQ.FAAQRe8WNHvozvMPoPm3vRcnfyJLbaD6QfiB6XPnOKM";
     private static final String SUPABASE_BUCKET = "Harmonia-bucket";
 
     private RecyclerView recyclerViewlists;
@@ -174,6 +174,13 @@ public class ListsActivity extends AppCompatActivity {
                     connection.getOutputStream().write(imageBytes);
 
                     int responseCode = connection.getResponseCode();
+                    android.util.Log.d("UPLOAD", "URL: " + uploadUrl);
+                    android.util.Log.d("UPLOAD", "Response code: " + responseCode);
+                    java.io.InputStream errorStream = connection.getErrorStream();
+                    if (errorStream != null) {
+                        String errorBody = new String(errorStream.readAllBytes());
+                        android.util.Log.e("UPLOAD", "Error body: " + errorBody);
+                    }
                     String publicUrl = supabaseUrl + "/storage/v1/object/public/" + SUPABASE_BUCKET + "/" + fileName;
 
                     runOnUiThread(() -> {
