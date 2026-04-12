@@ -20,11 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.harmonia.utils.ConvAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConvActivity extends AppCompatActivity {
     private com.google.firebase.firestore.ListenerRegistration chatListener;
@@ -156,20 +159,23 @@ public class ConvActivity extends AppCompatActivity {
     private void sendMessage(String partnerId, String text) {
         String chatId = getChatId(myId, partnerId);
 
-        // יצירת אובייקט הודעה
-// במקום השורה הישנה, השתמשי בזו:
-        Conv newMessage = new Conv(myId, partnerId, text, System.currentTimeMillis(), "text", null);
+        Map<String, Object> message = new HashMap<>();
+        message.put("senderId", myId);
+        message.put("receiverId", partnerId);
+        message.put("message", text);
+        message.put("timestamp", FieldValue.serverTimestamp());
+        message.put("type", "text");
+
         FirebaseFirestore.getInstance()
                 .collection("chats")
                 .document(chatId)
                 .collection("messages")
-                .add(newMessage)
+                .add(message)
                 .addOnFailureListener(e -> {
                     Log.e("CHAT_ERROR", "Failed to send message", e);
                     Toast.makeText(this, "שליחה נכשלה", Toast.LENGTH_SHORT).show();
                 });
     }
-
     private String getChatId(String uid1, String uid2) {
         if (uid1 == null || uid2 == null || uid1.isEmpty() || uid2.isEmpty()) return "invalid_id";
         // אלגוריתם ליצירת ID ייחודי וקבוע לשני המשתמשים

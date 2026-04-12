@@ -85,6 +85,12 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             bookHolder.genre.setText(message.getGenre());
             if (bookHolder.share != null) bookHolder.share.setVisibility(View.GONE);
 
+            // שינוי ה-itemView לרוחב מלא
+            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) bookHolder.itemView.getLayoutParams();
+            lp.width = RecyclerView.LayoutParams.MATCH_PARENT;
+            bookHolder.itemView.setLayoutParams(lp);
+
+            // הזזת הכרטיס לצד הנכון
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) bookHolder.card.getLayoutParams();
             params.gravity = isMine ? Gravity.END : Gravity.START;
             bookHolder.card.setLayoutParams(params);
