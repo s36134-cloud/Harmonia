@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Harmonia">
         <activity
+            android:name=".QuotesActivity"
+            android:exported="false" />
+        <activity
             android:name=".CommentsActivity"
             android:exported="false" />
         <activity

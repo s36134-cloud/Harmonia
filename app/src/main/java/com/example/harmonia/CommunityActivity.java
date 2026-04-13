@@ -71,6 +71,7 @@ public class CommunityActivity extends AppCompatActivity {
             if (id == R.id.nav_home) startActivity(new Intent(this, HomeActivity.class));
             else if (id == R.id.nav_messages) startActivity(new Intent(this, MessagesActivity.class));
             else if (id == R.id.nav_profile) startActivity(new Intent(this, ProfileActivity.class));
+            else if (id == R.id.nav_quotes) startActivity(new Intent(this, QuotesActivity.class));
 
             overridePendingTransition(0, 0);
             return true;

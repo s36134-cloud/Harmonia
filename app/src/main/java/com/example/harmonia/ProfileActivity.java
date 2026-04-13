@@ -95,6 +95,7 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
             if (id == R.id.nav_home) startActivity(new Intent(this, HomeActivity.class));
             else if (id == R.id.nav_messages) startActivity(new Intent(this, MessagesActivity.class));
             else if (id == R.id.nav_community) startActivity(new Intent(this, CommunityActivity.class));
+            else if (id == R.id.nav_quotes) startActivity(new Intent(this, QuotesActivity.class));
             overridePendingTransition(0, 0);
             return true;
         });

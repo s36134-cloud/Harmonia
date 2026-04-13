@@ -24,4 +24,11 @@
         android:icon="@drawable/ic_person"
         android:title="profile" />
 
+    <item
+        android:id="@+id/nav_quotes"
+        android:icon="@drawable/ic_quotes"
+        android:title="quotes" />
+
+
+
 </menu>
