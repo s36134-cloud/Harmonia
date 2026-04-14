@@ -97,20 +97,6 @@
 
 
 
-                <TextView
-
-                    android:id="@+id/Quotes1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Your favorite Songs"
-                    android:textColor="#1A2B3C"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:fontFamily="@font/myfont4"/>
-
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -159,11 +145,19 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_Quotes"
+                    android:id="@+id/recycler_Quotesbooks"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
                     android:layout_marginBottom="24dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_Quotessongs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:layout_marginBottom="24dp"/>
+
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.cardview.widget.CardView>

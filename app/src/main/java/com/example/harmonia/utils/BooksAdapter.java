@@ -38,7 +38,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
     private List<Book> bookList;
     private OnBookClickListener listener;
-    private int layoutResId; // הפרמטר שקובע איזה XML להציג
+    private int layoutResId;
     private static final String TAG = "BooksAdapter";
 
     // ה-Interface המעודכן שמחזיר אובייקט ספר

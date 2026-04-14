@@ -14,21 +14,21 @@ public class SongQuote {
     public SongQuote()
     {}
 
-    public String gettext() { return genre; }
-    public void settext(String genre) { this.text = text; }
+    public String getText() { return genre; }
+    public void setText(String genre) { this.text = text; }
 
-    public String getgenre() { return genre; }
-    public void setgenre(String genre) { this.genre = genre; }
+    public String getGenre() { return genre; }
+    public void setGenre(String genre) { this.genre = genre; }
 
-    public String getsourceType() { return sourceType; }
-    public void setsourceType(String sourceType) { this.sourceType = sourceType; }
+    public String getSourceType() { return sourceType; }
+    public void setSourceType(String sourceType) { this.sourceType = sourceType; }
 
-    public String getsourceName() { return sourceName; }
-    public void setsourceName(String sourceName) { this.sourceName = sourceName; }
+    public String getSourceName() { return sourceName; }
+    public void setSourceName(String sourceName) { this.sourceName = sourceName; }
 
-    public String getartist() { return artist; }
-    public void setartist(String artist) { this.artist = artist; }
+    public String getArtist() { return artist; }
+    public void setArtist(String artist) { this.artist = artist; }
 
-    public List<String> getsongmood() { return songmood; }
-    public void setsongmood(List<String> songmood) { this.songmood = songmood; }
+    public List<String> getSongMood() { return songmood; }
+    public void setSongMood(List<String> songmood) { this.songmood = songmood; }
 }
