@@ -15,8 +15,8 @@ public class BookQuote {
     public BookQuote()
     {}
 
-    public String gettext() { return genre; }
-    public void settext(String genre) { this.text = text; }
+    public String gettext() { return text; }
+    public void settext(String text) { this.text = text; }
 
     public String getgenre() { return genre; }
     public void setgenre(String genre) { this.genre = genre; }

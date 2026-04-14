@@ -19,8 +19,7 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
 
     // קונסטרקטור
     public SongQuoteAdapter(List<SongQuote> Songmood) {
-        this.quoteList = quoteList;
-    }
+        this.quoteList = Songmood;    }
 
     @NonNull
     @Override

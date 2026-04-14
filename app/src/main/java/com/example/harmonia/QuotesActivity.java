@@ -124,7 +124,6 @@ public class QuotesActivity extends AppCompatActivity {
 
                         // מעבר על כל המסמכים שהגיעו מהדאטאבייס
                         for (DocumentSnapshot document : queryDocumentSnapshots) {
-                            // המרת המסמך לאובייקט BookQuote
                             SongQuote quote = document.toObject(SongQuote.class);
                             if (quote != null) {
                                 Songmood.add(quote);

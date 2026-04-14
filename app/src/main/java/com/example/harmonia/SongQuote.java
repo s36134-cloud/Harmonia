@@ -14,8 +14,8 @@ public class SongQuote {
     public SongQuote()
     {}
 
-    public String getText() { return genre; }
-    public void setText(String genre) { this.text = text; }
+    public String getText() { return text; }
+    public void setText(String text) { this.text = text; }
 
     public String getGenre() { return genre; }
     public void setGenre(String genre) { this.genre = genre; }
