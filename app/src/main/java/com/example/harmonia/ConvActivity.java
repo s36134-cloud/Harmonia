@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.harmonia.utils.ConvAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -40,6 +41,8 @@ public class ConvActivity extends AppCompatActivity {
     private List<Conv> messageList = new ArrayList<>();
     private String myId;
 
+    private ImageView PartnerProfile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +59,7 @@ public class ConvActivity extends AppCompatActivity {
         }
 
         tvPartnerName = findViewById(R.id.tv_partner_name);
+        PartnerProfile = findViewById(R.id.profile_image_conv);
         etMessage = findViewById(R.id.et_message);
         btnSend = findViewById(R.id.btn_send);
         btnBack = findViewById(R.id.btn_back);
@@ -83,6 +87,15 @@ public class ConvActivity extends AppCompatActivity {
             if (tvPartnerName != null) {
                 tvPartnerName.setText(partnerName != null ? partnerName : "צ'אט");
             }
+            String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
+                    + partnerId + ".jpg";
+
+            Glide.with(this)
+                    .load(profileUrl)
+                    .placeholder(R.drawable.ic_person)
+                    .error(R.drawable.ic_person)
+                    .circleCrop()
+                    .into(PartnerProfile);
 
             listenForMessages(partnerId);
 

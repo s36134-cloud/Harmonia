@@ -21,23 +21,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-
-        <TextView
-            android:id="@+id/mainTitle"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingStart="45dp"
-            android:paddingEnd="45dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="Quotes"
-            android:textStyle="bold"
-            android:textColor="#1A2B3C"
-            android:textSize="36sp"
-            android:fontFamily="@font/myfont4" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="15dp"
+            android:paddingEnd="30dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+
+
+            <TextView
+                android:id="@+id/mainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quotes"
+                android:textColor="#1A2B3C"
+                android:textSize="36sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/myfont4"
+                android:layout_marginStart="10dp" /> </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
@@ -94,54 +99,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="20dp">
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp">
-                    <View android:layout_width="60dp" android:layout_height="1dp" android:background="#1A2B3C" android:alpha="0.4" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginHorizontal="12dp" android:text="⊱ ♡ ⊰" android:textColor="#1A2B3C" android:textSize="18sp" />
-                    <View android:layout_width="60dp" android:layout_height="1dp" android:background="#1A2B3C" android:alpha="0.4" />
-
-                </LinearLayout>
-
-
-
-
-
-                <TextView
-                    android:id="@+id/Quotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="#1A2B3C"
-                    android:text="Quotes"
-                    android:textSize="20sp"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/myfont4"/>
-
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="12dp">
-                    <View android:layout_width="60dp" android:layout_height="1dp" android:background="#1A2B3C" android:alpha="0.4" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginHorizontal="12dp" android:text="⊱ ♡ ⊰" android:textColor="#1A2B3C"
-                        android:textSize="18sp" />
-                    <View android:layout_width="60dp"
-                        android:layout_height="1dp"
-                        android:background="#1A2B3C" android:alpha="0.4" />
-                </LinearLayout>
-
 
 
                 <androidx.recyclerview.widget.RecyclerView

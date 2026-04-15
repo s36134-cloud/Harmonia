@@ -13,15 +13,21 @@ public class Conv {
     private String bookId;
     private String author;
 
+    public String userProfilepic;
+
+
+
     public Conv() {}
 
-    public Conv(String senderId, String receiverId, String message, Object timestamp, String type, String songId) {
+    public Conv(String senderId, String receiverId, String message, Object timestamp, String type, String songId,String userProfilepic) {
         this.senderId = senderId;
         this.receiverId = receiverId;
         this.message = message;
         this.timestamp = timestamp;
         this.type = type;
         this.songId = songId;
+        this.userProfilepic = userProfilepic;
+
     }
 
     @PropertyName("text")

@@ -104,6 +104,8 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             MessageViewHolder msgHolder = (MessageViewHolder) holder;
             msgHolder.messageText.setText(message.getMessage());
         }
+
+
     }
 
     @Override
@@ -111,9 +113,11 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     static class MessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
+
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             messageText = itemView.findViewById(R.id.text_message_body);
+
         }
     }
 
@@ -121,6 +125,9 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView name, artist, genre;
         ImageView img, share;
         androidx.cardview.widget.CardView card;
+
+
+
         public SongViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.namesong);
@@ -129,6 +136,7 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             img = itemView.findViewById(R.id.songimage);
             share = itemView.findViewById(R.id.sharesong);
             card = itemView.findViewById(R.id.songcard);
+
         }
     }
 
@@ -136,6 +144,9 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         TextView name, author, genre;
         ImageView img, share;
         androidx.cardview.widget.CardView card;
+        ImageView UserProfile;
+
+
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.namebook);
@@ -144,6 +155,10 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             img = itemView.findViewById(R.id.bookimage);
             share = itemView.findViewById(R.id.sharebook);
             card = itemView.findViewById(R.id.bookcard);
+            UserProfile = itemView.findViewById(R.id.profile_image_conv);
+
+
+
         }
     }
 }
