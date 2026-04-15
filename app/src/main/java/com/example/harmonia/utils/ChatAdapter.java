@@ -7,12 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.harmonia.ConvActivity;
 import com.example.harmonia.R;
 import com.example.harmonia.RecommendedUser;
@@ -68,6 +70,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             // יצירת השיחה ב-Firestore ואז מעבר לדף ההודעות
             createChatIfNeeded(v.getContext(), finalId, displayName);
         });
+        String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
+                + user.user_id + ".jpg";
+
+        Glide.with(holder.itemView.getContext())
+                .load(profileUrl)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .circleCrop()
+                .into(holder.UserProfile);
+
     }
 
     /**
@@ -146,12 +158,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         TextView tvName, tvScore, tvReason;
         Button btnStartChat;
 
+        ImageView UserProfile;
+
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_partner_name);
             tvScore = itemView.findViewById(R.id.tv_score);
             tvReason = itemView.findViewById(R.id.tv_reason);
             btnStartChat = itemView.findViewById(R.id.btn_start_chat);
+            UserProfile = itemView.findViewById(R.id.profile_image_chat);
+
         }
     }
 }

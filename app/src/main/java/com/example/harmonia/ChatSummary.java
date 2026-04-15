@@ -12,6 +12,8 @@ public class ChatSummary {
     public String partnerName; // השם שיוצג ברשימה
     public String lastMessage;
     public List<String> users;
+    public String userProfilepic;
+
     public Object timestamp; // שינינו ל-Object כדי לקבל גם Timestamp וגם Long בלי קריסה
 
     public ChatSummary() {} // חובה עבור Firebase
@@ -21,14 +23,17 @@ public class ChatSummary {
         this.partnerId = partnerId;
         this.partnerName = partnerName;
         this.lastMessage = lastMessage;
+
     }
 
     // הבנאי המלא
-    public ChatSummary(String chatId, List<String> users, String lastMessage, Object timestamp) {
+    public ChatSummary(String chatId, List<String> users, String lastMessage, Object timestamp, String userProfilepic ) {
         this.chatId = chatId;
         this.users = users;
         this.lastMessage = lastMessage;
         this.timestamp = timestamp;
+        this.userProfilepic = userProfilepic;
+
     }
 
     // פונקציית עזר למקרה שתצטרכי את הזמן כ-long (למשל למיון)

@@ -69,7 +69,6 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
 
         // אתחול ה-ImageView וטעינת התמונה מהשרת מיד בכניסה
         profilePictureImageView = findViewById(R.id.imageView);
-        loadProfilePicture();
 
         recyclerSongs = findViewById(R.id.recycler_songs);
         recyclerBooks = findViewById(R.id.recycler_books);

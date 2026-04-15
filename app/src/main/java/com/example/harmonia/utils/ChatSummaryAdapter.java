@@ -4,12 +4,17 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.harmonia.ChatSummary;
 import com.example.harmonia.ConvActivity;
 import com.example.harmonia.R;
+import com.google.android.material.imageview.ShapeableImageView;
+
 import java.util.List;
 
 public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.ViewHolder> {
@@ -40,24 +45,35 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChatSummary chat = chatList.get(position);
+        ChatSummary chatSummary = chatList.get(position);
 
         // הצגת ה-nickname מה-Firebase (למשל "lilo")
-        holder.tvName.setText(chat.partnerName != null ? chat.partnerName : "User");
-        holder.tvLastMsg.setText(chat.lastMessage);
+        holder.tvName.setText(chatSummary.partnerName != null ? chatSummary.partnerName : "User");
+        holder.tvLastMsg.setText(chatSummary.lastMessage);
 
         holder.itemView.setOnClickListener(v -> {
             // אם הגדרנו listener (כמו בדיאלוג השיתוף), נפעיל אותו
             if (listener != null) {
-                listener.onItemClick(chat);
+                listener.onItemClick(chatSummary);
             } else {
                 // אחרת, נתנהג כרגיל ונפתח את ה-Activity (עבור המסך הראשי)
                 Intent intent = new Intent(v.getContext(), ConvActivity.class);
-                intent.putExtra("userId", chat.partnerId);
-                intent.putExtra("userName", chat.partnerName);
+                intent.putExtra("userId", chatSummary.partnerId);
+                intent.putExtra("userName", chatSummary.partnerName);
                 v.getContext().startActivity(intent);
             }
         });
+        String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
+                + chatSummary.partnerId + ".jpg";
+
+        Glide.with(holder.itemView.getContext())
+                .load(profileUrl)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .circleCrop()
+                .into(holder.UserProfile);
+
+
     }
 
     @Override
@@ -67,10 +83,15 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvLastMsg;
+
+        ImageView UserProfile;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_partner_name_summary);
             tvLastMsg = itemView.findViewById(R.id.tv_last_message);
+            UserProfile = itemView.findViewById(R.id.profile_image_chat_summary);
+
         }
     }
 }
