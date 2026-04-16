@@ -8,6 +8,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,15 +28,22 @@ public class PlaylistActivity extends AppCompatActivity {
     private SongsAdapter songsAdapter;
     private List<Song> songsList = new ArrayList<>();
     private FirebaseFirestore db;
+    private String spotifyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlists);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         db = FirebaseFirestore.getInstance();
 
         String playlistId = getIntent().getStringExtra("playlistId");
+        spotifyId = getIntent().getStringExtra("SPOTIFY_ID");
 
         recyclerView = findViewById(R.id.recyclerViewSongsPlaylist);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -55,6 +65,30 @@ public class PlaylistActivity extends AppCompatActivity {
             Intent intent = new Intent(PlaylistActivity.this, HomeActivity.class);
             startActivity(intent);
         });
+
+        android.view.View btnSpotify = findViewById(R.id.btnOpenSpotify);
+        btnSpotify.setOnClickListener(v -> {
+            if (spotifyId != null && !spotifyId.isEmpty()) {
+                openSpotifyPlaylist(spotifyId);
+            } else {
+                Toast.makeText(this, "פלייליסט זה לא זמין בספוטיפיי", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void openSpotifyPlaylist(String id) {
+        // 1. הכתובת לפתיחה ישירה באפליקציה (URI)
+        android.net.Uri uri = android.net.Uri.parse("spotify:playlist:" + id);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.putExtra(Intent.EXTRA_REFERRER, android.net.Uri.parse("android-app://" + getPackageName()));
+
+        try {
+            startActivity(intent);
+        } catch (Exception e) {
+            // 2. הכתובת לגיבוי בדפדפן - שים לב למבנה הלינק המדויק
+            String webUrl = "https://open.spotify.com/playlist/" + id;
+            android.net.Uri webUri = android.net.Uri.parse(webUrl);
+            startActivity(new Intent(Intent.ACTION_VIEW, webUri));
+        }
     }
 
     private void fetchSongsFromPlaylist(String playlistId) {

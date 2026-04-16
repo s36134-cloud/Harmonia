@@ -100,6 +100,7 @@ public class PlaylistsAdapter extends RecyclerView.Adapter<PlaylistsAdapter.Play
             String id = playlist.getName();
             Intent intent = new Intent(activity, PlaylistActivity.class);
             intent.putExtra("playlistId", id);
+            intent.putExtra("SPOTIFY_ID", playlist.getSpotifyId());
             activity.startActivity(intent);
         });
     }

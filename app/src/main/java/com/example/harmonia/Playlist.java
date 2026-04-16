@@ -8,6 +8,8 @@ public class Playlist {
     private String name; // ודאי שב-Firestore זה בדיוק name
     private List<String> songs; // ה-Log מראה שב-Firestore זה נקרא songs
 
+    private String spotifyId;
+
     public Playlist() {}
 
     public String getId() { return id; }
@@ -18,4 +20,10 @@ public class Playlist {
 
     public List<String> getSongs() { return songs; }
     public void setSongs(List<String> songs) { this.songs = songs; }
+
+    public String getSpotifyId() {
+        return spotifyId;
+    }
+
+
 }
