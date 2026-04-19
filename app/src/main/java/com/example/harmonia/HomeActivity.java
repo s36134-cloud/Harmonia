@@ -201,7 +201,7 @@ public class HomeActivity extends AppCompatActivity {
         java.util.Set<Playlist> temporarySet = new java.util.LinkedHashSet<>();
 
         // רשימת ה-IDs של פלייליסטים חובה
-        List<String> mandatoryPlaylists = java.util.Arrays.asList("Calm songs", "Sad songs");
+        List<String> mandatoryPlaylists = java.util.Arrays.asList("Calm songs", "Sad songs", "Happy songs");
 
         // שאילתה מאוחדת לפלייליסטים חובה
         db.collection("playlists")

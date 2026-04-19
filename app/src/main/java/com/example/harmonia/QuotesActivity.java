@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.harmonia.utils.BookQuoteAdapter;
 import com.example.harmonia.utils.SongQuoteAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,6 +33,10 @@ public class QuotesActivity extends AppCompatActivity {
     RecyclerView recyclerViewsong;
     SongQuoteAdapter SongQuoteadapter;
     List<SongQuote> Songmood;
+
+    private MaterialButton btnInLove, btnSad, btnHappy, btnInspirational, btnHeartbroken,btnHope, btnAll;
+    private BookQuoteAdapter bookAdapter;
+    private SongQuoteAdapter songAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +81,37 @@ public class QuotesActivity extends AppCompatActivity {
         Songmood = new ArrayList<>();
         SongQuoteadapter = new SongQuoteAdapter(Songmood);
         recyclerViewsong.setAdapter(SongQuoteadapter);
-
+        btnInLove = findViewById(R.id.btnInLove);
+        btnSad = findViewById(R.id.btnSad);
+        btnHappy = findViewById(R.id.btnHappy);
+        btnInspirational = findViewById(R.id.btnInspirational);
+        btnHeartbroken = findViewById(R.id.btnHeartbroken);
+        btnHope = findViewById(R.id.btnHope);
+        btnAll = findViewById(R.id.btnAll);
 
 
         // 3. אתחול Firestore
         db = FirebaseFirestore.getInstance();
+
+
+        btnInLove.setOnClickListener(v -> filterAllByMood("In Love"));
+        btnSad.setOnClickListener(v -> filterAllByMood("Sad"));
+        btnHappy.setOnClickListener(v -> filterAllByMood("Happy"));
+        btnInspirational.setOnClickListener(v -> filterAllByMood("Inspirational"));
+        btnHeartbroken.setOnClickListener(v -> filterAllByMood("Heartbroken"));
+        btnHope.setOnClickListener(v -> filterAllByMood("Hope"));
+
+
+// כפתור הכל - פשוט קורא לפונקציות הטעינה המקוריות שלך (בלי where)
+        btnAll.setOnClickListener(v -> {
+            // קריאה לפונקציות הקיימות שלך
+            loadBooksQuotesFromFirestore();
+            loadSongsQuotesFromFirestore();
+
+            // חיבור מחדש של האדפטר לרשימה המקורית (זה מה שמשחרר את ה"תקיעה" מהסינון)
+            BookQuoteadapter.setList(Bookmood);
+            SongQuoteadapter.setList(Songmood);
+        });
 
         // 4. משיכת הנתונים
         loadBooksQuotesFromFirestore();
@@ -138,6 +169,43 @@ public class QuotesActivity extends AppCompatActivity {
                     // כאן אפשר להוסיף הודעת שגיאה (Toast) למקרה שמשהו השתבש
                     Toast.makeText(this, "שגיאה בטעינת הנתונים", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+
+    private void filterAllByMood(String moodValue) {
+        // 1. סינון ספרים
+        db.collection("BookQuotes")
+                .whereArrayContains("mood", moodValue)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // המרת המסמכים ישירות לרשימה
+                    List<BookQuote> filteredBooks = queryDocumentSnapshots.toObjects(BookQuote.class);
+
+                    // עדכון הרשימה המקורית והאדפטר
+                    Bookmood.clear();
+                    Bookmood.addAll(filteredBooks);
+                    BookQuoteadapter.notifyDataSetChanged();
+
+                    // במידה והאדפטר איבד רפרנס, נעדכן אותו ישירות
+                    BookQuoteadapter.setList(Bookmood);
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "שגיאה בסינון ספרים", Toast.LENGTH_SHORT).show());
+
+        // 2. סינון שירים
+        db.collection("SongQuotes")
+                .whereArrayContains("mood", moodValue)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<SongQuote> filteredSongs = queryDocumentSnapshots.toObjects(SongQuote.class);
+
+                    Songmood.clear();
+                    Songmood.addAll(filteredSongs);
+                    SongQuoteadapter.notifyDataSetChanged();
+
+                    // עדכון ישיר של האדפטר
+                    SongQuoteadapter.setList(Songmood);
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "שגיאה בסינון שירים", Toast.LENGTH_SHORT).show());
     }
 
 }

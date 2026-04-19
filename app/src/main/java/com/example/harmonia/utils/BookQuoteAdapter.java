@@ -61,4 +61,10 @@ public class BookQuoteAdapter extends RecyclerView.Adapter<BookQuoteAdapter.Quot
             tvBookName = itemView.findViewById(R.id.sourceNamebook);
         }
     }
+
+    // פונקציה לעדכון הרשימה מחוץ לאדפטר
+    public void setList(List<BookQuote> newList) {
+        this.quoteList = newList; // 'list' זה השם של הרשימה בתוך ה-Adapter שלך
+        notifyDataSetChanged(); // פקודה שאומרת ל-RecyclerView להתרענן ולהציג את הנתונים החדשים
+    }
 }

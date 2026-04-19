@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.harmonia.BookQuote;
 import com.example.harmonia.R;
 import com.example.harmonia.SongQuote;
 
@@ -65,4 +66,10 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
             sourceNamesong = itemView.findViewById(R.id.sourceNamesong);
         }
     }
+
+    public void setList(List<SongQuote> newList) {
+        this.quoteList = newList; // 'list' זה השם של הרשימה בתוך ה-Adapter שלך
+        notifyDataSetChanged(); // פקודה שאומרת ל-RecyclerView להתרענן ולהציג את הנתונים החדשים
+    }
+
 }

@@ -7,8 +7,6 @@
     android:layout_height="match_parent"
     android:background="#FFF8EC">
 
-
-
     <androidx.cardview.widget.CardView
         android:id="@+id/titleCard"
         android:layout_width="wrap_content"
@@ -31,8 +29,6 @@
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
 
-
-
             <TextView
                 android:id="@+id/mainTitle"
                 android:layout_width="wrap_content"
@@ -42,14 +38,11 @@
                 android:textSize="36sp"
                 android:textStyle="bold"
                 android:fontFamily="@font/myfont4"
-                android:layout_marginStart="10dp" /> </LinearLayout>
-
+                android:layout_marginStart="10dp" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
-
         android:id="@+id/bottom_navigation_Quotes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -66,10 +59,7 @@
         android:background="@drawable/bottom_nav_bg"
         app:backgroundTint="@null"/>
 
-
-
     <androidx.cardview.widget.CardView
-
         android:id="@+id/whiteCard"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -84,38 +74,137 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleCard">
 
-
-
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:scrollbars="none">
+            android:orientation="vertical">
 
-
-
-            <LinearLayout
+            <HorizontalScrollView
+                android:id="@+id/moodScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:scrollbars="none"
+                android:padding="8dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAll"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="All ✨"
+                        app:cornerRadius="50dp"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnInLove"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="In Love ❤️"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#FF4081"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSad"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Sad 🌧️"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#3F51B5"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHappy"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Happy ☀️"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#FFC107"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnInspirational"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Inspirational 🌈"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#FFC107"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHeartbroken"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Heartbroken 💔"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#FFC107"
+                        android:fontFamily="@font/myfont4"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnHope"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="4dp"
+                        android:text="Hope 🦋"
+                        app:cornerRadius="50dp"
+                        app:strokeColor="#FFC107"
+                        android:fontFamily="@font/myfont4"
+                        />
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_Quotesbooks"
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="24dp"/>
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_Quotessongs"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="24dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_Quotesbooks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginBottom="24dp"/>
 
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_Quotessongs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:layout_marginBottom="24dp"/>
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
