@@ -35,14 +35,15 @@ public class AppLifecycleObserver implements DefaultLifecycleObserver {
         // App moved to the BACKGROUND
         Log.d(TAG, "App is in BACKGROUND");
 
+
         // Start your notification service
         Intent serviceIntent = new Intent(context, PostsNotificationService.class);
 
         // Handle background service restrictions on Android 8 (Oreo) and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent);
+            //context.startForegroundService(serviceIntent);
         } else {
-            context.startService(serviceIntent);
+            //context.startService(serviceIntent);
         }
     }
 }
