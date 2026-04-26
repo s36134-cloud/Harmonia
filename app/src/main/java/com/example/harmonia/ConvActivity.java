@@ -171,7 +171,9 @@ public class ConvActivity extends AppCompatActivity {
     }
     private void sendMessage(String partnerId, String text) {
         String chatId = getChatId(myId, partnerId);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+        // 1. יצירת אובייקט ההודעה החדשה
         Map<String, Object> message = new HashMap<>();
         message.put("senderId", myId);
         message.put("receiverId", partnerId);
@@ -179,8 +181,8 @@ public class ConvActivity extends AppCompatActivity {
         message.put("timestamp", FieldValue.serverTimestamp());
         message.put("type", "text");
 
-        FirebaseFirestore.getInstance()
-                .collection("chats")
+        // 2. שמירת ההודעה בתת-האוסף (מה שכבר עשית)
+        db.collection("chats")
                 .document(chatId)
                 .collection("messages")
                 .add(message)
@@ -188,6 +190,23 @@ public class ConvActivity extends AppCompatActivity {
                     Log.e("CHAT_ERROR", "Failed to send message", e);
                     Toast.makeText(this, "שליחה נכשלה", Toast.LENGTH_SHORT).show();
                 });
+
+        // 3. עדכון מסמך האב - כדי שההודעה תופיע במסך הראשי!
+        Map<String, Object> chatSummaryUpdates = new HashMap<>();
+        chatSummaryUpdates.put("lastMessage", text);
+        chatSummaryUpdates.put("timestamp", FieldValue.serverTimestamp());
+
+        // נוסיף גם את מערך המשתמשים למקרה שזה הצ'אט הראשון וצריך ליצור את המסמך
+        List<String> usersArray = new ArrayList<>();
+        usersArray.add(myId);
+        usersArray.add(partnerId);
+        chatSummaryUpdates.put("users", usersArray);
+
+        // נשתמש ב-merge כדי לא למחוק נתונים אחרים אם הם קיימים במסמך (למשל אם שמרת שם דברים נוספים)
+        db.collection("chats").document(chatId)
+                .set(chatSummaryUpdates, com.google.firebase.firestore.SetOptions.merge())
+                .addOnSuccessListener(aVoid -> Log.d("CHAT_DEBUG", "Chat summary updated successfully!"))
+                .addOnFailureListener(e -> Log.e("CHAT_ERROR", "Failed to update chat summary", e));
     }
     private String getChatId(String uid1, String uid2) {
         if (uid1 == null || uid2 == null || uid1.isEmpty() || uid2.isEmpty()) return "invalid_id";

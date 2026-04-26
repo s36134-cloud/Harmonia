@@ -11,9 +11,7 @@ public class HarmoniaApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // Initialize and register the observer
-        AppLifecycleObserver appLifecycleObserver = new AppLifecycleObserver(this);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(appLifecycleObserver);
+
     }
 }
 

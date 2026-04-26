@@ -36,7 +36,6 @@ public class MessagesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewchats);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        loadUserChats();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -87,6 +86,13 @@ public class MessagesActivity extends AppCompatActivity {
                     });
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // כשהמסך מתעורר (גם בפעם הראשונה וגם כשחוזרים אליו), נפעיל את המאזין!
+        loadUserChats();
+    }
+
 
     private void loadUserChats() {
         String myUid = FirebaseAuth.getInstance().getUid();
@@ -94,8 +100,15 @@ public class MessagesActivity extends AppCompatActivity {
 
         FirebaseFirestore.getInstance().collection("chats")
                 .whereArrayContains("users", myUid)
-                .addSnapshotListener((value, error) -> {
-                    if (error != null || value == null) return;
+                // התוספת החשובה - מיון מובנה של פיירסטור
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .addSnapshotListener(this,(value, error) -> {
+                    if (error != null) {
+                        // אם חסר אינדקס (Index), השגיאה עם הקישור הכחול תודפס פה ב-Logcat!
+                        android.util.Log.e("CHAT_ERROR", "Error loading chats", error);
+                        return;
+                    }
+                    if (value == null) return;
 
                     chatList.clear();
                     for (DocumentSnapshot doc : value.getDocuments()) {
@@ -105,17 +118,26 @@ public class MessagesActivity extends AppCompatActivity {
                         final String partnerId = users.get(0).equals(myUid) ? users.get(1) : users.get(0);
                         final String lastMsg = doc.getString("lastMessage") != null ? doc.getString("lastMessage") : "No messages yet";
 
+                        // שליפת הזמן מהמסמך כדי שנוכל לסדר את הרשימה בסוף
+                        final Object timestamp = doc.get("timestamp");
+
                         FirebaseFirestore.getInstance().collection("users").document(partnerId)
                                 .get()
                                 .addOnSuccessListener(userDoc -> {
-                                    // תוקן: nickname במקום displayName
                                     String partnerName = userDoc.getString("nickname");
                                     if (partnerName == null || partnerName.isEmpty()) {
                                         partnerName = userDoc.getString("displayName"); // fallback
                                     }
                                     if (partnerName == null) partnerName = "Unknown User";
 
-                                    chatList.add(new ChatSummary(partnerId, partnerName, lastMsg));
+                                    // יצירת האובייקט והשמת הזמן (השדות שלך מוגדרים כ-public אז זה אפשרי)
+                                    ChatSummary chatSummary = new ChatSummary(partnerId, partnerName, lastMsg);
+                                    chatSummary.timestamp = timestamp;
+
+                                    chatList.add(chatSummary);
+
+                                    // הפתרון לאסינכרוניות: מיון הרשימה שלנו מהחדש לישן לפני שמציגים אותה
+                                    chatList.sort((c1, c2) -> Long.compare(c2.getTimestampAsLong(), c1.getTimestampAsLong()));
 
                                     if (adapter == null) {
                                         adapter = new ChatSummaryAdapter(chatList);
