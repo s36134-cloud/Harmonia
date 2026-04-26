@@ -6,7 +6,6 @@ import java.util.List;
 public class UserList {
     private String id;
     private String name;
-    private String description;
     private String type;
     private String imageUrl;
     private List<String> itemIds;
@@ -15,9 +14,8 @@ public class UserList {
 
     public UserList() {} // חובה ל-Firestore
 
-    public UserList(String name, String description, String type, String imageUrl) {
+    public UserList(String name, String type, String imageUrl) {
         this.name = name;
-        this.description = description;
         this.type = type;
         this.imageUrl = imageUrl;
         this.itemIds = new ArrayList<>();
@@ -29,8 +27,6 @@ public class UserList {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }

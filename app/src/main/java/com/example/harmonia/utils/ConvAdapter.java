@@ -68,6 +68,10 @@ public class ConvAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             songHolder.genre.setText(message.getGenre());
             if (songHolder.share != null) songHolder.share.setVisibility(View.GONE);
 
+            RecyclerView.LayoutParams lp = (RecyclerView.LayoutParams) songHolder.itemView.getLayoutParams();
+            lp.width = RecyclerView.LayoutParams.MATCH_PARENT;
+            songHolder.itemView.setLayoutParams(lp);
+
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) songHolder.card.getLayoutParams();
             params.gravity = isMine ? Gravity.END : Gravity.START;
             songHolder.card.setLayoutParams(params);

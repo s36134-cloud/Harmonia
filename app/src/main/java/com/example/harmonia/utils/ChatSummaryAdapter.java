@@ -47,33 +47,36 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChatSummary chatSummary = chatList.get(position);
 
-        // הצגת ה-nickname מה-Firebase (למשל "lilo")
+        // הצגת ה-nickname
         holder.tvName.setText(chatSummary.partnerName != null ? chatSummary.partnerName : "User");
         holder.tvLastMsg.setText(chatSummary.lastMessage);
 
         holder.itemView.setOnClickListener(v -> {
-            // אם הגדרנו listener (כמו בדיאלוג השיתוף), נפעיל אותו
             if (listener != null) {
                 listener.onItemClick(chatSummary);
             } else {
-                // אחרת, נתנהג כרגיל ונפתח את ה-Activity (עבור המסך הראשי)
                 Intent intent = new Intent(v.getContext(), ConvActivity.class);
                 intent.putExtra("userId", chatSummary.partnerId);
                 intent.putExtra("userName", chatSummary.partnerName);
                 v.getContext().startActivity(intent);
             }
         });
-        String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
-                + chatSummary.partnerId + ".jpg";
 
-        Glide.with(holder.itemView.getContext())
-                .load(profileUrl)
-                .placeholder(R.drawable.ic_person)
-                .error(R.drawable.ic_person)
-                .circleCrop()
-                .into(holder.UserProfile);
+        // בדיקה שה-ID קיים לפני בניית ה-URL
+        if (chatSummary.partnerId != null && !chatSummary.partnerId.isEmpty()) {
+            String profileUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/profiles/"
+                    + chatSummary.partnerId + ".jpg";
 
-
+            Glide.with(holder.itemView.getContext())
+                    .load(profileUrl)
+                    .placeholder(R.drawable.ic_person)
+                    .error(R.drawable.ic_person)
+                    .circleCrop()
+                    .into(holder.UserProfile);
+        } else {
+            // אם אין ID, נשים תמונת ברירת מחדל
+            holder.UserProfile.setImageResource(R.drawable.ic_person);
+        }
     }
 
     @Override

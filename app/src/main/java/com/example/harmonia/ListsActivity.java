@@ -106,7 +106,6 @@ public class ListsActivity extends AppCompatActivity {
                 new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         TextInputEditText etName = dialogView.findViewById(R.id.list_name);
-        TextInputEditText etDescription = dialogView.findViewById(R.id.list_description);
         RadioGroup radioGroupType = dialogView.findViewById(R.id.radioGroupType);
         ivListImagePreview = dialogView.findViewById(R.id.ivListImagePreview);
         Button btnGallery = dialogView.findViewById(R.id.btnPickGallery);
@@ -128,7 +127,6 @@ public class ListsActivity extends AppCompatActivity {
 
         btnCreate.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
-            String description = etDescription.getText().toString().trim();
 
             if (name.isEmpty()) {
                 etName.setError("Please enter name");
@@ -139,9 +137,9 @@ public class ListsActivity extends AppCompatActivity {
             String type = (selectedTypeId == R.id.radioSongs) ? "songs" : "books";
 
             if (selectedImageUri != null) {
-                uploadImageToSupabase(name, description, type, dialog);
+                uploadImageToSupabase(name, type, dialog);
             } else {
-                createListInFirestore(name, description, type, "", dialog);
+                createListInFirestore(name,  type, "", dialog);
             }
         });
 
@@ -154,7 +152,7 @@ public class ListsActivity extends AppCompatActivity {
                 this, getPackageName() + ".provider", tempFile);
     }
 
-    private void uploadImageToSupabase(String name, String description, String type, AlertDialog dialog) {
+    private void uploadImageToSupabase(String name,  String type, AlertDialog dialog) {
         try {
             String fileName = "images/lists/" + currentUserId + "/" + UUID.randomUUID() + ".jpg";
             String uploadUrl = supabaseUrl + "/storage/v1/object/" + SUPABASE_BUCKET + "/" + fileName;
@@ -185,7 +183,7 @@ public class ListsActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
                         if (responseCode == 200 || responseCode == 201) {
-                            createListInFirestore(name, description, type, publicUrl, dialog);
+                            createListInFirestore(name, type, publicUrl, dialog);
                         } else {
                             Toast.makeText(this, "שגיאה בהעלאת תמונה: " + responseCode, Toast.LENGTH_SHORT).show();
                         }
@@ -202,8 +200,8 @@ public class ListsActivity extends AppCompatActivity {
         }
     }
 
-    private void createListInFirestore(String name, String description, String type, String imageUrl, AlertDialog dialog) {
-        UserList newList = new UserList(name, description, type, imageUrl);
+    private void createListInFirestore(String name, String type, String imageUrl, AlertDialog dialog) {
+        UserList newList = new UserList(name, type, imageUrl);
 
         db.collection("users").document(currentUserId)
                 .collection("lists")

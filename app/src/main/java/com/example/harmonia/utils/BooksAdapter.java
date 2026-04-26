@@ -174,9 +174,11 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
                         }
                     }
                     if (!partnerId.isEmpty()) {
+                        final String finalPartnerId = partnerId; // שמירה על ה-ID לשימוש בתוך ה-Success
                         db.collection("users").document(partnerId).get().addOnSuccessListener(userDoc -> {
                             if (userDoc.exists()) {
                                 chat.partnerName = userDoc.getString("nickname");
+                                chat.partnerId = finalPartnerId; // השורה שמוסיפה את ה-ID לאובייקט
                                 adapter.notifyDataSetChanged();
                             }
                         });

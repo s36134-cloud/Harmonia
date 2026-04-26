@@ -126,7 +126,8 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         RecyclerView rvChats = dialogView.findViewById(R.id.select_chat);
         rvChats.setLayoutManager(new LinearLayoutManager(v.getContext()));
         String currentUserId = FirebaseAuth.getInstance().getUid();
-        FirebaseFirestore.getInstance().collection("chats").whereArrayContains("users", currentUserId).get().addOnSuccessListener(queryDocumentSnapshots -> {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("chats").whereArrayContains("users", currentUserId).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<ChatSummary> chatList = new ArrayList<>();
             ChatSummaryAdapter adapter = new ChatSummaryAdapter(chatList);
             rvChats.setAdapter(adapter);
@@ -139,7 +140,23 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
                 if (chat != null) {
                     chat.chatId = doc.getId();
                     chatList.add(chat);
-                    adapter.notifyDataSetChanged();
+
+                    String partnerId = "";
+                    if (chat.users != null) {
+                        for (String uid : chat.users) {
+                            if (!uid.equals(currentUserId)) { partnerId = uid; break; }
+                        }
+                    }
+                    if (!partnerId.isEmpty()) {
+                        final String finalPartnerId = partnerId;
+                        db.collection("users").document(partnerId).get().addOnSuccessListener(userDoc -> {
+                            if (userDoc.exists()) {
+                                chat.partnerName = userDoc.getString("nickname");
+                                chat.partnerId = finalPartnerId;
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
                 }
             }
         });
