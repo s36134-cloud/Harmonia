@@ -99,7 +99,7 @@
                         android:layout_margin="4dp"
                         android:text="All ✨"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -111,7 +111,7 @@
                         android:layout_margin="4dp"
                         android:text="In Love ❤️"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -123,7 +123,7 @@
                         android:layout_margin="4dp"
                         android:text="Sad 🌧️"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -135,7 +135,7 @@
                         android:layout_margin="4dp"
                         android:text="Happy ☀️"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -147,7 +147,7 @@
                         android:layout_margin="4dp"
                         android:text="Inspirational 🌈"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -159,7 +159,7 @@
                         android:layout_margin="4dp"
                         android:text="Heartbroken 💔"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 
@@ -171,7 +171,7 @@
                         android:layout_margin="4dp"
                         android:text="Hope 🦋"
                         app:cornerRadius="50dp"
-                        app:strokeColor="#E8DBB3"
+                        app:strokeColor="#DCCCAC"
                         android:fontFamily="@font/myfont4"
                         />
 

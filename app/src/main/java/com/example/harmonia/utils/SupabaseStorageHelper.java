@@ -49,6 +49,8 @@ public class SupabaseStorageHelper {
                     filePath,
                     body
             );
+
+            Log.d(TAG, "uploadPicture: enqueuing call to supabase");
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -72,6 +74,8 @@ public class SupabaseStorageHelper {
             Log.e(TAG, "Exception during Supabase upload", e);
             callback.onResult(false, null, e.getMessage());
         }
+
+        Log.d(TAG, "uploadPicture: done");
     }
 
     public static String getFileSupabaseUrl(String filePath) {

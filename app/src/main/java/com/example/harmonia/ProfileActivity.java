@@ -127,38 +127,49 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         Button choosePictureButton = findViewById(R.id.btn_choose_picture);
         choosePictureButton.setOnClickListener(v -> userImageSelector.showImageSourceDialog());
 
-        loadUserTopSongs();
-        loadUserTopBooks();
+
     }
 
     // הפונקציה המרכזית שטוענת את התמונה מה-Storage
     private void loadProfilePicture() {
         if (auth.getCurrentUser() != null) {
             String filePath = "images/profiles/" + auth.getUid() + ".jpg";
-            String url = SupabaseStorageHelper.getFileSupabaseUrl(filePath);
+            String baseUrl = SupabaseStorageHelper.getFileSupabaseUrl(filePath);
+
+            // שליפת חותמת הזמן האחרונה (אם אין, נשתמש ב-0 כברירת מחדל)
+            long lastUpdated = getSharedPreferences("AppPrefs", MODE_PRIVATE)
+                    .getLong("profilePicUpdated", 0);
+
+            // הוספת חותמת הזמן ל-URL תכריח את ה-CDN של Supabase לתת לנו את הגרסה החדשה ביותר
+            String url = baseUrl + "?t=" + lastUpdated;
 
             Log.d(TAG, "Loading image from: " + url);
 
             Glide.with(this)
                     .load(url)
-                    .signature(new ObjectKey(System.currentTimeMillis())) // חשוב: מבטיח שהתמונה תתרענן ולא תיקלח מהזיכרון הישן
+                    // Glide ישמור את התמונה במטמון המקומי ויעדכן אותה רק כש-lastUpdated ישתנה!
+                    .signature(new ObjectKey(lastUpdated))
                     .circleCrop()
                     .placeholder(android.R.drawable.progress_horizontal)
-                    .error(android.R.drawable.ic_menu_gallery) // תמונה שתוצג אם אין עדיין תמונה בשרת
+                    .error(android.R.drawable.ic_menu_gallery)
                     .into(profilePictureImageView);
         }
     }
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume: start");
         super.onResume();
-        loadProfilePicture(); // טעינה מחדש בכל פעם שחוזרים למסך
         loadUserTopSongs();
         loadUserTopBooks();
+        loadProfilePicture(); // טעינה מחדש בכל פעם שחוזרים למסך
+
+        Log.d(TAG, "onResume: end");
     }
 
     @Override
     public void onResult(boolean success, String message) {
+        Log.d(TAG, "onResult of choosing new image: " + success);
         if(success) {
             File imageFile = userImageSelector.createImageFile();
             String filePath = "images/profiles/" + auth.getUid() + ".jpg";
@@ -167,13 +178,21 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
                 @Override
                 public void onResult(boolean success, String url, String error) {
                     if (success) {
-                        Log.d(TAG, "Upload success! Refreshing UI...");
-                        loadProfilePicture(); // רענון התמונה ב-UI מיד אחרי ההעלאה
+                        // עדכון חותמת הזמן של התמונה במכשיר
+                        getSharedPreferences("AppPrefs", MODE_PRIVATE).edit()
+                                .putLong("profilePicUpdated", System.currentTimeMillis())
+                                .apply();
+
+                        // רענון התצוגה מיד כשההעלאה מסתיימת (חשוב להריץ על ה-UI Thread)
+                        runOnUiThread(() -> loadProfilePicture());
                     } else {
                         Log.e(TAG, "Upload failed: " + error);
+                        runOnUiThread(() -> Toast.makeText(ProfileActivity.this, "Upload failed", Toast.LENGTH_SHORT).show());
                     }
                 }
             });
+        } else {
+            Log.d(TAG, "onResult of choosing new image failed. message: : " + message);
         }
     }
 
