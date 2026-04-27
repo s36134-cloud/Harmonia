@@ -59,9 +59,7 @@ public class CombinedMediaAdapter extends RecyclerView.Adapter<CombinedMediaAdap
             imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
 
             holder.genreText.setText(book.getGenre());
-            holder.minageText.setText(String.valueOf(book.getMinage()) + "+");
             holder.genreText.setVisibility(View.VISIBLE);
-            holder.minageText.setVisibility(View.VISIBLE);
 
         } else if (item instanceof Song) {
             Song song = (Song) item;
@@ -70,7 +68,6 @@ public class CombinedMediaAdapter extends RecyclerView.Adapter<CombinedMediaAdap
             imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/songs/" + song.getId() + ".jpg";
 
             holder.genreText.setVisibility(View.GONE);
-            holder.minageText.setVisibility(View.GONE);
         }
 
         holder.nameText.setText(name);
@@ -122,7 +119,6 @@ public class CombinedMediaAdapter extends RecyclerView.Adapter<CombinedMediaAdap
         TextView creatorText;
         ImageView imageView;
         TextView genreText;
-        TextView minageText;
 
         public MediaViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -130,7 +126,6 @@ public class CombinedMediaAdapter extends RecyclerView.Adapter<CombinedMediaAdap
             creatorText = itemView.findViewById(R.id.author);
             imageView = itemView.findViewById(R.id.bookimage);
             genreText = itemView.findViewById(R.id.genrebook);
-            minageText = itemView.findViewById(R.id.minage);
         }
     }
 }

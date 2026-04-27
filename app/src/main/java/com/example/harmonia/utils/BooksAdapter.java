@@ -59,7 +59,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     }
 
     public static class BookViewHolder extends RecyclerView.ViewHolder {
-        public TextView namebook, author, genrebook, minage;
+        public TextView namebook, author, genrebook;
         public ImageView bookimage, sharebook;
 
         public BookViewHolder(@NonNull View itemView) {
@@ -68,7 +68,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
             author = itemView.findViewById(R.id.author);
             bookimage = itemView.findViewById(R.id.bookimage);
             genrebook = itemView.findViewById(R.id.genrebook);
-            minage = itemView.findViewById(R.id.minage);
             sharebook = itemView.findViewById(R.id.sharebook);
         }
     }
@@ -90,7 +89,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
         // בדיקות Null לרכיבים שלא קיימים ב-Compact Mode
         if (holder.genrebook != null) holder.genrebook.setText(book.getGenre());
-        if (holder.minage != null) holder.minage.setText(book.getMinage() + "+");
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
 

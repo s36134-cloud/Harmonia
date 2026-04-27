@@ -7,7 +7,6 @@ public class Book {
     private String name;
     private String author;
     private String genre;
-    private int minage;
 
     private boolean isSelectedbook = false;
 
@@ -23,13 +22,7 @@ public class Book {
     public void setAuthor(String author) { this.author = author;}
     public String getGenre() { return genre; }
     public void setGenre(String genre) { this.genre = genre; }
-    public int getMinage() {
-        return minage;
-    }
 
-    public void setMinage(int minage) {
-        this.minage = minage;
-    }
     public boolean isSelectedbook() {
         return isSelectedbook;
     }

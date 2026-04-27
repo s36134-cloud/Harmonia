@@ -76,15 +76,6 @@
                     android:layout_height="14dp"
                     android:layout_marginTop="2dp">
 
-                    <TextView
-                        android:id="@+id/minage"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/myfont4"
-                        android:text="age"
-                        android:textColor="#1A2B3C"
-                        android:textSize="10sp" />
 
                     <ImageView
                         android:id="@+id/sharebook"
