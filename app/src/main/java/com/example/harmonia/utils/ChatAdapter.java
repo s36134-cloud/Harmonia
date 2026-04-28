@@ -166,7 +166,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             tvName = itemView.findViewById(R.id.tv_partner_name);
             tvScore = itemView.findViewById(R.id.tv_score);
             tvReason = itemView.findViewById(R.id.tv_reason);
-            btnStartChat = itemView.findViewById(R.id.btn_start_chat);
             UserProfile = itemView.findViewById(R.id.profile_image_chat);
 
         }

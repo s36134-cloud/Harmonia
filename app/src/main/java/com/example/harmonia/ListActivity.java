@@ -2,6 +2,7 @@ package com.example.harmonia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.*;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -76,9 +77,14 @@ public class ListActivity extends AppCompatActivity {
     private void setupAdapters() {
         if (listType.equals("songs")) {
             songsSearchAdapter = new SongsAdapter(songResults, song -> {
+                song.setSelected(false);
                 addItemToList(song.getId());
                 songsInList.add(song);
                 songsListAdapter.updateList(songsInList);
+
+                recyclerViewsongbooklist.setVisibility(View.GONE);
+                searchViewbookorsong.setQuery("", false);
+
                 Toast.makeText(this, song.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
             }, R.layout.song_list);
             recyclerViewsongbooklist.setAdapter(songsSearchAdapter);
@@ -92,8 +98,11 @@ public class ListActivity extends AppCompatActivity {
                 public boolean onQueryTextSubmit(String query) { return false; }
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (!newText.isEmpty()) searchSongs(newText);
-                    else {
+                    if (!newText.isEmpty()) {
+                        recyclerViewsongbooklist.setVisibility(View.VISIBLE);
+                        searchSongs(newText);
+                    } else {
+                        recyclerViewsongbooklist.setVisibility(View.GONE);
                         songResults.clear();
                         songsSearchAdapter.updateList(songResults);
                     }
@@ -103,9 +112,14 @@ public class ListActivity extends AppCompatActivity {
 
         } else {
             booksSearchAdapter = new BooksAdapter(bookResults, book -> {
+                book.setSelected(false);
                 addItemToList(book.getId());
                 booksInList.add(book);
                 booksListAdapter.updateList(booksInList);
+
+                searchViewbookorsong.setQuery("", false);
+                recyclerViewsongbooklist.setVisibility(View.GONE);
+
                 Toast.makeText(this, book.getName() + " נוסף לרשימה!", Toast.LENGTH_SHORT).show();
             }, R.layout.book_list);
             recyclerViewsongbooklist.setAdapter(booksSearchAdapter);
@@ -119,8 +133,11 @@ public class ListActivity extends AppCompatActivity {
                 public boolean onQueryTextSubmit(String query) { return false; }
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    if (!newText.isEmpty()) searchBooks(newText);
-                    else {
+                    if (!newText.isEmpty()) {
+                        recyclerViewsongbooklist.setVisibility(View.VISIBLE);
+                        searchBooks(newText);
+                    } else {
+                        recyclerViewsongbooklist.setVisibility(View.GONE);
                         bookResults.clear();
                         booksSearchAdapter.updateList(bookResults);
                     }
