@@ -5,8 +5,6 @@ import java.util.List;
 public class BookQuote {
 
     private String text;
-    private String genre;
-    private String sourceType;
     private String sourceName;
     private String author;
 
@@ -18,11 +16,9 @@ public class BookQuote {
     public String gettext() { return text; }
     public void settext(String text) { this.text = text; }
 
-    public String getgenre() { return genre; }
-    public void setgenre(String genre) { this.genre = genre; }
 
-    public String getsourceType() { return sourceType; }
-    public void setsourceType(String sourceType) { this.sourceType = sourceType; }
+
+
 
     public String getsourceName() { return sourceName; }
     public void setsourceName(String sourceName) { this.sourceName = sourceName; }

@@ -246,19 +246,7 @@ public class HomeActivity extends AppCompatActivity {
                 });
     }
 
-    // פונקציית עזר כדי לא לשכפל קוד של יצירת האובייקט והגדרת השם
-    private void addPlaylistFromDoc(DocumentSnapshot doc, java.util.Set<String> processedIds) {
-        if (!processedIds.contains(doc.getId())) {
-            Playlist playlist = doc.toObject(Playlist.class);
-            if (playlist != null) {
-                playlist.setId(doc.getId());
-                // הגדרת השם מה-ID כפי שמופיע ב-Console
-                playlist.setName(doc.getId());
 
-                playlistsList.add(playlist);
-                processedIds.add(doc.getId());
-            }
-        }
-    }
+
 
 }
