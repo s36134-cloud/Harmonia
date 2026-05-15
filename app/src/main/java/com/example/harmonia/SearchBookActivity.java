@@ -151,7 +151,7 @@ public class SearchBookActivity extends AppCompatActivity {
         db.collection("users").document(userId)
                 .update("topBooks", FieldValue.arrayUnion(bookIds.toArray()))
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "הספרים נוספו לפרופיל!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "התווסף למועדפים!", Toast.LENGTH_SHORT).show();
                     finish();
                 })
                 .addOnFailureListener(e -> {
