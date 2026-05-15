@@ -18,14 +18,13 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
 
     private List<SongQuote> quoteList;
 
-    // קונסטרקטור
     public SongQuoteAdapter(List<SongQuote> Songmood) {
         this.quoteList = Songmood;    }
 
     @NonNull
     @Override
     public QuoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // קישור לקובץ ה-XML של השורה הבודדת (תוודאי שזה השם של ה-Layout שלך)
+        // קישור לקובץ ה-XML של השורה הבודדת
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.songquote, parent, false);
         return new QuoteViewHolder(view);
     }
@@ -48,7 +47,6 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
 
     @Override
     public int getItemCount() {
-        // תיקון למניעת קריסה: אם הרשימה null, נחזיר 0
         if (quoteList == null) {
             return 0;
         }
@@ -60,7 +58,6 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
 
         public QuoteViewHolder(@NonNull View itemView) {
             super(itemView);
-            // כאן את עושה findViewById לכל ה-ID שיצרת בעיצוב (XML)
             QuoteTextasong = itemView.findViewById(R.id.QuoteTextasong);
             artist = itemView.findViewById(R.id.artist);
             sourceNamesong = itemView.findViewById(R.id.sourceNamesong);
@@ -68,7 +65,7 @@ public class SongQuoteAdapter extends RecyclerView.Adapter<SongQuoteAdapter.Quot
     }
 
     public void setList(List<SongQuote> newList) {
-        this.quoteList = newList; // 'list' זה השם של הרשימה בתוך ה-Adapter שלך
+        this.quoteList = newList; //
         notifyDataSetChanged(); // פקודה שאומרת ל-RecyclerView להתרענן ולהציג את הנתונים החדשים
     }
 

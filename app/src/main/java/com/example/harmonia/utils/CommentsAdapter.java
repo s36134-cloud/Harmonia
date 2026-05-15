@@ -27,7 +27,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
     @NonNull
     @Override
     public CommentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // וודאי ששם ה-XML של התגובה הבודדת הוא comment.xml
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment, parent, false);
         return new CommentViewHolder(view);
@@ -71,7 +70,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
             ivUserProfile = itemView.findViewById(R.id.commentUserProfile);
             tvUserName = itemView.findViewById(R.id.commentUserName);
             tvCommentText = itemView.findViewById(R.id.commentText);
-            tvTime = itemView.findViewById(R.id.commentTime); // אם הוספת שדה זמן ב-XML
+            tvTime = itemView.findViewById(R.id.commentTime);
         }
     }
 }

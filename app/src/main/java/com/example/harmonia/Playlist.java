@@ -5,8 +5,8 @@ import java.util.List;
 
 public class Playlist {
     private String id;
-    private String name; // ודאי שב-Firestore זה בדיוק name
-    private List<String> songs; // ה-Log מראה שב-Firestore זה נקרא songs
+    private String name;
+    private List<String> songs;
 
     private String spotifyId;
 

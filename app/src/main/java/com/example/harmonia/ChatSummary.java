@@ -14,7 +14,7 @@ public class ChatSummary {
     public List<String> users;
     public String userProfilepic;
 
-    public Object timestamp; // שינינו ל-Object כדי לקבל גם Timestamp וגם Long בלי קריסה
+    public Object timestamp; // Object כדי לקבל גם Timestamp וגם Long בלי קריסה
 
     public ChatSummary() {} // חובה עבור Firebase
 
@@ -36,7 +36,7 @@ public class ChatSummary {
 
     }
 
-    // פונקציית עזר למקרה שתצטרכי את הזמן כ-long (למשל למיון)
+    // פונקציית עזר למקרה שנצטרך את הזמן כ-long
     @Exclude
     public long getTimestampAsLong() {
         if (timestamp instanceof Long) {

@@ -27,7 +27,6 @@ public class ChatSummaryAdapter extends RecyclerView.Adapter<ChatSummaryAdapter.
 
     private OnItemClickListener listener;
 
-    // 2. הפונקציה שהייתה חסרה בשגיאה שלך
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }

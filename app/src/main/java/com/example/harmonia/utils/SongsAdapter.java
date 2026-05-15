@@ -94,7 +94,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
             holder.songimage.setAlpha(song.isSelectedsong() ? 0.5f : 1.0f);
         }
 
-        // לחיצה על כפתור השיתוף (אם קיים ב-Layout)
+        // לחיצה על כפתור השיתוף
         if (holder.sharesong != null) {
             holder.sharesong.setOnClickListener(v -> showShareDialog(v, song));
         }

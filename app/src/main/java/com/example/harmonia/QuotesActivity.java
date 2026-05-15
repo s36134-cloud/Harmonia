@@ -102,13 +102,12 @@ public class QuotesActivity extends AppCompatActivity {
         btnHope.setOnClickListener(v -> filterAllByMood("Hope"));
 
 
-// כפתור הכל - פשוט קורא לפונקציות הטעינה המקוריות שלך (בלי where)
+// כפתור הכל - פשוט קורא לפונקציות הטעינה המקוריות שלך
         btnAll.setOnClickListener(v -> {
-            // קריאה לפונקציות הקיימות שלך
             loadBooksQuotesFromFirestore();
             loadSongsQuotesFromFirestore();
 
-            // חיבור מחדש של האדפטר לרשימה המקורית (זה מה שמשחרר את ה"תקיעה" מהסינון)
+            // חיבור מחדש של האדפטר לרשימה המקורית
             BookQuoteadapter.setList(Bookmood);
             SongQuoteadapter.setList(Songmood);
         });
@@ -119,7 +118,7 @@ public class QuotesActivity extends AppCompatActivity {
 
     }
     private void loadBooksQuotesFromFirestore() {
-        db.collection("BookQuotes") // השם המדויק של ה-Collection מהתמונה הראשונה
+        db.collection("BookQuotes")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -140,13 +139,12 @@ public class QuotesActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // כאן אפשר להוסיף הודעת שגיאה (Toast) למקרה שמשהו השתבש
                     Toast.makeText(this, "שגיאה בטעינת הנתונים", Toast.LENGTH_SHORT).show();
                 });
     }
 
     private void loadSongsQuotesFromFirestore() {
-        db.collection("SongQuotes") // השם המדויק של ה-Collection מהתמונה הראשונה
+        db.collection("SongQuotes")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     if (!queryDocumentSnapshots.isEmpty()) {
@@ -166,7 +164,6 @@ public class QuotesActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // כאן אפשר להוסיף הודעת שגיאה (Toast) למקרה שמשהו השתבש
                     Toast.makeText(this, "שגיאה בטעינת הנתונים", Toast.LENGTH_SHORT).show();
                 });
     }

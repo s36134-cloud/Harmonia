@@ -71,15 +71,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         // --- לוגיקת לייק ויזואלית ---
         // בדיקה אם המשתמש הנוכחי נמצא בתוך רשימת הלייקים של הפוסט
         if (post.getLikedBy() != null && post.getLikedBy().containsKey(currentUserId)) {
-            holder.likeImageView.setImageResource(R.drawable.ic_heart_filled); // לב אדום/מלא
+            holder.likeImageView.setImageResource(R.drawable.ic_heart_filled);
         } else {
-            holder.likeImageView.setImageResource(R.drawable.ic_heart_outline); // לב ריק
+            holder.likeImageView.setImageResource(R.drawable.ic_heart_outline);
         }
 
         // לחיצה על לייק
-        String finalCurrentUserId = currentUserId; // משתנה סופי עבור ה-Lambda
+        String finalCurrentUserId = currentUserId;
         holder.likeImageView.setOnClickListener(v -> {
-            // כאן תקראי לפונקציה שתעדכן את ה-Firebase (נסדר אותה בהמשך)
             toggleLike(post, finalCurrentUserId);
         });
 
@@ -99,7 +98,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             holder.createdTextView.setText("No date");
         }
 
-        // --- טעינת תמונה (הקוד הקיים שלך) ---
+        // טעינת תמונה
         String imageUrl = post.getImageUrl();
         if (imageUrl != null && !imageUrl.isEmpty()) {
             holder.postImageView.setVisibility(View.VISIBLE);
@@ -112,7 +111,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
             holder.postImageView.setVisibility(View.GONE);
         }
 
-        // --- כפתור מחיקה (הקוד הקיים שלך) ---
+        //  כפתור מחיקה
         if (post.getOwnerUid() != null && post.getOwnerUid().equals(currentUserId)) {
             holder.deleteImageView.setVisibility(View.VISIBLE);
             holder.deleteImageView.setOnClickListener(v -> {

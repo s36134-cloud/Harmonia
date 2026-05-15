@@ -196,7 +196,6 @@ public class ProfileActivity extends AppCompatActivity implements OnResultCallba
         }
     }
 
-    // --- שאר הפונקציות של Firebase (Songs/Books) נשארות ללא שינוי ---
     private void loadUserTopSongs() {
         String userId = auth.getUid();
         db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {

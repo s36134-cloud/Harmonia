@@ -22,7 +22,7 @@ import java.util.List;
 
 public class SearchCommActivity extends AppCompatActivity {
 
-    private SearchView searchView;  // 👈 שונה מ-EditText
+    private SearchView searchView;
     private RecyclerView rvSearchResults;
     private TextView tvNoResults;
 
@@ -66,7 +66,7 @@ public class SearchCommActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        searchView = findViewById(R.id.et_search);  // 👈 SearchView
+        searchView = findViewById(R.id.et_search);
         rvSearchResults = findViewById(R.id.rv_search_results);
         tvNoResults = findViewById(R.id.tv_no_results);
     }
@@ -78,7 +78,7 @@ public class SearchCommActivity extends AppCompatActivity {
     }
 
     private void setupSearch() {
-        // 👇 שימוש ב-SearchView במקום TextWatcher
+        //  שימוש ב-SearchView במקום TextWatcher
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -143,7 +143,7 @@ public class SearchCommActivity extends AppCompatActivity {
             tvNoResults.setVisibility(View.VISIBLE);
             rvSearchResults.setVisibility(View.GONE);
 
-            String query = searchView.getQuery().toString();  // 👈 שונה
+            String query = searchView.getQuery().toString();
             if (query.trim().isEmpty()) {
                 tvNoResults.setText("אין פוסטים להצגה");
             } else {

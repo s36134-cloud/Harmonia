@@ -11,7 +11,6 @@ public class Song {
     private boolean isSelectedsong = false;
 
     public Song() {
-        // חובה להשאיר ריק עבור Firestore
     }
 
     // Getters & Setters

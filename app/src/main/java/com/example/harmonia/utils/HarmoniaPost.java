@@ -13,7 +13,6 @@ public class HarmoniaPost {
     private String imageUrl;
     private String PostId;
 
-    // --- משתנים חדשים ללייקים ותגובות ---
     private int likesCount = 0;
     private int commentsCount = 0;
     private Map<String, Boolean> likedBy = new HashMap<>();
@@ -28,7 +27,6 @@ public class HarmoniaPost {
         this.ownerNickname = ownerNickname;
         this.createdAt = createdAt;
         this.imageUrl = imageUrl;
-        // כברירת מחדל הכל מתחיל ב-0
         this.likesCount = 0;
         this.commentsCount = 0;
         this.likedBy = new HashMap<>();
@@ -45,7 +43,6 @@ public class HarmoniaPost {
     public Map<String, Boolean> getLikedBy() { return likedBy; }
     public void setLikedBy(Map<String, Boolean> likedBy) { this.likedBy = likedBy; }
 
-    // --- שאר ה-Getters וה-Setters הקיימים שלך ---
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public Timestamp getCreatedAt() { return createdAt; }

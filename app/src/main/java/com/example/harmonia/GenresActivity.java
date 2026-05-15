@@ -36,7 +36,7 @@ public class GenresActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private String userId;
-    private Button saveButton; // הפכנו אותו לגלובלי
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

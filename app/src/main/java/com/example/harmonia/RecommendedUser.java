@@ -4,10 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class RecommendedUser {
 
-    @SerializedName("ID") // מתאים למה שג'מיני שולח בלוגים
+    @SerializedName("ID")
     public String user_id;
 
-    // הוספת האנוטציה הזו מוודא שאם ג'מיני שולח "name", זה ייכנס ל-display_name
     @SerializedName(value = "display_name", alternate = {"name", "userName", "display_name"})
     public String display_name;
 

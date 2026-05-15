@@ -33,7 +33,7 @@ public class SearchBookActivity extends AppCompatActivity {
     private BooksAdapter adapter;
     private List<Book> bookList;
     private FirebaseFirestore db;
-    private String listId; // ID של הרשימה הספציפית
+    private String listId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

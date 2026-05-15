@@ -10,7 +10,6 @@ public class Comment {
     private String text;         // תוכן התגובה
     private long timestamp;      // זמן כתיבת התגובה
 
-    // חובה: בנאי ריק עבור Firebase Firestore
     public Comment() {
     }
 
@@ -24,7 +23,6 @@ public class Comment {
         this.timestamp = new Date().getTime(); // קובע את הזמן הנוכחי
     }
 
-    // Getters ו-Setters (חובה כדי ש-Firebase יוכל לקרוא ולכתוב)
     public String getCommentId() { return commentId; }
     public void setCommentId(String commentId) { this.commentId = commentId; }
 

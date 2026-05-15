@@ -24,7 +24,6 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     }
     private OnGenreClickListener listener;
 
-    // בנאי מעודכן שמקבל את הליסנר
     public GenresAdapter(List<String> genreNames, OnGenreClickListener listener) {
         this.genreNames = genreNames;
         this.checkedPositions = new HashSet<>();
@@ -56,7 +55,6 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
                 checkedPositions.remove(position);
             } else {
                 checkedPositions.add(position);
-                // האנימציה היפה שלך
                 holder.heartIcon.animate()
                         .scaleX(1.4f)
                         .scaleY(1.4f)

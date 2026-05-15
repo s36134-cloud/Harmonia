@@ -121,11 +121,10 @@ public class CommentsActivity extends AppCompatActivity {
                         .addOnSuccessListener(aVoid -> {
                             etComment.setText(""); // ניקוי השדה
 
-                            // --- הנה הקסם שמעדכן את ה-Counter בפוסט עצמו ---
+                            // ---  מעדכן את ה-Counter בפוסט עצמו ---
                             db.collection("posts").document(postId)
                                     .update("commentsCount", com.google.firebase.firestore.FieldValue.increment(1))
                                     .addOnSuccessListener(v -> {
-                                        // כאן זה התעדכן ב-DB!
                                     });
                         })
                         .addOnFailureListener(e -> {

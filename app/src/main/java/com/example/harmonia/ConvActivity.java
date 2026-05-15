@@ -156,7 +156,7 @@ public class ConvActivity extends AppCompatActivity {
                                 Conv msg = dc.getDocument().toObject(Conv.class);
                                 if (msg != null) {
                                     messageList.add(msg);
-                                    // אומרים לאדפטר שנוספה רק שורה אחת בסוף - זה הרבה יותר מהיר!
+                                    // אומרים לאדפטר שנוספה רק שורה אחת בסוף
                                     adapter.notifyItemInserted(messageList.size() - 1);
                                 }
                             }
@@ -181,7 +181,7 @@ public class ConvActivity extends AppCompatActivity {
         message.put("timestamp", FieldValue.serverTimestamp());
         message.put("type", "text");
 
-        // 2. שמירת ההודעה בתת-האוסף (מה שכבר עשית)
+        // 2. שמירת ההודעה בתת-האוסף
         db.collection("chats")
                 .document(chatId)
                 .collection("messages")
@@ -191,7 +191,7 @@ public class ConvActivity extends AppCompatActivity {
                     Toast.makeText(this, "שליחה נכשלה", Toast.LENGTH_SHORT).show();
                 });
 
-        // 3. עדכון מסמך האב - כדי שההודעה תופיע במסך הראשי!
+        // 3. עדכון מסמך האב - כדי שההודעה תופיע במסך הראשי
         Map<String, Object> chatSummaryUpdates = new HashMap<>();
         chatSummaryUpdates.put("lastMessage", text);
         chatSummaryUpdates.put("timestamp", FieldValue.serverTimestamp());
@@ -202,7 +202,7 @@ public class ConvActivity extends AppCompatActivity {
         usersArray.add(partnerId);
         chatSummaryUpdates.put("users", usersArray);
 
-        // נשתמש ב-merge כדי לא למחוק נתונים אחרים אם הם קיימים במסמך (למשל אם שמרת שם דברים נוספים)
+        // נשתמש ב-merge כדי לא למחוק נתונים אחרים אם הם קיימים במסמך
         db.collection("chats").document(chatId)
                 .set(chatSummaryUpdates, com.google.firebase.firestore.SetOptions.merge())
                 .addOnSuccessListener(aVoid -> Log.d("CHAT_DEBUG", "Chat summary updated successfully!"))

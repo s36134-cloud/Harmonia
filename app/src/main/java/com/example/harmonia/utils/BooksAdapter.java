@@ -41,12 +41,11 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     private int layoutResId;
     private static final String TAG = "BooksAdapter";
 
-    // ה-Interface המעודכן שמחזיר אובייקט ספר
+    // ה-Interface שמחזיר אובייקט ספר
     public interface OnBookClickListener {
         void onBookClick(Book book);
     }
 
-    // בנאי מעודכן עם layoutResId
     public BooksAdapter(List<Book> bookList, OnBookClickListener listener, int layoutResId) {
         this.bookList = bookList;
         this.listener = listener;
@@ -75,7 +74,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
     @NonNull
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // שימוש ב-Layout שהועבר בבנאי
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutResId, parent, false);
         return new BookViewHolder(view);
     }
@@ -87,7 +85,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
         holder.namebook.setText(book.getName());
         holder.author.setText(book.getAuthor());
 
-        // בדיקות Null לרכיבים שלא קיימים ב-Compact Mode
         if (holder.genrebook != null) holder.genrebook.setText(book.getGenre());
 
         String imageUrl = "https://nbliklmpfsjemwizicuh.supabase.co/storage/v1/object/public/Harmonia-bucket/images/books/" + book.getId() + ".jpg";
@@ -124,17 +121,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.BookViewHold
 
             Book currentBook = bookList.get(currentPosition);
 
-            // 1. תמיד נהפוך את מצב הבחירה (זה מה שהיה חסר!)
             currentBook.setSelected(!currentBook.isSelectedbook());
 
-            // 2. תמיד נעדכן את הנראות של השורה (שקיפות)
             notifyItemChanged(currentPosition);
 
             if (listener != null) {
-                // 3. אם יש ליסנר, נפעיל אותו כדי שה-Activity יעדכן את כפתור ה-Done
                 listener.onBookClick(currentBook);
             } else {
-                // 4. אם אין ליסנר, נעדכן את הכפתור ישירות
                 updateDoneButtonVisibility(v);
             }
         });

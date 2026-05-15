@@ -91,15 +91,15 @@ public class CommunityActivity extends AppCompatActivity {
             }
         });
 
-        // 👇 הוספת חיבור ל-SearchView
+        // הוספת חיבור ל-SearchView
         searchView = findViewById(R.id.searchViewbookorsong);
         searchView.setOnClickListener(v -> {
-            // מעבר לעמוד החיפוש
+
             Intent intent = new Intent(CommunityActivity.this, SearchCommActivity.class);
             startActivity(intent);
         });
 
-        // אפשר גם כשמתחילים להקליד
+        // כשמתחילים להקליד
         searchView.setOnQueryTextFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 Intent intent = new Intent(CommunityActivity.this, SearchCommActivity.class);
@@ -110,7 +110,6 @@ public class CommunityActivity extends AppCompatActivity {
         posts = new ArrayList<>();
         initRecyclerView();
         loadPosts();
-        askNotificationPermission();
     }
 
     private void initRecyclerView() {
@@ -148,21 +147,6 @@ public class CommunityActivity extends AppCompatActivity {
                 });
     }
 
-    private void askNotificationPermission() {
-        // This is only necessary for API level 33 and above.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // TIRAMISU is API 33
-            // Check if the permission has already been granted.
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // Permission is already granted.
-                Log.d("FeedActivity", "Permission already granted.");
-            } else {
-                // Directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
-                Log.d("FeedActivity", "Requesting notification permission.");
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
-        }
-    }
+
 
 }

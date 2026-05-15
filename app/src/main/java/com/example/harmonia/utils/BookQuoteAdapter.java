@@ -17,9 +17,7 @@ public class BookQuoteAdapter extends RecyclerView.Adapter<BookQuoteAdapter.Quot
 
     private List<BookQuote> quoteList;
 
-    // קונסטרקטור מתוקן
     public BookQuoteAdapter(List<BookQuote> mood) {
-        // כאן התיקון: אנחנו לוקחים את הנתונים מהפרמטר 'mood' ושומרים ב-'quoteList'
         this.quoteList = mood;
     }
 
@@ -32,7 +30,6 @@ public class BookQuoteAdapter extends RecyclerView.Adapter<BookQuoteAdapter.Quot
 
     @Override
     public void onBindViewHolder(@NonNull QuoteViewHolder holder, int position) {
-        // הגנה קטנה למקרה שהרשימה ריקה
         if (quoteList == null || quoteList.isEmpty()) return;
 
         BookQuote quote = quoteList.get(position);
@@ -44,7 +41,7 @@ public class BookQuoteAdapter extends RecyclerView.Adapter<BookQuoteAdapter.Quot
 
     @Override
     public int getItemCount() {
-        // תיקון למניעת קריסה: אם הרשימה null, נחזיר 0
+        // אם הרשימה null, נחזיר 0
         if (quoteList == null) {
             return 0;
         }
@@ -64,7 +61,7 @@ public class BookQuoteAdapter extends RecyclerView.Adapter<BookQuoteAdapter.Quot
 
     // פונקציה לעדכון הרשימה מחוץ לאדפטר
     public void setList(List<BookQuote> newList) {
-        this.quoteList = newList; // 'list' זה השם של הרשימה בתוך ה-Adapter שלך
+        this.quoteList = newList;
         notifyDataSetChanged(); // פקודה שאומרת ל-RecyclerView להתרענן ולהציג את הנתונים החדשים
     }
 }

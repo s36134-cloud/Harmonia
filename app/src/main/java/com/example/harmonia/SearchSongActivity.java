@@ -32,7 +32,7 @@ public class SearchSongActivity extends AppCompatActivity {
     private SongsAdapter adapter;
     private List<Song> songList;
     private FirebaseFirestore db;
-    private String listId; // ID של הרשימה הספציפית אם קיים
+    private String listId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,6 @@ public class SearchSongActivity extends AppCompatActivity {
         listData.put("itemsIds", songIds); // רשימת ה-IDs של השירים/ספרים
         listData.put("lastUpdated", FieldValue.serverTimestamp());
 
-        // נתיב: users -> {userId} -> my_custom_lists -> {listId}
         db.collection("users").document(userId)
                 .collection("my_custom_lists").document(listId)
                 .set(listData, SetOptions.merge())
@@ -149,7 +148,6 @@ public class SearchSongActivity extends AppCompatActivity {
                 });
     }
 
-    // ... (loadAllSongs ו-searchInFirebase נשארים ללא שינוי)
     private void searchInFirebase(String searchText) {
         db.collection("songs")
                 .orderBy("name")

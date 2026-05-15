@@ -31,7 +31,7 @@ public class AddPostActivity extends AppCompatActivity {
     private TextInputEditText titleEditText;
     private TextInputEditText descEditText;
     private ImageView imageView;
-    private Button sendButton; // הוספנו משתנה כדי לשלוט בכפתור
+    private Button sendButton; //  משתנה כדי לשלוט בכפתור
     private String selectedImageUrl = null;
 
     private static final String TAG = "AddPostActivity";
@@ -73,8 +73,6 @@ public class AddPostActivity extends AppCompatActivity {
 
         imageView.setVisibility(View.GONE);
 
-        // שיפור: לא מוחקים את ה-nickname כאן. זה גורם לעומס מיותר.
-        // אם תרצי לרענן אותו, אפשר לעשות זאת בתוך sendpost אם ה-nickname ריק.
 
         sendButton.setOnClickListener(v -> sendpost());
 

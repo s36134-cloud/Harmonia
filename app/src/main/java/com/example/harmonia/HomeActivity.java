@@ -107,8 +107,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void loadRecommendations() {
-        // --- שיפור חווית משתמש: מניעת טעינה כפולה כשחוזרים למסך ---
-        // אם אחת מהרשימות כבר מכילה נתונים, אנחנו לא רוצים להריץ את השאילתות שוב
+
         if (!bookList.isEmpty() || !songList.isEmpty() || !playlistsList.isEmpty()) {
             Log.d("HomeActivity", "הנתונים כבר קיימים, מדלג על טעינה מחדש");
             return;
@@ -219,7 +218,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     // רק אחרי שסיימנו עם החובה, נבדוק אם צריך ז'אנרים
                     if (genres != null && !genres.isEmpty()) {
-                        // הגבלה: קח רק את 5 הז'אנרים הראשונים כדי לא לחנוק את המכשיר
                         List<String> limitedGenres = genres.subList(0, Math.min(genres.size(), 10));
 
                         db.collection("playlists")
